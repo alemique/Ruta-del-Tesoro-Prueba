@@ -304,7 +304,7 @@ const bonusMissionData = {
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
     description: 'Guardián, hemos detectado una anomalía placentera en Portho Gelatto. Tienes la oportunidad de desviarte de tu ruta para conseguir una recompensa masiva de 200 fragmentos. ¡Pero cuidado! El cronómetro principal no se detendrá. La decisión es tuya.',
-    mapsLink: 'https://maps.app.goo.gl/kav1yEaR8fHq22L4A', // Tu enlace a Portho
+    mapsLink: 'https://maps.app.goo.gl/htvnw6Dbowx1PEw46', // CORRECCIÓN 1: Link actualizado.
     challenge: {
         question: 'Portho tiene un famoso sabor que refleja un dulce muy característico de San Juan. ¿Cuál es?',
         options: ['Uva', 'Pistacho', 'Membrillo', 'Dulce de Leche'],
@@ -1055,7 +1055,8 @@ const getInitialState = () => ({
     pendingAnchorResult: null,
     activeDistortionEventId: null,
     postDistortionStatus: null,
-    returnStatus: null
+    returnStatus: null,
+    bonusPorthoOffered: false // CORRECCIÓN 3: Añadir bandera de estado.
 });
 
 const App = () => {
@@ -1064,7 +1065,9 @@ const App = () => {
         try {
             const parsedState = savedState ? JSON.parse(savedState) : null;
             if (parsedState && typeof parsedState.status === 'string' && parsedState.status !== 'login') {
-                return parsedState;
+                // Asegurarse de que los nuevos estados existan al cargar
+                const initialState = getInitialState();
+                return { ...initialState, ...parsedState };
             }
         } catch (e) {
             console.error("Error al parsear localStorage, usando estado inicial.", e);
@@ -1110,6 +1113,7 @@ const App = () => {
         }));
     };
     
+    // CORRECCIÓN 2 y 3: Lógica de la función modificada.
     const handleTriviaComplete = (triviaResult) => {
         if (!currentStageData || !appState.pendingAnchorResult) return;
         
@@ -1133,20 +1137,26 @@ const App = () => {
             pendingAnchorResult: null,
         };
 
-        if (currentStageData.id === bonusMissionData.triggerMissionId) {
+        const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
+        // Se calcula el próximo estado ANTES de cualquier bifurcación.
+        const nextStatus = nextMission 
+            ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
+            : 'finished'; // Si no hay próxima misión, el estado es 'finished'
+
+        // Se comprueba si la misión bonus debe activarse.
+        if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
             setAppState({
                 ...newState,
                 status: 'bonus_mission_offer', 
-                returnStatus: 'on_the_road'
+                returnStatus: nextStatus, // Se guarda el estado de retorno correcto.
+                bonusPorthoOffered: true // Se marca la oferta como "usada".
             });
             return; 
         }
         
         const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-        const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
         
         if (triggeredEvent && nextMission) {
-            const nextStatus = nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road';
             setAppState({
                 ...newState,
                 status: 'distortion_event',
@@ -1154,8 +1164,10 @@ const App = () => {
                 postDistortionStatus: nextStatus, 
             });
         } else {
-            if (!nextMission) { handleFinalComplete(0); return; }
-            const nextStatus = nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road';
+            if (!nextMission) { 
+                handleFinalComplete(0); 
+                return; 
+            }
             const finalNewState = {...newState, status: nextStatus };
             setAppState(finalNewState);
             sendResultsToBackend(finalNewState);
@@ -1241,21 +1253,30 @@ const App = () => {
     };
 
     const handleBonusChallengeComplete = (pointsWon) => {
-        setAppState(prev => ({
-            ...prev,
-            score: prev.score + pointsWon,
-            status: prev.returnStatus,
+        const newState = {
+            ...appState,
+            score: appState.score + pointsWon,
+            status: appState.returnStatus,
             returnStatus: null
-        }));
+        };
+        setAppState(newState);
+        // También enviamos una actualización al backend después del bonus
+        sendResultsToBackend(newState);
     };
 
     const handleJumpToBonus = () => {
         if (window.confirm("¿Saltar directamente a la oferta del bonus? (DEV)")) {
+            // Simulamos haber completado la misión 8 para tener el estado correcto
+            const mission8 = eventData.find(m => m.id === 8);
+            const nextMission = eventData.find(m => m.id === mission8.nextMissionId);
+            const nextStatus = nextMission.department !== mission8.department ? 'long_travel' : 'on_the_road';
+
             setAppState(prev => ({
                 ...prev,
                 currentMissionId: bonusMissionData.triggerMissionId,
                 status: 'bonus_mission_offer',
-                returnStatus: 'on_the_road'
+                returnStatus: nextStatus,
+                bonusPorthoOffered: true // Marcamos como ofrecido para que la lógica principal funcione
             }));
         }
     };
