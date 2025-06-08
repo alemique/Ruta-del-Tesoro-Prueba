@@ -297,6 +297,21 @@ const distortionEventsData = [
     }
 ];
 
+// --- DATOS DE LA MISIÓN BONUS ---
+const bonusMissionData = {
+    id: 'bonus_portho_1',
+    triggerMissionId: 8, // Se activa al completar la misión 8 (Plaza de Santa Lucía)
+    sponsorName: 'Portho Gelatto',
+    title: 'Misión Bonus: El Sabor del Tiempo',
+    description: 'Guardián, hemos detectado una anomalía placentera en Portho Gelatto. Tienes la oportunidad de desviarte de tu ruta para conseguir una recompensa masiva de 200 fragmentos. ¡Pero cuidado! El cronómetro principal no se detendrá. La decisión es tuya.',
+    mapsLink: 'https://maps.app.goo.gl/kav1yEaR8fHq22L4A', // Tu enlace a Portho
+    challenge: {
+        question: 'Portho tiene un famoso sabor que refleja un dulce muy característico de San Juan. ¿Cuál es?',
+        options: ['Uva', 'Pistacho', 'Membrillo', 'Dulce de Leche'],
+        correctAnswer: 'Membrillo',
+        points: 200
+    }
+};
 
 // --- FUNCIONES GLOBALES DE AYUDA ---
 const formatTime = (totalSeconds) => {
@@ -968,6 +983,62 @@ const Leaderboard = () => {
   );
 };
 
+const BonusMissionOfferPage = ({ bonusData, onAccept, onDecline }) => (
+    <div className="stage-container">
+        <img src="imagenes/portho.jpg" alt={`Logo ${bonusData.sponsorName}`} className="portal-image" style={{ width: '150px', borderRadius: '50%' }}/>
+        <h3>{bonusData.title}</h3>
+        <div className="transmission-box">
+            <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
+        </div>
+        <p>{bonusData.description}</p>
+        <a href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
+            📍 ABRIR EN GOOGLE MAPS
+        </a>
+        <div className="button-group">
+            <button className="secondary-button" onClick={onDecline}>Rechazar Desvío</button>
+            <button className="primary-button" onClick={onAccept}>¡ACEPTO EL DESAFÍO!</button>
+        </div>
+    </div>
+);
+const BonusMissionChallengePage = ({ bonusData, onComplete }) => {
+    const [selectedOption, setSelectedOption] = React.useState('');
+    const [feedback, setFeedback] = React.useState({ message: '', type: ''});
+    const [glowClass, setGlowClass] = React.useState('');
+
+    const handleSubmit = () => {
+        const isCorrect = selectedOption === bonusData.challenge.correctAnswer;
+        const pointsWon = isCorrect ? bonusData.challenge.points : 0;
+        setGlowClass(isCorrect ? 'success-glow' : 'error-glow');
+        setFeedback({
+            message: isCorrect 
+                ? `✔️ ¡Correcto! ¡Has ganado ${pointsWon} Fragmentos!` 
+                : `❌ Respuesta Incorrecta. No has recuperado fragmentos esta vez.`,
+            type: isCorrect ? 'success' : 'error'
+        });
+        setTimeout(() => {
+            onComplete(pointsWon);
+        }, 3000);
+    };
+
+    return (
+        <div className={`challenge-container ${glowClass}`}>
+            <h3>{bonusData.sponsorName} - Desafío</h3>
+            <p>{bonusData.challenge.question}</p>
+            <ul className="trivia-options">
+                {bonusData.challenge.options.map(option => (
+                    <li key={option} className={selectedOption === option ? 'selected' : ''} onClick={() => !feedback.message && setSelectedOption(option)}>
+                        {option}
+                    </li>
+                ))}
+            </ul>
+            <button className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>
+                CONFIRMAR RESPUESTA
+            </button>
+            {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+        </div>
+    );
+};
+
 
 // --- BLOQUE PRINCIPAL DE LA APP ---
 const getInitialState = () => ({ 
@@ -984,6 +1055,7 @@ const getInitialState = () => ({
     pendingAnchorResult: null,
     activeDistortionEventId: null,
     postDistortionStatus: null,
+    returnStatus: null
 });
 
 const App = () => {
@@ -1042,6 +1114,7 @@ const App = () => {
         if (!currentStageData || !appState.pendingAnchorResult) return;
         
         const newScore = appState.score + triviaResult.points;
+        
         const completeMissionRecord = {
             missionId: currentStageData.id,
             missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
@@ -1053,12 +1126,21 @@ const App = () => {
 
         const updatedResults = [...appState.missionResults, completeMissionRecord];
         
-        const newState = {
+        let newState = {
             ...appState,
             score: newScore,
             missionResults: updatedResults,
             pendingAnchorResult: null,
         };
+
+        if (currentStageData.id === bonusMissionData.triggerMissionId) {
+            setAppState({
+                ...newState,
+                status: 'bonus_mission_offer', 
+                returnStatus: 'on_the_road'
+            });
+            return; 
+        }
         
         const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
@@ -1115,32 +1197,6 @@ const App = () => {
         }
     };
     
-    const handleJumpToSantaLuciaEnd = () => {
-        if (window.confirm("¿Saltar al último desafío de Santa Lucía? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'in_game',
-                subStage: 'anchor',
-                currentMissionId: 8,
-                activeDistortionEventId: null,
-                postDistortionStatus: null
-            }));
-        }
-    };
-
-    const handleJumpToCapitalEnd = () => {
-        if (window.confirm("¿Saltar al último desafío de Capital? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'in_game',
-                subStage: 'anchor',
-                currentMissionId: 26,
-                activeDistortionEventId: null,
-                postDistortionStatus: null
-            }));
-        }
-    };
-
     const handleResetDevelopment = () => {
         if (window.confirm("¿Seguro que quieres reiniciar toda la misión y borrar los datos guardados? (Solo para desarrollo)")) {
             localStorage.removeItem('guardianesAppState');
@@ -1166,6 +1222,44 @@ const App = () => {
         }
     };
 
+    const handleAcceptBonusMission = async () => {
+        try {
+            const params = new URLSearchParams({
+                action: 'recordBonusParticipation',
+                teamName: appState.teamName,
+                bonusColumnName: 'BonusPorthoParticipacion'
+            });
+            await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
+        } catch (error) {
+            console.error("Error al registrar participación en bonus:", error);
+        }
+        setAppState(prev => ({ ...prev, status: 'bonus_mission_challenge' }));
+    };
+
+    const handleDeclineBonusMission = () => {
+        setAppState(prev => ({ ...prev, status: prev.returnStatus, returnStatus: null }));
+    };
+
+    const handleBonusChallengeComplete = (pointsWon) => {
+        setAppState(prev => ({
+            ...prev,
+            score: prev.score + pointsWon,
+            status: prev.returnStatus,
+            returnStatus: null
+        }));
+    };
+
+    const handleJumpToBonus = () => {
+        if (window.confirm("¿Saltar directamente a la oferta del bonus? (DEV)")) {
+            setAppState(prev => ({
+                ...prev,
+                currentMissionId: bonusMissionData.triggerMissionId,
+                status: 'bonus_mission_offer',
+                returnStatus: 'on_the_road'
+            }));
+        }
+    };
+
     const renderContent = () => {
         if (appState.status === 'distortion_event' && activeDistortionEvent) {
             return <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />;
@@ -1178,6 +1272,19 @@ const App = () => {
         switch (appState.status) {
             case 'login':
                 return <LoginPage onLogin={handleLogin} setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} errorMessage={appState.errorMessage} />;
+            
+            case 'bonus_mission_offer':
+                return <BonusMissionOfferPage 
+                            bonusData={bonusMissionData} 
+                            onAccept={handleAcceptBonusMission} 
+                            onDecline={handleDeclineBonusMission} 
+                        />;
+            
+            case 'bonus_mission_challenge':
+                return <BonusMissionChallengePage 
+                            bonusData={bonusMissionData} 
+                            onComplete={handleBonusChallengeComplete} 
+                        />;
             
             case 'long_travel': {
                 if (!currentStageData.nextMissionId) return null;
@@ -1241,11 +1348,8 @@ const App = () => {
             <div className="dev-controls-container">
                 {appState.status !== 'login' && (
                     <>
-                        <button className="dev-reset-button dev-jump-sl" onClick={handleJumpToSantaLuciaEnd}>
-                            Fin Sta. Lucía
-                        </button>
-                        <button className="dev-reset-button dev-jump-cpt" onClick={handleJumpToCapitalEnd}>
-                            Fin Capital
+                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonus}>
+                            BONUS
                         </button>
                         <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
                             RESET
