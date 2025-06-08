@@ -250,10 +250,8 @@ const eventData = [
 const distortionEventsData = [
     {
         id: 'distorsion_1',
-        trigger: { onMissionComplete: 3 }, 
-        // --- INICIO DE LA MODIFICACIÓN ---
+        trigger: { onMissionComplete: 3 },
         visual: { type: 'video', src: 'imagenes/AMENAZA2.mp4' },
-        // --- FIN DE LA MODIFICACIÓN ---
         challenge: {
             type: 'corrupt_transmission',
             title: "¡Transmisión Corrupta!",
@@ -267,7 +265,7 @@ const distortionEventsData = [
     },
     {
         id: 'distorsion_2',
-        trigger: { onMissionComplete: 8 }, 
+        trigger: { onMissionComplete: 8 },
         visual: { type: 'video', src: 'imagenes/AMENAZA.mp4' },
         challenge: {
             type: 'multiple_choice',
@@ -300,11 +298,11 @@ const distortionEventsData = [
 // --- DATOS DE LA MISIÓN BONUS ---
 const bonusMissionData = {
     id: 'bonus_portho_1',
-    triggerMissionId: 8, // Se activa al completar la misión 8 (Plaza de Santa Lucía)
+    triggerMissionId: 26, // Se activa al completar la misión 26
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
     description: 'Guardián, hemos detectado una anomalía placentera en Portho Gelatto. Tienes la oportunidad de desviarte de tu ruta para conseguir una recompensa masiva de 200 fragmentos. ¡Pero cuidado! El cronómetro principal no se detendrá. La decisión es tuya.',
-    mapsLink: 'https://maps.app.goo.gl/htvnw6Dbowx1PEw46', // CORRECCIÓN 1: Link actualizado.
+    mapsLink: 'https://maps.app.goo.gl/htvnw6Dbowx1PEw46',
     challenge: {
         question: 'Portho tiene un famoso sabor que refleja un dulce muy característico de San Juan. ¿Cuál es?',
         options: ['Uva', 'Pistacho', 'Membrillo', 'Dulce de Leche'],
@@ -983,58 +981,85 @@ const Leaderboard = () => {
   );
 };
 
-const BonusMissionOfferPage = ({ bonusData, onAccept, onDecline }) => (
-    <div className="stage-container">
-        <img src="imagenes/portho.jpg" alt={`Logo ${bonusData.sponsorName}`} className="portal-image" style={{ width: '150px', borderRadius: '50%' }}/>
-        <h3>{bonusData.title}</h3>
-        <div className="transmission-box">
-            <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
-        </div>
-        <p>{bonusData.description}</p>
-        <a href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
-            📍 ABRIR EN GOOGLE MAPS
-        </a>
-        <div className="button-group">
-            <button className="secondary-button" onClick={onDecline}>Rechazar Desvío</button>
-            <button className="primary-button" onClick={onAccept}>¡ACEPTO EL DESAFÍO!</button>
-        </div>
-    </div>
-);
-const BonusMissionChallengePage = ({ bonusData, onComplete }) => {
-    const [selectedOption, setSelectedOption] = React.useState('');
-    const [feedback, setFeedback] = React.useState({ message: '', type: ''});
+const BonusMissionModal = ({ bonusData, onComplete }) => {
+    const [view, setView] = React.useState('offer'); // 'offer' or 'challenge'
+    const [feedback, setFeedback] = React.useState({ message: '', type: '' });
     const [glowClass, setGlowClass] = React.useState('');
+    const [selectedOption, setSelectedOption] = React.useState('');
 
-    const handleSubmit = () => {
+    const handleAccept = async () => {
+        try {
+            const params = new URLSearchParams({
+                action: 'recordBonusParticipation',
+                teamName: bonusData.teamName,
+                bonusColumnName: 'BonusPorthoParticipacion'
+            });
+            await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
+        } catch (error) {
+            console.error("Error al registrar participación en bonus:", error);
+        }
+        setView('challenge');
+    };
+
+    const handleDecline = () => {
+        onComplete({ points: 0 }); // Cierra el modal sin dar puntos
+    };
+
+    const handleSubmitChallenge = () => {
+        if (feedback.message) return;
+
         const isCorrect = selectedOption === bonusData.challenge.correctAnswer;
         const pointsWon = isCorrect ? bonusData.challenge.points : 0;
         setGlowClass(isCorrect ? 'success-glow' : 'error-glow');
         setFeedback({
             message: isCorrect 
                 ? `✔️ ¡Correcto! ¡Has ganado ${pointsWon} Fragmentos!` 
-                : `❌ Respuesta Incorrecta. No has recuperado fragmentos esta vez.`,
+                : `❌ Respuesta Incorrecta. No has recuperado fragmentos.`,
             type: isCorrect ? 'success' : 'error'
         });
         setTimeout(() => {
-            onComplete(pointsWon);
+            onComplete({ points: pointsWon });
         }, 3000);
     };
 
     return (
-        <div className={`challenge-container ${glowClass}`}>
-            <h3>{bonusData.sponsorName} - Desafío</h3>
-            <p>{bonusData.challenge.question}</p>
-            <ul className="trivia-options">
-                {bonusData.challenge.options.map(option => (
-                    <li key={option} className={selectedOption === option ? 'selected' : ''} onClick={() => !feedback.message && setSelectedOption(option)}>
-                        {option}
-                    </li>
-                ))}
-            </ul>
-            <button className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>
-                CONFIRMAR RESPUESTA
-            </button>
-            {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+        <div className="amenaza-modal-overlay">
+            <div className={`amenaza-modal-content ${glowClass}`}>
+                {view === 'offer' && (
+                    <div className="stage-container">
+                        <img src="imagenes/portho.jpg" alt={`Logo ${bonusData.sponsorName}`} className="portal-image" style={{ width: '150px', borderRadius: '50%' }}/>
+                        <h3>{bonusData.title}</h3>
+                        <div className="transmission-box">
+                            <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
+                        </div>
+                        <p>{bonusData.description}</p>
+                        <a href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
+                            📍 ABRIR EN GOOGLE MAPS
+                        </a>
+                        <div className="button-group">
+                            <button className="secondary-button" onClick={handleDecline}>Rechazar Desvío</button>
+                            <button className="primary-button" onClick={handleAccept}>¡ACEPTO EL DESAFÍO!</button>
+                        </div>
+                    </div>
+                )}
+                {view === 'challenge' && (
+                    <div className="challenge-container">
+                        <h3>{bonusData.sponsorName} - Desafío</h3>
+                        <p>{bonusData.challenge.question}</p>
+                        <ul className="trivia-options">
+                            {bonusData.challenge.options.map(option => (
+                                <li key={option} className={selectedOption === option ? 'selected' : ''} onClick={() => !feedback.message && setSelectedOption(option)}>
+                                    {option}
+                                </li>
+                            ))}
+                        </ul>
+                        <button className="primary-button" onClick={handleSubmitChallenge} disabled={!selectedOption || feedback.message}>
+                            CONFIRMAR RESPUESTA
+                        </button>
+                        {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
@@ -1055,8 +1080,8 @@ const getInitialState = () => ({
     pendingAnchorResult: null,
     activeDistortionEventId: null,
     postDistortionStatus: null,
-    returnStatus: null,
-    bonusPorthoOffered: false // CORRECCIÓN 3: Añadir bandera de estado.
+    activeBonusMissionId: null,
+    bonusPorthoOffered: false
 });
 
 const App = () => {
@@ -1065,7 +1090,6 @@ const App = () => {
         try {
             const parsedState = savedState ? JSON.parse(savedState) : null;
             if (parsedState && typeof parsedState.status === 'string' && parsedState.status !== 'login') {
-                // Asegurarse de que los nuevos estados existan al cargar
                 const initialState = getInitialState();
                 return { ...initialState, ...parsedState };
             }
@@ -1082,16 +1106,18 @@ const App = () => {
 
     React.useEffect(() => {
         let interval;
-        if (appState.status !== 'login' && appState.status !== 'finished' && appState.status !== 'aborted' && appState.status !== 'distortion_event') {
+        if (appState.status !== 'login' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId) {
             interval = setInterval(() => {
                 setAppState(prev => ({ ...prev, mainTimer: prev.mainTimer + 1 }));
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [appState.status]);
+    }, [appState.status, appState.activeDistortionEventId, appState.activeBonusMissionId]);
 
     const currentStageData = eventData.find(m => m.id === appState.currentMissionId);
     const activeDistortionEvent = distortionEventsData.find(e => e.id === appState.activeDistortionEventId);
+    const activeBonusData = appState.activeBonusMissionId === bonusMissionData.id ? bonusMissionData : null;
+
 
     const handleLogin = (code, name) => {
         const initialState = getInitialState();
@@ -1113,12 +1139,10 @@ const App = () => {
         }));
     };
     
-    // CORRECCIÓN 2 y 3: Lógica de la función modificada.
     const handleTriviaComplete = (triviaResult) => {
         if (!currentStageData || !appState.pendingAnchorResult) return;
         
         const newScore = appState.score + triviaResult.points;
-        
         const completeMissionRecord = {
             missionId: currentStageData.id,
             missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
@@ -1127,7 +1151,6 @@ const App = () => {
             triviaTime: triviaResult.time,
             triviaPoints: triviaResult.points
         };
-
         const updatedResults = [...appState.missionResults, completeMissionRecord];
         
         let newState = {
@@ -1138,24 +1161,22 @@ const App = () => {
         };
 
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
-        // Se calcula el próximo estado ANTES de cualquier bifurcación.
         const nextStatus = nextMission 
             ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
-            : 'finished'; // Si no hay próxima misión, el estado es 'finished'
+            : 'finished';
 
-        // Se comprueba si la misión bonus debe activarse.
+        const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
+
         if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
             setAppState({
                 ...newState,
-                status: 'bonus_mission_offer', 
-                returnStatus: nextStatus, // Se guarda el estado de retorno correcto.
-                bonusPorthoOffered: true // Se marca la oferta como "usada".
+                status: nextStatus,
+                activeBonusMissionId: bonusMissionData.id,
+                bonusPorthoOffered: true
             });
-            return; 
+            return;
         }
-        
-        const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-        
+
         if (triggeredEvent && nextMission) {
             setAppState({
                 ...newState,
@@ -1168,25 +1189,22 @@ const App = () => {
                 handleFinalComplete(0); 
                 return; 
             }
-            const finalNewState = {...newState, status: nextStatus };
+            const finalNewState = { ...newState, status: nextStatus };
             setAppState(finalNewState);
             sendResultsToBackend(finalNewState);
         }
     };
-
+    
     const handleDistortionComplete = (result) => {
-        const newScore = Math.max(0, appState.score + (result.points || 0));
-        
-        const newState = {
-            ...appState,
+        const newScore = Math.max(0, appState.score + (result?.points || 0));
+        setAppState(prev => ({
+            ...prev,
             score: newScore,
             activeDistortionEventId: null, 
-            status: appState.postDistortionStatus, 
+            status: prev.postDistortionStatus, 
             postDistortionStatus: null,
-        };
-        setAppState(newState);
-        sendResultsToBackend(newState);
-    }
+        }));
+    };
 
     const handleFinalComplete = (bonusPoints) => {
         const totalSeconds = appState.mainTimer;
@@ -1234,58 +1252,30 @@ const App = () => {
         }
     };
 
-    const handleAcceptBonusMission = async () => {
-        try {
-            const params = new URLSearchParams({
-                action: 'recordBonusParticipation',
-                teamName: appState.teamName,
-                bonusColumnName: 'BonusPorthoParticipacion'
-            });
-            await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
-        } catch (error) {
-            console.error("Error al registrar participación en bonus:", error);
-        }
-        setAppState(prev => ({ ...prev, status: 'bonus_mission_challenge' }));
-    };
-
-    const handleDeclineBonusMission = () => {
-        setAppState(prev => ({ ...prev, status: prev.returnStatus, returnStatus: null }));
-    };
-
-    const handleBonusChallengeComplete = (pointsWon) => {
+    const handleBonusModalClose = (result) => {
+        const pointsWon = result?.points || 0;
         const newState = {
             ...appState,
             score: appState.score + pointsWon,
-            status: appState.returnStatus,
-            returnStatus: null
+            activeBonusMissionId: null
         };
         setAppState(newState);
-        // También enviamos una actualización al backend después del bonus
         sendResultsToBackend(newState);
     };
 
     const handleJumpToBonus = () => {
-        if (window.confirm("¿Saltar directamente a la oferta del bonus? (DEV)")) {
-            // Simulamos haber completado la misión 8 para tener el estado correcto
-            const mission8 = eventData.find(m => m.id === 8);
-            const nextMission = eventData.find(m => m.id === mission8.nextMissionId);
-            const nextStatus = nextMission.department !== mission8.department ? 'long_travel' : 'on_the_road';
-
+        if (window.confirm("Saltar a la pantalla de viaje con el bonus? (DEV)")) {
             setAppState(prev => ({
                 ...prev,
-                currentMissionId: bonusMissionData.triggerMissionId,
-                status: 'bonus_mission_offer',
-                returnStatus: nextStatus,
-                bonusPorthoOffered: true // Marcamos como ofrecido para que la lógica principal funcione
+                status: 'long_travel',
+                currentMissionId: 26,
+                activeBonusMissionId: bonusMissionData.id,
+                bonusPorthoOffered: true,
             }));
         }
     };
 
     const renderContent = () => {
-        if (appState.status === 'distortion_event' && activeDistortionEvent) {
-            return <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />;
-        }
-        
         if (appState.status === 'in_game' && !currentStageData) {
             return <p style={{padding: "20px"}}>Detectando anomalía temporal...</p>;
         }
@@ -1293,19 +1283,6 @@ const App = () => {
         switch (appState.status) {
             case 'login':
                 return <LoginPage onLogin={handleLogin} setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} errorMessage={appState.errorMessage} />;
-            
-            case 'bonus_mission_offer':
-                return <BonusMissionOfferPage 
-                            bonusData={bonusMissionData} 
-                            onAccept={handleAcceptBonusMission} 
-                            onDecline={handleDeclineBonusMission} 
-                        />;
-            
-            case 'bonus_mission_challenge':
-                return <BonusMissionChallengePage 
-                            bonusData={bonusMissionData} 
-                            onComplete={handleBonusChallengeComplete} 
-                        />;
             
             case 'long_travel': {
                 if (!currentStageData.nextMissionId) return null;
@@ -1323,7 +1300,6 @@ const App = () => {
             case 'on_the_road': {
                 const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
                 if (!nextMission) {
-                    handleFinalComplete(0);
                     return <EndGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
                 }
                 return <EnRutaPage 
@@ -1337,12 +1313,7 @@ const App = () => {
             case 'in_game': {
                 if(currentStageData.type === 'final') return <FinalSection stage={currentStageData} onComplete={handleFinalComplete} />;
                 
-                if (appState.subStage === 'anchor') return <AnchorSection 
-                                                                stage={currentStageData} 
-                                                                onComplete={handleAnchorComplete}
-                                                                onHintRequest={handleRequestHint}
-                                                                score={appState.score}
-                                                            />;
+                if (appState.subStage === 'anchor') return <AnchorSection stage={currentStageData} onComplete={handleAnchorComplete} onHintRequest={handleRequestHint} score={appState.score} />;
                 
                 if (appState.subStage === 'trivia') return <TriviaSection stage={currentStageData} onComplete={handleTriviaComplete} />;
                 break;
@@ -1362,10 +1333,14 @@ const App = () => {
     return (
         <div className="app-container">
             {appState.status !== 'login' && <Header teamName={appState.teamName} score={appState.score} timer={appState.mainTimer} />}
+            
             <div className="dashboard-content">
                 {renderContent()}
             </div>
             
+            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
+            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
+
             <div className="dev-controls-container">
                 {appState.status !== 'login' && (
                     <>
