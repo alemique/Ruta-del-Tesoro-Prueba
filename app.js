@@ -1182,9 +1182,10 @@ const App = () => {
         }));
     };
     
+    // --- INICIO DE LA CORRECCIÓN ---
     const handleTriviaComplete = (triviaResult) => {
         if (!currentStageData || !appState.pendingAnchorResult) return;
-        
+
         const newScore = appState.score + triviaResult.points;
         const completeMissionRecord = {
             missionId: currentStageData.id,
@@ -1195,7 +1196,7 @@ const App = () => {
             triviaPoints: triviaResult.points
         };
         const updatedResults = [...appState.missionResults, completeMissionRecord];
-        
+
         let newState = {
             ...appState,
             score: newScore,
@@ -1204,12 +1205,13 @@ const App = () => {
         };
 
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
-        const nextStatus = nextMission 
+        const nextStatus = nextMission
             ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
             : 'finished';
 
         const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
 
+        // Lógica de decisión reestructurada
         if (currentStageData.id === bonusLaProfeciaData.triggerMissionId && !appState.bonusLaProfeciaOffered) {
             setAppState({
                 ...newState,
@@ -1217,36 +1219,31 @@ const App = () => {
                 activeBonusMissionId: bonusLaProfeciaData.id,
                 bonusLaProfeciaOffered: true
             });
-            return;
-        }
-
-        if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
+        } else if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
             setAppState({
                 ...newState,
                 status: nextStatus,
                 activeBonusMissionId: bonusMissionData.id,
                 bonusPorthoOffered: true
             });
-            return;
-        }
-
-        if (triggeredEvent && nextMission) {
+        } else if (triggeredEvent && nextMission) {
             setAppState({
                 ...newState,
                 status: 'distortion_event',
-                activeDistortionEventId: triggeredEvent.id, 
-                postDistortionStatus: nextStatus, 
+                activeDistortionEventId: triggeredEvent.id,
+                postDistortionStatus: nextStatus,
             });
         } else {
-            if (!nextMission) { 
-                handleFinalComplete(0); 
-                return; 
+            if (!nextMission) {
+                handleFinalComplete(0);
+                return;
             }
             const finalNewState = { ...newState, status: nextStatus };
             setAppState(finalNewState);
             sendResultsToBackend(finalNewState);
         }
     };
+    // --- FIN DE LA CORRECCIÓN ---
     
     const handleDistortionComplete = (result) => {
         const newScore = Math.max(0, appState.score + (result?.points || 0));
