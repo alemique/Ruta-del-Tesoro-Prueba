@@ -354,7 +354,7 @@ const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
     const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
     const seconds = String(totalSeconds % 60).padStart(2, '0');
-    return `<span class="math-inline">\{hours\}\:</span>{minutes}:${seconds}`;
+    return `${hours}:${minutes}:${seconds}`;
 };
 
 const generarPistaDinamica = (respuesta) => {
@@ -447,7 +447,7 @@ async function sendBonusResultToBackend(data) {
     });
 
     try {
-        await fetch(`<span class="math-inline">\{GOOGLE\_SCRIPT\_URL\}?</span>{params.toString()}`, {
+        await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
             method: 'POST'
         });
         // He modificado este log para que también resalte y sea más claro.
@@ -575,11 +575,11 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 );
             case 'narrative_echo':
                  return (
-                         <div className="distortion-container">
-                             <h3>{challenge.title}</h3>
-                             <p className="distortion-narrative-text">{challenge.message}</p>
-                             <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                       </div>
+                        <div className="distortion-container">
+                              <h3>{challenge.title}</h3>
+                              <p className="distortion-narrative-text">{challenge.message}</p>
+                              <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                     </div>
                  );
             default:
                 onComplete({ points: 0 });
@@ -629,7 +629,7 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
         setErrorMessage('');
 
         try {
-            const validationUrl = `<span class="math-inline">\{GOOGLE\_SCRIPT\_URL\}?action\=validateUser&squadCode\=</span>{enteredCode}`;
+            const validationUrl = `${GOOGLE_SCRIPT_URL}?action=validateUser&squadCode=${enteredCode}`;
             
             const response = await fetch(validationUrl, { method: 'POST' });
             if (!response.ok) {
@@ -1206,7 +1206,7 @@ const App = () => {
         }));
     };
     
- // --- INICIO DE LA CORRECCIÓN CON DEPURACIÓN ---
+  // --- INICIO DE LA CORRECCIÓN CON DEPURACIÓN ---
 const handleTriviaComplete = (triviaResult) => {
     if (!currentStageData || !appState.pendingAnchorResult) return;
 
@@ -1422,10 +1422,10 @@ const handleBonusModalClose = (result) => {
                 const toDept = nextMission.department;
 
                 return <LongTravelPage 
-                        nextDepartment={toDept} 
-                        onArrival={handleArrival} 
-                        onFinishEarly={handleFinishEarly}
-                       />;
+                            nextDepartment={toDept} 
+                            onArrival={handleArrival} 
+                            onFinishEarly={handleFinishEarly}
+                        />;
             }
             
             case 'on_the_road': {
@@ -1434,11 +1434,11 @@ const handleBonusModalClose = (result) => {
                     return <EndGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
                 }
                 return <EnRutaPage 
-                        nextLocation={nextMission.location} 
-                        department={nextMission.department} 
-                        onArrival={handleArrival}
-                        onFinishEarly={handleFinishEarly}
-                       />;
+                            nextLocation={nextMission.location} 
+                            department={nextMission.department} 
+                            onArrival={handleArrival}
+                            onFinishEarly={handleFinishEarly}
+                        />;
             }
 
             case 'in_game': {
@@ -1472,18 +1472,24 @@ const handleBonusModalClose = (result) => {
             {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
             {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
 
-<div className="dev-controls-container">
-            {appState.status !== 'login' && (
-                <>
-                    {/* El botón de RESET se puede dejar si aún quieres una forma fácil de reiniciar durante las pruebas */}
-                    <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
-                        RESET
-                    </button>
-                </>
-            )}
+            <div className="dev-controls-container">
+                {appState.status !== 'login' && (
+                    <>
+                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
+                            B.PORTHO
+                        </button>
+                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusLaProfecia}>
+                            B.PROFECIA
+                        </button>
+                        <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
+                            RESET
+                        </button>
+                    </>
+                )}
+            </div>
         </div>
     );
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);"
+root.render(<App />);
