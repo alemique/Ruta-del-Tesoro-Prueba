@@ -354,7 +354,7 @@ const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
     const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
     const seconds = String(totalSeconds % 60).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+    return `<span class="math-inline">\{hours\}\:</span>{minutes}:${seconds}`;
 };
 
 const generarPistaDinamica = (respuesta) => {
@@ -447,7 +447,7 @@ async function sendBonusResultToBackend(data) {
     });
 
     try {
-        await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+        await fetch(`<span class="math-inline">\{GOOGLE\_SCRIPT\_URL\}?</span>{params.toString()}`, {
             method: 'POST'
         });
         // He modificado este log para que también resalte y sea más claro.
@@ -575,11 +575,11 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 );
             case 'narrative_echo':
                  return (
-                        <div className="distortion-container">
-                              <h3>{challenge.title}</h3>
-                              <p className="distortion-narrative-text">{challenge.message}</p>
-                              <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                     </div>
+                         <div className="distortion-container">
+                             <h3>{challenge.title}</h3>
+                             <p className="distortion-narrative-text">{challenge.message}</p>
+                             <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                       </div>
                  );
             default:
                 onComplete({ points: 0 });
@@ -629,7 +629,7 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
         setErrorMessage('');
 
         try {
-            const validationUrl = `${GOOGLE_SCRIPT_URL}?action=validateUser&squadCode=${enteredCode}`;
+            const validationUrl = `<span class="math-inline">\{GOOGLE\_SCRIPT\_URL\}?action\=validateUser&squadCode\=</span>{enteredCode}`;
             
             const response = await fetch(validationUrl, { method: 'POST' });
             if (!response.ok) {
@@ -934,20 +934,10 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
 
             <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
             
-            {/* El botón principal ahora ocupa todo el ancho, igual que 'Solicitar Pista', dándole máxima prioridad. */}
-        <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>
-            🗝️ ANCLAR RECUERDO
-        </button>
-
-        {/* Hemos convertido el botón 'No sé' en un enlace de texto. 
-          Está centrado y es menos prominente para no competir con la acción principal.
-          Lo envolvemos en un div para centrarlo y darle un poco de espacio superior.
-        */}
-        <div style={{ textAlign: 'center', marginTop: '15px' }}>
-            <button className="skip-link" onClick={handleSkip} disabled={isLocked}>
-                No sé, omitir anclaje
-            </button>
-        </div>
+            <div className="button-group">
+                <button className="secondary-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
+                <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
+            </div>
             
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
         </div>
@@ -1216,7 +1206,7 @@ const App = () => {
         }));
     };
     
-  // --- INICIO DE LA CORRECCIÓN CON DEPURACIÓN ---
+ // --- INICIO DE LA CORRECCIÓN CON DEPURACIÓN ---
 const handleTriviaComplete = (triviaResult) => {
     if (!currentStageData || !appState.pendingAnchorResult) return;
 
@@ -1432,10 +1422,10 @@ const handleBonusModalClose = (result) => {
                 const toDept = nextMission.department;
 
                 return <LongTravelPage 
-                            nextDepartment={toDept} 
-                            onArrival={handleArrival} 
-                            onFinishEarly={handleFinishEarly}
-                        />;
+                        nextDepartment={toDept} 
+                        onArrival={handleArrival} 
+                        onFinishEarly={handleFinishEarly}
+                       />;
             }
             
             case 'on_the_road': {
@@ -1444,11 +1434,11 @@ const handleBonusModalClose = (result) => {
                     return <EndGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
                 }
                 return <EnRutaPage 
-                            nextLocation={nextMission.location} 
-                            department={nextMission.department} 
-                            onArrival={handleArrival}
-                            onFinishEarly={handleFinishEarly}
-                        />;
+                        nextLocation={nextMission.location} 
+                        department={nextMission.department} 
+                        onArrival={handleArrival}
+                        onFinishEarly={handleFinishEarly}
+                       />;
             }
 
             case 'in_game': {
@@ -1496,4 +1486,4 @@ const handleBonusModalClose = (result) => {
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+root.render(<App />);"
