@@ -876,3 +876,14 @@ input:not(.login-container input)::placeholder {
 .dev-reset { background-color: #c0392b; } /* Rojo (el que ya tenías) */
 
 /* --- FIN: ESTILOS PARA BOTONES DE DEPURACIÓN --- */
+
+/* Añade esto al final de tu archivo estilos.css */
+
+.dev-reset-button.dev-profecia { 
+  background-color: #27ae60; /* Verde */
+}
+
+/* Y puedes renombrar el de bonus para que sea más específico */
+.dev-reset-button.dev-bonus {
+  background-color: #8e44ad; /* Púrpura */
+}

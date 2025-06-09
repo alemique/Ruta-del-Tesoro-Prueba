@@ -295,12 +295,13 @@ const distortionEventsData = [
     }
 ];
 
-// --- DATOS DE LA MISIÓN BONUS ---
+// --- DATOS DE LAS MISIONES BONUS ---
 const bonusMissionData = {
-    id: 'bonus_portho_1', // ID único para el bonus, coincide con el del script
-    triggerMissionId: 26, // Se activa al completar la misión 26
+    id: 'bonus_portho_1',
+    triggerMissionId: 26,
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
+    logoSrc: 'imagenes/portho.jpg',
     description: 'Guardián, hemos detectado una anomalía placentera en Portho Gelatto. Tienes la oportunidad de desviarte de tu ruta para conseguir una recompensa masiva de 200 fragmentos. ¡Pero cuidado! El cronómetro principal no se detendrá. La decisión es tuya.',
     mapsLink: 'https://maps.app.goo.gl/htvnw6Dbowx1PEw46',
     challenge: {
@@ -310,6 +311,25 @@ const bonusMissionData = {
         points: 200
     }
 };
+
+const bonusLaProfeciaData = {
+    id: 'bonus_la_profecia_1',
+    triggerMissionId: 6,
+    sponsorName: 'Familia Monserrat - La Profecía',
+    title: 'Misión Bonus: El Sabor del Terruño',
+    logoSrc: 'imagenes/la profecia.jpg',
+    description: "Guardián, hemos detectado una poderosa concentración de memoria ancestral en 'La Profecía' de Familia Monserrat. Sus sabores son un ancla al pasado sanjuanino. Desvíate de tu ruta para probar un dulce tradicional y reclama una recompensa de 200 fragmentos. El tiempo sigue corriendo. ¿Aceptas el desafío?",
+    mapsLink: 'https://maps.app.goo.gl/cbffANJXPhTGh3nDA',
+    challenge: {
+        question: 'El maestro dulcero de La Profecía te ha dado a probar una de sus creaciones más emblemáticas, un sabor que define la tradición sanjuanina. ¿Qué dulce has probado?',
+        options: ['Dulce de Uva', 'Dulce de Tomate', 'Dulce de Membrillo', 'Mermelada de Naranja'],
+        correctAnswer: 'Dulce de Membrillo',
+        points: 200
+    }
+};
+
+const allBonusData = [bonusMissionData, bonusLaProfeciaData];
+
 
 // --- FUNCIONES GLOBALES DE AYUDA ---
 const formatTime = (totalSeconds) => {
@@ -531,11 +551,11 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 );
             case 'narrative_echo':
                  return (
-                       <div className="distortion-container">
-                             <h3>{challenge.title}</h3>
-                             <p className="distortion-narrative-text">{challenge.message}</p>
-                             <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                    </div>
+                        <div className="distortion-container">
+                              <h3>{challenge.title}</h3>
+                              <p className="distortion-narrative-text">{challenge.message}</p>
+                              <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                     </div>
                  );
             default:
                 onComplete({ points: 0 });
@@ -945,66 +965,66 @@ const Leaderboard = () => {
  const [error, setError] = React.useState(null);
 
  React.useEffect(() => {
-   const fetchRanking = async () => {
-     if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
-       setError('URL del ranking no configurada.');
-       setIsLoading(false);
-       return;
-     }
-     
-     try {
-       const response = await fetch(LEADERBOARD_URL);
-       if (!response.ok) {
-         throw new Error('La respuesta del servidor no fue correcta.');
-       }
-       const data = await response.json();
-       if (data.error) {
-          throw new Error(data.error);
-       }
-       setRanking(data);
-     } catch (err) {
-       setError('No se pudo cargar el ranking. Intenta más tarde.');
-       console.error("Error al obtener el ranking:", err);
-     } finally {
-       setIsLoading(false);
-     }
-   };
+  const fetchRanking = async () => {
+    if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
+      setError('URL del ranking no configurada.');
+      setIsLoading(false);
+      return;
+    }
+    
+    try {
+      const response = await fetch(LEADERBOARD_URL);
+      if (!response.ok) {
+        throw new Error('La respuesta del servidor no fue correcta.');
+      }
+      const data = await response.json();
+      if (data.error) {
+         throw new Error(data.error);
+      }
+      setRanking(data);
+    } catch (err) {
+      setError('No se pudo cargar el ranking. Intenta más tarde.');
+      console.error("Error al obtener el ranking:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-   fetchRanking();
+  fetchRanking();
  }, []);
 
  if (isLoading) {
-   return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
+  return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
  }
 
  if (error) {
-   return <p className="feedback error">{error}</p>;
+  return <p className="feedback error">{error}</p>;
  }
 
  return (
-   <div className="leaderboard-container">
-     <h3>CONCILIO DE GUARDIANES</h3>
-     <table className="leaderboard-table">
-       <thead>
-         <tr>
-           <th>#</th>
-           <th>Guardián</th>
-           <th>Fragmentos</th>
-           <th>Tiempo</th>
-         </tr>
-       </thead>
-       <tbody>
-         {ranking.slice(0, 10).map((team, index) => (
-           <tr key={index}>
-             <td>{index + 1}</td>
-             <td>{team.teamName}</td>
-             <td>{team.score}</td>
-             <td>{team.time}</td>
-           </tr>
-         ))}
-       </tbody>
-     </table>
-   </div>
+  <div className="leaderboard-container">
+    <h3>CONCILIO DE GUARDIANES</h3>
+    <table className="leaderboard-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Guardián</th>
+          <th>Fragmentos</th>
+          <th>Tiempo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {ranking.slice(0, 10).map((team, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{team.teamName}</td>
+            <td>{team.score}</td>
+            <td>{team.time}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
  );
 };
 
@@ -1049,7 +1069,7 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
             <div className={`amenaza-modal-content ${glowClass}`}>
                 {view === 'offer' && (
                     <div className="stage-container">
-                        <img src="imagenes/portho.jpg" alt={`Logo ${bonusData.sponsorName}`} className="portal-image" style={{ width: '150px', borderRadius: '50%' }}/>
+                        <img src={bonusData.logoSrc} alt={`Logo ${bonusData.sponsorName}`} className="portal-image" style={{ width: '150px', borderRadius: '50%' }}/>
                         <h3>{bonusData.title}</h3>
                         <div className="transmission-box">
                             <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
@@ -1103,7 +1123,8 @@ const getInitialState = () => ({
     activeDistortionEventId: null,
     postDistortionStatus: null,
     activeBonusMissionId: null,
-    bonusPorthoOffered: false
+    bonusPorthoOffered: false,
+    bonusLaProfeciaOffered: false
 });
 
 const App = () => {
@@ -1138,7 +1159,7 @@ const App = () => {
 
     const currentStageData = eventData.find(m => m.id === appState.currentMissionId);
     const activeDistortionEvent = distortionEventsData.find(e => e.id === appState.activeDistortionEventId);
-    const activeBonusData = appState.activeBonusMissionId === bonusMissionData.id ? bonusMissionData : null;
+    const activeBonusData = appState.activeBonusMissionId ? allBonusData.find(b => b.id === appState.activeBonusMissionId) : null;
 
 
     const handleLogin = (code, name) => {
@@ -1189,10 +1210,20 @@ const App = () => {
 
         const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
 
+        if (currentStageData.id === bonusLaProfeciaData.triggerMissionId && !appState.bonusLaProfeciaOffered) {
+            setAppState({
+                ...newState,
+                status: nextStatus,
+                activeBonusMissionId: bonusLaProfeciaData.id,
+                bonusLaProfeciaOffered: true
+            });
+            return;
+        }
+
         if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
             setAppState({
                 ...newState,
-                status: nextStatus, // Se prepara para el viaje pero muestra el modal primero
+                status: nextStatus,
                 activeBonusMissionId: bonusMissionData.id,
                 bonusPorthoOffered: true
             });
@@ -1304,18 +1335,31 @@ const App = () => {
         sendResultsToBackend(newState); 
     };
     // --- FIN DE LA MODIFICACIÓN ---
-
-    const handleJumpToBonus = () => {
-        if (window.confirm("Saltar a la pantalla de viaje con el bonus? (DEV)")) {
+    
+    const handleJumpToBonusPortho = () => {
+        if (window.confirm("Saltar a la pantalla de viaje con el bonus Portho? (DEV)")) {
             setAppState(prev => ({
                 ...prev,
                 status: 'long_travel',
-                currentMissionId: 26,
+                currentMissionId: 26, // La mision que dispara el bonus
                 activeBonusMissionId: bonusMissionData.id,
                 bonusPorthoOffered: true,
             }));
         }
     };
+
+    const handleJumpToBonusLaProfecia = () => {
+        if (window.confirm("Saltar a la pantalla de viaje con el bonus La Profecía? (DEV)")) {
+            setAppState(prev => ({
+                ...prev,
+                status: 'on_the_road',
+                currentMissionId: 6, // La mision que dispara el bonus
+                activeBonusMissionId: bonusLaProfeciaData.id,
+                bonusLaProfeciaOffered: true,
+            }));
+        }
+    };
+
 
     const renderContent = () => {
         if (appState.status === 'in_game' && !currentStageData) {
@@ -1386,8 +1430,11 @@ const App = () => {
             <div className="dev-controls-container">
                 {appState.status !== 'login' && (
                     <>
-                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonus}>
-                            BONUS
+                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
+                            B.PORTHO
+                        </button>
+                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusLaProfecia}>
+                            B.PROFECIA
                         </button>
                         <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
                             RESET
