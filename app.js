@@ -1306,29 +1306,35 @@ const App = () => {
 
     // --- INICIO DE LA MODIFICACIÓN ---
     const handleBonusModalClose = (result) => {
+        // LÍNEA A AGREGAR: Nos mostrará los datos que llegan del modal del bonus
+        console.log('--- DEBUGGER: DATOS RECIBIDOS DEL MODAL ---', result); 
+
         const pointsWon = result?.points || 0;
 
-        // Si el usuario participó (aceptó el desafío, sin importar si acertó o no)
         if (result?.participated) {
+            // LÍNEA A AGREGAR: Nos mostrará exactamente lo que se intenta enviar al backend
+            console.log('--- DEBUGGER: ENVIANDO AL BACKEND ---', {
+                teamName: appState.teamName,
+                bonusId: appState.activeBonusMissionId,
+                points: pointsWon
+            });
+
             sendBonusResultToBackend({
                 teamName: appState.teamName,
-                bonusId: appState.activeBonusMissionId, // El ID del bonus que acaba de terminar
-                points: pointsWon // Envía 200 si acertó, 0 si falló
+                bonusId: appState.activeBonusMissionId, 
+                points: pointsWon 
             });
         }
-        // Si el usuario declinó (result.participated es false), no se envía nada al backend
-        // y la celda del bonus en la hoja de cálculo quedará en blanco.
 
         const newScore = appState.score + pointsWon;
 
         const newState = {
             ...appState,
-            score: newScore, // Actualiza el puntaje total en la app
-            activeBonusMissionId: null // Cierra el modal
+            score: newScore, 
+            activeBonusMissionId: null 
         };
         
         setAppState(newState);
-        // Envía el estado actualizado con el puntaje total (incluido el bonus) al backend.
         sendResultsToBackend(newState); 
     };
     // --- FIN DE LA MODIFICACIÓN ---
