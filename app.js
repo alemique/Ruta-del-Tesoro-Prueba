@@ -1406,6 +1406,31 @@ const handleBonusModalClose = (result) => {
 };
 // --- FIN DE LA MODIFICACIÓN CON DEPURACIÓN ---
     
+    const handleJumpToBonusPortho = () => {
+        if (window.confirm("Saltar a la pantalla de viaje con el bonus Portho? (DEV)")) {
+            setAppState(prev => ({
+                ...prev,
+                status: 'long_travel',
+                currentMissionId: 26, // La mision que dispara el bonus
+                activeBonusMissionId: bonusMissionData.id,
+                bonusPorthoOffered: true,
+            }));
+        }
+    };
+
+    const handleJumpToBonusLaProfecia = () => {
+        if (window.confirm("Saltar a la pantalla de viaje con el bonus La Profecía? (DEV)")) {
+            setAppState(prev => ({
+                ...prev,
+                status: 'on_the_road',
+                currentMissionId: 6, // La mision que dispara el bonus
+                activeBonusMissionId: bonusLaProfeciaData.id,
+                bonusLaProfeciaOffered: true,
+            }));
+        }
+    };
+
+
     const renderContent = () => {
         if (appState.status === 'in_game' && !currentStageData) {
             return <p style={{padding: "20px"}}>Detectando anomalía temporal...</p>;
