@@ -94,7 +94,7 @@ const eventData = [
     },
     {
         id: 15, department: "Capital", location: "Casa Natal de Sarmiento",
-        anchor: { missionName: "Ancla: El Nacimiento del Prócer", enabler: "Consigna: Descubran il año en que nació en esta humilde vivienda il futuro presidente de la Nación.\nPista: Es conocido como el 'padre de la educación argentina'.", enablerKeyword: "1811", transmission: "En esta casa de adobe comenzó todo. Ancla el año de nacimiento del hombre que cambiaría la educación del país." },
+        anchor: { missionName: "Ancla: El Nacimiento del Prócer", enabler: "Consigna: Descubran el año en que nació en esta humilde vivienda el futuro presidente de la Nación.\nPista: Es conocido como el 'padre de la educación argentina'.", enablerKeyword: "1811", transmission: "En esta casa de adobe comenzó todo. Ancla el año de nacimiento del hombre que cambiaría la educación del país." },
         trivia: { missionName: "Trivia: La Higuera Histórica", challenge: { question: "¿Bajo la sombra de qué árbol hilaba doña Paula Albarracín mientras supervisaba la construcción de la casa?", options: ["Un algarrobo", "Una higuera", "Un olivo", "Un naranjo"], correctAnswer: "Una higuera" } },
         nextMissionId: 16
     },
@@ -339,7 +339,7 @@ const bonusLaVeneData = {
     mapsLink: 'https://maps.app.goo.gl/mCBt6hLp1yaikzyv8',
     challenge: {
         question: 'Has interceptado una receta secreta de los famosos sorrentinos premium de La Vene. ¿Qué combinación de ingredientes le da su sabor inconfundible?',
-        options: ['Salmón y queso azul', 'Carne braseada y provolone', 'CAMARONES Y MUZZARELLA', 'Espinaca y ricota de oveja'],
+        options: ['Salmón y queso azul', 'Carne braseada y provolone', 'Camarones y muzzarella', 'Espinaca y ricota de oveja'],
         correctAnswer: 'CAMARONES Y MUZZARELLA',
         points: 200
     }
@@ -934,10 +934,20 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
 
             <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
             
-            <div className="button-group">
-                <button className="secondary-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
-                <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
-            </div>
+            {/* El botón principal ahora ocupa todo el ancho, igual que 'Solicitar Pista', dándole máxima prioridad. */}
+        <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>
+            🗝️ ANCLAR RECUERDO
+        </button>
+
+        {/* Hemos convertido el botón 'No sé' en un enlace de texto. 
+          Está centrado y es menos prominente para no competir con la acción principal.
+          Lo envolvemos en un div para centrarlo y darle un poco de espacio superior.
+        */}
+        <div style={{ textAlign: 'center', marginTop: '15px' }}>
+            <button className="skip-link" onClick={handleSkip} disabled={isLocked}>
+                No sé, omitir anclaje
+            </button>
+        </div>
             
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
         </div>
@@ -1406,31 +1416,6 @@ const handleBonusModalClose = (result) => {
 };
 // --- FIN DE LA MODIFICACIÓN CON DEPURACIÓN ---
     
-    const handleJumpToBonusPortho = () => {
-        if (window.confirm("Saltar a la pantalla de viaje con el bonus Portho? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'long_travel',
-                currentMissionId: 26, // La mision que dispara el bonus
-                activeBonusMissionId: bonusMissionData.id,
-                bonusPorthoOffered: true,
-            }));
-        }
-    };
-
-    const handleJumpToBonusLaProfecia = () => {
-        if (window.confirm("Saltar a la pantalla de viaje con el bonus La Profecía? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'on_the_road',
-                currentMissionId: 6, // La mision que dispara el bonus
-                activeBonusMissionId: bonusLaProfeciaData.id,
-                bonusLaProfeciaOffered: true,
-            }));
-        }
-    };
-
-
     const renderContent = () => {
         if (appState.status === 'in_game' && !currentStageData) {
             return <p style={{padding: "20px"}}>Detectando anomalía temporal...</p>;
@@ -1497,21 +1482,15 @@ const handleBonusModalClose = (result) => {
             {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
             {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
 
-            <div className="dev-controls-container">
-                {appState.status !== 'login' && (
-                    <>
-                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
-                            B.PORTHO
-                        </button>
-                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusLaProfecia}>
-                            B.PROFECIA
-                        </button>
-                        <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
-                            RESET
-                        </button>
-                    </>
-                )}
-            </div>
+<div className="dev-controls-container">
+            {appState.status !== 'login' && (
+                <>
+                    {/* El botón de RESET se puede dejar si aún quieres una forma fácil de reiniciar durante las pruebas */}
+                    <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
+                        RESET
+                    </button>
+                </>
+            )}
         </div>
     );
 };
