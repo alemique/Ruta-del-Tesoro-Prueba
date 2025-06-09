@@ -297,7 +297,7 @@ const distortionEventsData = [
 
 // --- DATOS DE LA MISIÓN BONUS ---
 const bonusMissionData = {
-    id: 'bonus_portho_1',
+    id: 'bonus_portho_1', // ID único para el bonus, coincide con el del script
     triggerMissionId: 26, // Se activa al completar la misión 26
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
@@ -387,6 +387,33 @@ async function sendResultsToBackend(data) {
         console.error("Error al enviar la actualización al backend:", error);
     }
 }
+
+// --- INICIO DE LA MODIFICACIÓN ---
+// Nueva función para enviar específicamente el resultado de un bonus.
+async function sendBonusResultToBackend(data) {
+  if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('URL_QUE_COPIASTE')) {
+    console.warn("URL del script no configurada. No se enviarán los datos del bonus.");
+    return;
+  }
+  
+  const params = new URLSearchParams({
+    action: 'saveBonusResult',
+    teamName: data.teamName,
+    bonusId: data.bonusId,
+    points: data.points
+  });
+
+  try {
+    await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+      method: 'POST'
+    });
+    console.log(`Resultado del bonus ${data.bonusId} enviado correctamente.`);
+  } catch (error) {
+    console.error("Error al enviar el resultado del bonus al backend:", error);
+  }
+}
+// --- FIN DE LA MODIFICACIÓN ---
+
 
 // --- COMPONENTES DE REACT ---
 
@@ -504,10 +531,10 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 );
             case 'narrative_echo':
                  return (
-                     <div className="distortion-container">
-                         <h3>{challenge.title}</h3>
-                         <p className="distortion-narrative-text">{challenge.message}</p>
-                         <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                       <div className="distortion-container">
+                             <h3>{challenge.title}</h3>
+                             <p className="distortion-narrative-text">{challenge.message}</p>
+                             <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
                     </div>
                  );
             default:
@@ -911,74 +938,74 @@ const FinalSection = ({stage, onComplete}) => {
 };
 
 const Leaderboard = () => {
-  const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec'; 
+ const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec'; 
 
-  const [ranking, setRanking] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [error, setError] = React.useState(null);
+ const [ranking, setRanking] = React.useState([]);
+ const [isLoading, setIsLoading] = React.useState(true);
+ const [error, setError] = React.useState(null);
 
-  React.useEffect(() => {
-    const fetchRanking = async () => {
-      if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
-        setError('URL del ranking no configurada.');
-        setIsLoading(false);
-        return;
-      }
-      
-      try {
-        const response = await fetch(LEADERBOARD_URL);
-        if (!response.ok) {
-          throw new Error('La respuesta del servidor no fue correcta.');
-        }
-        const data = await response.json();
-        if (data.error) {
-           throw new Error(data.error);
-        }
-        setRanking(data);
-      } catch (err) {
-        setError('No se pudo cargar el ranking. Intenta más tarde.');
-        console.error("Error al obtener el ranking:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+ React.useEffect(() => {
+   const fetchRanking = async () => {
+     if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
+       setError('URL del ranking no configurada.');
+       setIsLoading(false);
+       return;
+     }
+     
+     try {
+       const response = await fetch(LEADERBOARD_URL);
+       if (!response.ok) {
+         throw new Error('La respuesta del servidor no fue correcta.');
+       }
+       const data = await response.json();
+       if (data.error) {
+          throw new Error(data.error);
+       }
+       setRanking(data);
+     } catch (err) {
+       setError('No se pudo cargar el ranking. Intenta más tarde.');
+       console.error("Error al obtener el ranking:", err);
+     } finally {
+       setIsLoading(false);
+     }
+   };
 
-    fetchRanking();
-  }, []);
+   fetchRanking();
+ }, []);
 
-  if (isLoading) {
-    return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
-  }
+ if (isLoading) {
+   return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
+ }
 
-  if (error) {
-    return <p className="feedback error">{error}</p>;
-  }
+ if (error) {
+   return <p className="feedback error">{error}</p>;
+ }
 
-  return (
-    <div className="leaderboard-container">
-      <h3>CONCILIO DE GUARDIANES</h3>
-      <table className="leaderboard-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Guardián</th>
-            <th>Fragmentos</th>
-            <th>Tiempo</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ranking.slice(0, 10).map((team, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{team.teamName}</td>
-              <td>{team.score}</td>
-              <td>{team.time}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+ return (
+   <div className="leaderboard-container">
+     <h3>CONCILIO DE GUARDIANES</h3>
+     <table className="leaderboard-table">
+       <thead>
+         <tr>
+           <th>#</th>
+           <th>Guardián</th>
+           <th>Fragmentos</th>
+           <th>Tiempo</th>
+         </tr>
+       </thead>
+       <tbody>
+         {ranking.slice(0, 10).map((team, index) => (
+           <tr key={index}>
+             <td>{index + 1}</td>
+             <td>{team.teamName}</td>
+             <td>{team.score}</td>
+             <td>{team.time}</td>
+           </tr>
+         ))}
+       </tbody>
+     </table>
+   </div>
+ );
 };
 
 const BonusMissionModal = ({ bonusData, onComplete }) => {
@@ -987,22 +1014,15 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
     const [glowClass, setGlowClass] = React.useState('');
     const [selectedOption, setSelectedOption] = React.useState('');
 
-    const handleAccept = async () => {
-        try {
-            const params = new URLSearchParams({
-                action: 'recordBonusParticipation',
-                teamName: bonusData.teamName,
-                bonusColumnName: 'BonusPorthoParticipacion'
-            });
-            await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, { method: 'POST' });
-        } catch (error) {
-            console.error("Error al registrar participación en bonus:", error);
-        }
+    const handleAccept = () => {
+        // Ya no necesitamos registrar solo la participación, el guardado de puntos se encarga de todo.
         setView('challenge');
     };
 
+    // --- INICIO DE LA MODIFICACIÓN ---
     const handleDecline = () => {
-        onComplete({ points: 0 }); // Cierra el modal sin dar puntos
+        // Informa al componente padre que el usuario no participó.
+        onComplete({ points: 0, participated: false });
     };
 
     const handleSubmitChallenge = () => {
@@ -1018,9 +1038,11 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
             type: isCorrect ? 'success' : 'error'
         });
         setTimeout(() => {
-            onComplete({ points: pointsWon });
+            // Informa que el usuario sí participó y envía el resultado.
+            onComplete({ points: pointsWon, participated: true });
         }, 3000);
     };
+    // --- FIN DE LA MODIFICACIÓN ---
 
     return (
         <div className="amenaza-modal-overlay">
@@ -1170,7 +1192,7 @@ const App = () => {
         if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
             setAppState({
                 ...newState,
-                status: nextStatus,
+                status: nextStatus, // Se prepara para el viaje pero muestra el modal primero
                 activeBonusMissionId: bonusMissionData.id,
                 bonusPorthoOffered: true
             });
@@ -1197,13 +1219,15 @@ const App = () => {
     
     const handleDistortionComplete = (result) => {
         const newScore = Math.max(0, appState.score + (result?.points || 0));
-        setAppState(prev => ({
-            ...prev,
+        const newState = {
+            ...appState,
             score: newScore,
             activeDistortionEventId: null, 
-            status: prev.postDistortionStatus, 
+            status: appState.postDistortionStatus, 
             postDistortionStatus: null,
-        }));
+        }
+        setAppState(newState);
+        sendResultsToBackend(newState); // Envía la actualización de puntaje después de la distorsión
     };
 
     const handleFinalComplete = (bonusPoints) => {
@@ -1252,16 +1276,34 @@ const App = () => {
         }
     };
 
+    // --- INICIO DE LA MODIFICACIÓN ---
     const handleBonusModalClose = (result) => {
         const pointsWon = result?.points || 0;
+
+        // Si el usuario participó (aceptó el desafío, sin importar si acertó o no)
+        if (result?.participated) {
+            sendBonusResultToBackend({
+                teamName: appState.teamName,
+                bonusId: appState.activeBonusMissionId, // El ID del bonus que acaba de terminar
+                points: pointsWon // Envía 200 si acertó, 0 si falló
+            });
+        }
+        // Si el usuario declinó (result.participated es false), no se envía nada al backend
+        // y la celda del bonus en la hoja de cálculo quedará en blanco.
+
+        const newScore = appState.score + pointsWon;
+
         const newState = {
             ...appState,
-            score: appState.score + pointsWon,
-            activeBonusMissionId: null
+            score: newScore, // Actualiza el puntaje total en la app
+            activeBonusMissionId: null // Cierra el modal
         };
+        
         setAppState(newState);
-        sendResultsToBackend(newState);
+        // Envía el estado actualizado con el puntaje total (incluido el bonus) al backend.
+        sendResultsToBackend(newState); 
     };
+    // --- FIN DE LA MODIFICACIÓN ---
 
     const handleJumpToBonus = () => {
         if (window.confirm("Saltar a la pantalla de viaje con el bonus? (DEV)")) {
