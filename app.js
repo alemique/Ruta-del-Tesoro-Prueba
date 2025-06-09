@@ -408,31 +408,37 @@ async function sendResultsToBackend(data) {
     }
 }
 
-// --- INICIO DE LA MODIFICACIÓN ---
+// --- INICIO DE LA MODIFICACIÓN CON DEPURACIÓN ---
 // Nueva función para enviar específicamente el resultado de un bonus.
 async function sendBonusResultToBackend(data) {
-  if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('URL_QUE_COPIASTE')) {
-    console.warn("URL del script no configurada. No se enviarán los datos del bonus.");
-    return;
-  }
-  
-  const params = new URLSearchParams({
-    action: 'saveBonusResult',
-    teamName: data.teamName,
-    bonusId: data.bonusId,
-    points: data.points
-  });
+    // ----------- LÍNEAS DE DEPURACIÓN INSERTADAS -----------
+    console.log('%c[ETAPA 3] Intentando enviar datos del bonus al backend.', 'color: #22CC22; font-size: 14px; font-weight: bold;');
+    console.log('Datos que se enviarán:', data);
+    // ----------------------------------------------------
 
-  try {
-    await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-      method: 'POST'
+    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('URL_QUE_COPIASTE')) {
+        console.warn("URL del script no configurada. No se enviarán los datos del bonus.");
+        return;
+    }
+
+    const params = new URLSearchParams({
+        action: 'saveBonusResult',
+        teamName: data.teamName,
+        bonusId: data.bonusId,
+        points: data.points
     });
-    console.log(`Resultado del bonus ${data.bonusId} enviado correctamente.`);
-  } catch (error) {
-    console.error("Error al enviar el resultado del bonus al backend:", error);
-  }
+
+    try {
+        await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
+            method: 'POST'
+        });
+        // He modificado este log para que también resalte y sea más claro.
+        console.log(`%cResultado del bonus ${data.bonusId} enviado (supuestamente) con éxito.`, 'color: #22CC22;');
+    } catch (error) {
+        console.error("Error CRÍTICO al enviar el resultado del bonus al backend:", error);
+    }
 }
-// --- FIN DE LA MODIFICACIÓN ---
+// --- FIN DE LA MODIFICACIÓN CON DEPURACIÓN ---
 
 
 // --- COMPONENTES DE REACT ---
@@ -1182,8 +1188,8 @@ const App = () => {
         }));
     };
     
-    // --- INICIO DE LA CORRECCIÓN ---
-   const handleTriviaComplete = (triviaResult) => {
+  // --- INICIO DE LA CORRECCIÓN CON DEPURACIÓN ---
+const handleTriviaComplete = (triviaResult) => {
     if (!currentStageData || !appState.pendingAnchorResult) return;
 
     const newScore = appState.score + triviaResult.points;
@@ -1208,13 +1214,17 @@ const App = () => {
     sendResultsToBackend(baseStateForNextStep);
 
     // Verificamos si esta misión dispara un bonus.
-    const triggeredBonus = allBonusData.find(b => 
-        b.triggerMissionId === currentStageData.id && 
+    const triggeredBonus = allBonusData.find(b =>
+        b.triggerMissionId === currentStageData.id &&
         (b.id === 'bonus_portho_1' ? !appState.bonusPorthoOffered : true) &&
         (b.id === 'bonus_la_profecia_1' ? !appState.bonusLaProfeciaOffered : true)
     );
 
     if (triggeredBonus) {
+        // ----------- LÍNEA DE DEPURACIÓN INSERTADA -----------
+        console.log(`%c[ETAPA 1] Disparando Bonus: ${triggeredBonus.id}`, 'color: #00AACC; font-size: 14px; font-weight: bold;');
+        // ----------------------------------------------------
+
         // --- LÓGICA CORREGIDA PARA BONUS ---
         // Solo activamos el modal del bonus y marcamos como ofrecido.
         // NO cambiamos el status a 'on_the_road' o 'long_travel' todavía.
@@ -1250,7 +1260,7 @@ const App = () => {
         // No es necesario un sendResults aquí porque ya lo hicimos al principio de la función.
     }
 };
-    // --- FIN DE LA CORRECCIÓN ---
+// --- FIN DE LA CORRECCIÓN CON DEPURACIÓN ---
     
     const handleDistortionComplete = (result) => {
         const newScore = Math.max(0, appState.score + (result?.points || 0));
@@ -1311,8 +1321,13 @@ const App = () => {
         }
     };
 
-    // --- INICIO DE LA MODIFICACIÓN ---
-   const handleBonusModalClose = (result) => {
+   // --- INICIO DE LA MODIFICACIÓN CON DEPURACIÓN ---
+const handleBonusModalClose = (result) => {
+    // ----------- LÍNEAS DE DEPURACIÓN INSERTADAS -----------
+    console.log('%c[ETAPA 2] Se cierra el modal del bonus.', 'color: #FF6600; font-size: 14px; font-weight: bold;');
+    console.log('Datos recibidos del modal:', result);
+    // ----------------------------------------------------
+
     const pointsWon = result?.points || 0;
     const participated = result?.participated || false;
 
@@ -1332,7 +1347,7 @@ const App = () => {
         score: newScore,
         activeBonusMissionId: null // Cerramos el modal del bonus.
     };
-    
+
     // Ahora, aquí calculamos el siguiente paso (el viaje).
     // Esta lógica estaba antes en handleTriviaComplete.
     const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
@@ -1340,18 +1355,18 @@ const App = () => {
 
     if (!nextMission) {
         // Si el bonus estaba en la última misión, terminamos el juego.
-        handleFinalComplete(0); 
+        handleFinalComplete(0);
         return;
     }
-    
+
     // Determinamos el tipo de viaje.
-    const nextStatus = nextMission.department !== missionThatTriggeredBonus.department 
-        ? 'long_travel' 
+    const nextStatus = nextMission.department !== missionThatTriggeredBonus.department
+        ? 'long_travel'
         : 'on_the_road';
 
     // Verificamos si hay una distorsión después de esta misión.
     const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-    
+
     let finalState;
     if (triggeredEvent) {
         finalState = {
@@ -1366,12 +1381,12 @@ const App = () => {
             status: nextStatus
         };
     }
-    
+
     setAppState(finalState);
     // Enviamos una última actualización general con el puntaje del bonus ya sumado.
     sendResultsToBackend(finalState);
 };
-    // --- FIN DE LA MODIFICACIÓN ---
+// --- FIN DE LA MODIFICACIÓN CON DEPURACIÓN ---
     
     const handleJumpToBonusPortho = () => {
         if (window.confirm("Saltar a la pantalla de viaje con el bonus Portho? (DEV)")) {
