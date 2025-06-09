@@ -1183,66 +1183,73 @@ const App = () => {
     };
     
     // --- INICIO DE LA CORRECCIÓN ---
-    const handleTriviaComplete = (triviaResult) => {
-        if (!currentStageData || !appState.pendingAnchorResult) return;
+   const handleTriviaComplete = (triviaResult) => {
+    if (!currentStageData || !appState.pendingAnchorResult) return;
 
-        const newScore = appState.score + triviaResult.points;
-        const completeMissionRecord = {
-            missionId: currentStageData.id,
-            missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
-            anchorTime: appState.pendingAnchorResult.time,
-            anchorPoints: appState.pendingAnchorResult.points,
-            triviaTime: triviaResult.time,
-            triviaPoints: triviaResult.points
-        };
-        const updatedResults = [...appState.missionResults, completeMissionRecord];
-
-        let newState = {
-            ...appState,
-            score: newScore,
-            missionResults: updatedResults,
-            pendingAnchorResult: null,
-        };
-
-        const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
-        const nextStatus = nextMission
-            ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
-            : 'finished';
-
-        const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-
-        // Lógica de decisión reestructurada
-        if (currentStageData.id === bonusLaProfeciaData.triggerMissionId && !appState.bonusLaProfeciaOffered) {
-            setAppState({
-                ...newState,
-                status: nextStatus,
-                activeBonusMissionId: bonusLaProfeciaData.id,
-                bonusLaProfeciaOffered: true
-            });
-        } else if (currentStageData.id === bonusMissionData.triggerMissionId && !appState.bonusPorthoOffered) {
-            setAppState({
-                ...newState,
-                status: nextStatus,
-                activeBonusMissionId: bonusMissionData.id,
-                bonusPorthoOffered: true
-            });
-        } else if (triggeredEvent && nextMission) {
-            setAppState({
-                ...newState,
-                status: 'distortion_event',
-                activeDistortionEventId: triggeredEvent.id,
-                postDistortionStatus: nextStatus,
-            });
-        } else {
-            if (!nextMission) {
-                handleFinalComplete(0);
-                return;
-            }
-            const finalNewState = { ...newState, status: nextStatus };
-            setAppState(finalNewState);
-            sendResultsToBackend(finalNewState);
-        }
+    const newScore = appState.score + triviaResult.points;
+    const completeMissionRecord = {
+        missionId: currentStageData.id,
+        missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
+        anchorTime: appState.pendingAnchorResult.time,
+        anchorPoints: appState.pendingAnchorResult.points,
+        triviaTime: triviaResult.time,
+        triviaPoints: triviaResult.points
     };
+    const updatedResults = [...appState.missionResults, completeMissionRecord];
+
+    let baseStateForNextStep = {
+        ...appState,
+        score: newScore,
+        missionResults: updatedResults,
+        pendingAnchorResult: null,
+    };
+
+    // Primero, enviamos el resultado de la misión que acaba de terminar.
+    sendResultsToBackend(baseStateForNextStep);
+
+    // Verificamos si esta misión dispara un bonus.
+    const triggeredBonus = allBonusData.find(b => 
+        b.triggerMissionId === currentStageData.id && 
+        (b.id === 'bonus_portho_1' ? !appState.bonusPorthoOffered : true) &&
+        (b.id === 'bonus_la_profecia_1' ? !appState.bonusLaProfeciaOffered : true)
+    );
+
+    if (triggeredBonus) {
+        // --- LÓGICA CORREGIDA PARA BONUS ---
+        // Solo activamos el modal del bonus y marcamos como ofrecido.
+        // NO cambiamos el status a 'on_the_road' o 'long_travel' todavía.
+        setAppState({
+            ...baseStateForNextStep,
+            activeBonusMissionId: triggeredBonus.id,
+            bonusPorthoOffered: triggeredBonus.id === 'bonus_portho_1' ? true : appState.bonusPorthoOffered,
+            bonusLaProfeciaOffered: triggeredBonus.id === 'bonus_la_profecia_1' ? true : appState.bonusLaProfeciaOffered
+        });
+        return; // Detenemos la ejecución aquí, esperamos que el usuario resuelva el bonus.
+    }
+
+    // Si no hay bonus, procedemos con el flujo normal (distorsión o viaje).
+    const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
+    const nextStatus = nextMission
+        ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
+        : 'finished';
+    const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
+
+    if (triggeredEvent && nextMission) {
+        setAppState({
+            ...baseStateForNextStep,
+            status: 'distortion_event',
+            activeDistortionEventId: triggeredEvent.id,
+            postDistortionStatus: nextStatus,
+        });
+    } else {
+        if (!nextMission) {
+            handleFinalComplete(0);
+            return;
+        }
+        setAppState({ ...baseStateForNextStep, status: nextStatus });
+        // No es necesario un sendResults aquí porque ya lo hicimos al principio de la función.
+    }
+};
     // --- FIN DE LA CORRECCIÓN ---
     
     const handleDistortionComplete = (result) => {
@@ -1305,38 +1312,65 @@ const App = () => {
     };
 
     // --- INICIO DE LA MODIFICACIÓN ---
-    const handleBonusModalClose = (result) => {
-        // LÍNEA A AGREGAR: Nos mostrará los datos que llegan del modal del bonus
-        console.log('--- DEBUGGER: DATOS RECIBIDOS DEL MODAL ---', result); 
+   const handleBonusModalClose = (result) => {
+    const pointsWon = result?.points || 0;
+    const participated = result?.participated || false;
 
-        const pointsWon = result?.points || 0;
+    // Si el usuario jugó el bonus, enviamos el resultado específico del bonus.
+    if (participated) {
+        sendBonusResultToBackend({
+            teamName: appState.teamName,
+            bonusId: appState.activeBonusMissionId,
+            points: pointsWon
+        });
+    }
 
-        if (result?.participated) {
-            // LÍNEA A AGREGAR: Nos mostrará exactamente lo que se intenta enviar al backend
-            console.log('--- DEBUGGER: ENVIANDO AL BACKEND ---', {
-                teamName: appState.teamName,
-                bonusId: appState.activeBonusMissionId,
-                points: pointsWon
-            });
-
-            sendBonusResultToBackend({
-                teamName: appState.teamName,
-                bonusId: appState.activeBonusMissionId, 
-                points: pointsWon 
-            });
-        }
-
-        const newScore = appState.score + pointsWon;
-
-        const newState = {
-            ...appState,
-            score: newScore, 
-            activeBonusMissionId: null 
-        };
-        
-        setAppState(newState);
-        sendResultsToBackend(newState); 
+    // Preparamos el estado base con el puntaje actualizado.
+    const newScore = appState.score + pointsWon;
+    const baseStateAfterBonus = {
+        ...appState,
+        score: newScore,
+        activeBonusMissionId: null // Cerramos el modal del bonus.
     };
+    
+    // Ahora, aquí calculamos el siguiente paso (el viaje).
+    // Esta lógica estaba antes en handleTriviaComplete.
+    const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
+    const nextMission = eventData.find(m => m.id === missionThatTriggeredBonus.nextMissionId);
+
+    if (!nextMission) {
+        // Si el bonus estaba en la última misión, terminamos el juego.
+        handleFinalComplete(0); 
+        return;
+    }
+    
+    // Determinamos el tipo de viaje.
+    const nextStatus = nextMission.department !== missionThatTriggeredBonus.department 
+        ? 'long_travel' 
+        : 'on_the_road';
+
+    // Verificamos si hay una distorsión después de esta misión.
+    const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
+    
+    let finalState;
+    if (triggeredEvent) {
+        finalState = {
+            ...baseStateAfterBonus,
+            status: 'distortion_event',
+            activeDistortionEventId: triggeredEvent.id,
+            postDistortionStatus: nextStatus,
+        };
+    } else {
+        finalState = {
+            ...baseStateAfterBonus,
+            status: nextStatus
+        };
+    }
+    
+    setAppState(finalState);
+    // Enviamos una última actualización general con el puntaje del bonus ya sumado.
+    sendResultsToBackend(finalState);
+};
     // --- FIN DE LA MODIFICACIÓN ---
     
     const handleJumpToBonusPortho = () => {
