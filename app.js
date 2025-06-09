@@ -285,7 +285,7 @@ const distortionEventsData = [
     },
     {
         id: 'distorsion_3',
-        trigger: { onMissionComplete: 26 },
+        trigger: { onMissionComplete: 24 },
         visual: { type: 'video', src: 'imagenes/amenaza1.mp4' },
         challenge: {
             type: 'narrative_echo',
@@ -328,7 +328,25 @@ const bonusLaProfeciaData = {
     }
 };
 
-const allBonusData = [bonusMissionData, bonusLaProfeciaData];
+// --- NUEVO BONUS PARA "LA VENE" ---
+const bonusLaVeneData = {
+    id: 'bonus_la_vene_1',
+    triggerMissionId: 20,
+    sponsorName: 'La Vene',
+    title: 'Misión Bonus: El Sabor de la Tradición',
+    logoSrc: 'imagenes/lavene.png',
+    description: "Guardián, detectamos una anomalía temporal exquisita proveniente de 'La Vene'. Desde 1959, han perfeccionado sus recetas. Desvíate de tu ruta para descifrar el secreto de uno de sus platos más codiciados y reclama una recompensa de 200 fragmentos. ¡El tiempo corre!",
+    mapsLink: 'https://maps.app.goo.gl/mCBt6hLp1yaikzyv8',
+    challenge: {
+        question: 'Has interceptado una receta secreta de los famosos sorrentinos premium de La Vene. ¿Qué combinación de ingredientes le da su sabor inconfundible?',
+        options: ['Salmón y queso azul', 'Carne braseada y provolone', 'CAMARONES Y MUZZARELLA', 'Espinaca y ricota de oveja'],
+        correctAnswer: 'CAMARONES Y MUZZARELLA',
+        points: 200
+    }
+};
+
+
+const allBonusData = [bonusMissionData, bonusLaProfeciaData, bonusLaVeneData]; // 
 
 
 // --- FUNCIONES GLOBALES DE AYUDA ---
