@@ -906,42 +906,48 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
     };
 
     return (
-        <div className={`stage-container ${glowClass}`}>
-            <h3>{anchor.missionName}</h3>
-            <div className="challenge-timer">⏱️ {anchorTimer}s</div>
-            <p><strong>Departamento:</strong> {stage.department}</p>
-            {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
-            <p><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
+    <div className={`stage-container ${glowClass}`}>
+        <h3>{anchor.missionName}</h3>
+        <div className="challenge-timer">⏱️ {anchorTimer}s</div>
+        <p><strong>Departamento:</strong> {stage.department}</p>
+        {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
+        <p><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
 
-            {error && <p className="feedback error">{error}</p>}
-            
-            {!pistaGenerada && (
-                <div className="hint-request-container">
-                    <button
-                        className="primary-button"
-                        onClick={handleHintRequest}
-                        disabled={score < 25 || isLocked}>
-                        SOLICITAR PISTA (-25 Fragmentos)
-                    </button>
-                </div>
-            )}
-            
-            {pistaGenerada && (
-                <div className="hint-box hint-dynamic">
-                    <p><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
-                </div>
-            )}
-
-            <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
-            
-            <div className="button-group">
-                <button className="secondary-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
-                <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
+        {error && <p className="feedback error">{error}</p>}
+        
+        {!pistaGenerada && (
+            <div className="hint-request-container">
+                <button
+                    className="primary-button"
+                    onClick={handleHintRequest}
+                    disabled={score < 25 || isLocked}>
+                    SOLICITAR PISTA (-25 Fragmentos)
+                </button>
             </div>
+        )}
+        
+        {pistaGenerada && (
+            <div className="hint-box hint-dynamic">
+                <p><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
+            </div>
+        )}
+
+        <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
+        
+        {/* --- INICIO DE LA MODIFICACIÓN --- */}
+        {/* He reorganizado este contenedor para que sea una columna y he cambiado las clases de los botones */}
+        <div className="button-group-vertical"> 
+            {/* 1. Botón "Anclar Recuerdo" movido arriba y con la clase "primary-button" para que coincida con "Solicitar Pista" */}
+            <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
             
-            {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+            {/* 2. Botón "No sé" movido abajo y con una nueva clase "skip-button" para darle un estilo único y más pequeño */}
+            <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
         </div>
-    );
+        {/* --- FIN DE LA MODIFICACIÓN --- */}
+        
+        {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+    </div>
+);
 };
 
 

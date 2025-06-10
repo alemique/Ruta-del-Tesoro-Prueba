@@ -887,3 +887,37 @@ input:not(.login-container input)::placeholder {
 .dev-reset-button.dev-bonus {
   background-color: #8e44ad; /* Púrpura */
 }
+
+/* --- INICIO: MODIFICACIONES PARA BOTONES DE ANCLAJE --- */
+
+/* 1. Contenedor vertical para los botones */
+.button-group-vertical {
+    display: flex;
+    flex-direction: column; /* Apila los botones uno sobre otro */
+    align-items: center;   /* Centra los botones horizontalmente */
+    gap: 10px;             /* Espacio entre los botones */
+    margin-top: 20px;       /* Espacio arriba del grupo */
+}
+
+/* 2. Estilo para el botón "No sé" */
+.skip-button {
+    background: none;    /* Sin fondo */
+    border: none;         /* Sin borde */
+    color: var(--color-text-secondary-on-dark); /* Color de texto sutil */
+    font-family: var(--font-secondary); /* Usa la fuente secundaria, más legible en tamaño pequeño */
+    font-size: 1rem;      /* Tamaño de fuente reducido */
+    padding: 8px 16px;   /* Relleno más pequeño */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.skip-button:hover:not(:disabled) {
+    color: var(--color-primary); /* Cambia de color al pasar el mouse para indicar que es clickeable */
+}
+
+/* 3. Nos aseguramos que el botón primario ocupe todo el ancho disponible */
+.button-group-vertical .primary-button {
+    width: 100%;
+}
+
+/* --- FIN DE LAS MODIFICACIONES --- */
