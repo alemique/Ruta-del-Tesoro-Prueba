@@ -399,6 +399,61 @@ const generarPistaDinamica = (respuesta) => {
     return pistaGenerada;
 };
 
+// --- INICIO: NUEVAS FUNCIONES DE FEEDBACK SENSORIAL ---
+const triggerVibration = (duration = 100) => {
+    if ('vibrate' in navigator) {
+        navigator.vibrate(duration);
+    }
+};
+
+const animatePoints = (points, originElementId) => {
+    const origin = document.getElementById(originElementId);
+    const destination = document.getElementById('score-display');
+
+    if (!origin || !destination) {
+        console.error("No se encontraron los elementos de origen o destino para la animación de puntos.");
+        return;
+    }
+
+    const pointsFlyer = document.createElement('div');
+    pointsFlyer.textContent = `+${points}`;
+    pointsFlyer.style.position = 'absolute';
+    pointsFlyer.style.padding = '5px 10px';
+    pointsFlyer.style.backgroundColor = 'var(--color-feedback-success)';
+    pointsFlyer.style.color = 'white';
+    pointsFlyer.style.borderRadius = '15px';
+    pointsFlyer.style.fontWeight = 'bold';
+    pointsFlyer.style.zIndex = '9999';
+    pointsFlyer.style.pointerEvents = 'none';
+
+    document.body.appendChild(pointsFlyer);
+
+    const originRect = origin.getBoundingClientRect();
+    const destRect = destination.getBoundingClientRect();
+
+    const startX = originRect.left + (originRect.width / 2);
+    const startY = originRect.top;
+
+    const endX = destRect.left + (destRect.width / 2);
+    const endY = destRect.top;
+
+    gsap.fromTo(pointsFlyer, 
+        { x: startX, y: startY, opacity: 1, scale: 0.5 }, 
+        { 
+            x: endX, 
+            y: endY,
+            opacity: 0,
+            scale: 1,
+            duration: 1.5,
+            ease: 'power1.in',
+            onComplete: () => {
+                pointsFlyer.remove();
+            }
+        }
+    );
+};
+// --- FIN: NUEVAS FUNCIONES DE FEEDBACK SENSORIAL ---
+
 
 async function sendResultsToBackend(data) {
     const timeToSend = data.finalTimeDisplay || formatTime(data.mainTimer);
@@ -610,7 +665,8 @@ const Header = ({ teamName, score, timer }) => (
             <span className="team-title">GUARDIANES DEL TIEMPO</span>
         </div>
         <div className="header-score">
-            <span className="score">{score} FRAGMENTOS</span>
+            {/* <<< MODIFICACIÓN: AÑADIDO ID PARA ANIMACIÓN >>> */}
+            <span id="score-display" className="score">{score} FRAGMENTOS</span>
             <span className="timer">⏳ {formatTime(timer)}</span>
         </div>
     </div>
@@ -801,19 +857,25 @@ const TriviaSection = ({ stage, onComplete }) => {
         const isCorrect = selectedOption.toUpperCase() === challenge.correctAnswer.toUpperCase();
         const pointsWon = isCorrect ? calculatePoints(finalTime) : 0;
         
-        if (isCorrect) {
-            triggerVibration();
-            animatePoints(pointsWon, 'trivia-button');
-        }
-
+        // <<< INICIO DE LA MODIFICACIÓN (CORRECCIÓN DE BUG) >>>
+        // 1. Bloquear la UI y mostrar feedback visual.
         setGlowClass(isCorrect ? 'success-glow' : 'error-glow');
         setFeedback({
             message: isCorrect ? `✔️ ¡Respuesta Correcta! Has recuperado ${pointsWon} Fragmentos.` : `❌ Respuesta Incorrecta. No se han recuperado Fragmentos.`,
             type: isCorrect ? 'success' : 'error'
         });
+
+        // 2. Programar la acción CRÍTICA (avanzar de etapa).
         setTimeout(() => {
             onComplete({ points: pointsWon, time: finalTime });
         }, 2500);
+
+        // 3. Ejecutar los efectos NO CRÍTICOS.
+        if (isCorrect) {
+            triggerVibration();
+            animatePoints(pointsWon, 'trivia-button');
+        }
+        // <<< FIN DE LA MODIFICACIÓN (CORRECCIÓN DE BUG) >>>
     };
     return (
         <div className={`challenge-container ${glowClass}`}>
@@ -827,6 +889,7 @@ const TriviaSection = ({ stage, onComplete }) => {
                     </li>
                 ))}
             </ul>
+            {/* <<< MODIFICACIÓN: AÑADIDO ID PARA ANIMACIÓN >>> */}
             <button id="trivia-button" className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>VERIFICAR TRANSMISIÓN</button>
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
         </div>
@@ -872,16 +935,23 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
         if (isLocked) return;
 
         if (keyword.toUpperCase().trim() === anchor.enablerKeyword.toUpperCase().trim()) {
+            // <<< INICIO DE LA MODIFICACIÓN (CORRECCIÓN DE BUG) >>>
             const points = calculateAnchorPoints(anchorTimer);
             
-            triggerVibration();
-            animatePoints(points, 'anchor-button');
-            
+            // 1. Bloquear la UI y mostrar feedback visual.
             setIsLocked(true);
             setError('');
             setGlowClass('success-glow');
             setFeedback({ message: `✔️ ¡Ancla estabilizada! Has recuperado ${points} Fragmentos.`, type: 'success' });
+            
+            // 2. Programar la acción CRÍTICA (avanzar de etapa).
             setTimeout(() => onComplete({ points: points, time: anchorTimer }), 2500);
+
+            // 3. Ejecutar los efectos NO CRÍTICOS.
+            triggerVibration();
+            animatePoints(points, 'anchor-button');
+            // <<< FIN DE LA MODIFICACIÓN (CORRECCIÓN DE BUG) >>>
+
         } else {
             const newAttemptCount = incorrectAttempts + 1;
             setIncorrectAttempts(newAttemptCount);
@@ -944,16 +1014,12 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
 
         <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
         
-        {/* --- INICIO DE LA MODIFICACIÓN --- */}
-        {/* He reorganizado este contenedor para que sea una columna y he cambiado las clases de los botones */}
         <div className="button-group-vertical"> 
-            {/* 1. Botón "Anclar Recuerdo" movido arriba y con la clase "primary-button" para que coincida con "Solicitar Pista" */}
+            {/* <<< MODIFICACIÓN: AÑADIDO ID PARA ANIMACIÓN >>> */}
             <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
             
-            {/* 2. Botón "No sé" movido abajo y con una nueva clase "skip-button" para darle un estilo único y más pequeño */}
             <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
         </div>
-        {/* --- FIN DE LA MODIFICACIÓN --- */}
         
         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
     </div>
