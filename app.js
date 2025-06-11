@@ -575,11 +575,11 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 );
             case 'narrative_echo':
                  return (
-                        <div className="distortion-container">
-                              <h3>{challenge.title}</h3>
-                              <p className="distortion-narrative-text">{challenge.message}</p>
-                              <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                     </div>
+                         <div className="distortion-container">
+                                 <h3>{challenge.title}</h3>
+                                 <p className="distortion-narrative-text">{challenge.message}</p>
+                                 <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                       </div>
                  );
             default:
                 onComplete({ points: 0 });
@@ -800,6 +800,12 @@ const TriviaSection = ({ stage, onComplete }) => {
         const finalTime = triviaTimer;
         const isCorrect = selectedOption.toUpperCase() === challenge.correctAnswer.toUpperCase();
         const pointsWon = isCorrect ? calculatePoints(finalTime) : 0;
+        
+        if (isCorrect) {
+            triggerVibration();
+            animatePoints(pointsWon, 'trivia-button');
+        }
+
         setGlowClass(isCorrect ? 'success-glow' : 'error-glow');
         setFeedback({
             message: isCorrect ? `✔️ ¡Respuesta Correcta! Has recuperado ${pointsWon} Fragmentos.` : `❌ Respuesta Incorrecta. No se han recuperado Fragmentos.`,
@@ -821,7 +827,7 @@ const TriviaSection = ({ stage, onComplete }) => {
                     </li>
                 ))}
             </ul>
-            <button className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>VERIFICAR TRANSMISIÓN</button>
+            <button id="trivia-button" className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>VERIFICAR TRANSMISIÓN</button>
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
         </div>
     );
@@ -866,8 +872,12 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
         if (isLocked) return;
 
         if (keyword.toUpperCase().trim() === anchor.enablerKeyword.toUpperCase().trim()) {
-            setIsLocked(true);
             const points = calculateAnchorPoints(anchorTimer);
+            
+            triggerVibration();
+            animatePoints(points, 'anchor-button');
+            
+            setIsLocked(true);
             setError('');
             setGlowClass('success-glow');
             setFeedback({ message: `✔️ ¡Ancla estabilizada! Has recuperado ${points} Fragmentos.`, type: 'success' });
@@ -938,7 +948,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
         {/* He reorganizado este contenedor para que sea una columna y he cambiado las clases de los botones */}
         <div className="button-group-vertical"> 
             {/* 1. Botón "Anclar Recuerdo" movido arriba y con la clase "primary-button" para que coincida con "Solicitar Pista" */}
-            <button className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
+            <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
             
             {/* 2. Botón "No sé" movido abajo y con una nueva clase "skip-button" para darle un estilo único y más pequeño */}
             <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
