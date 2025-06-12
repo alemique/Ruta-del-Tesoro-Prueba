@@ -10,7 +10,7 @@ const eventData = [
     // SANTA LUCÍA
     {
         id: 1, department: "Santa Lucía", location: "Parroquia Santa Lucía",
-        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y un después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla." },
+        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla." },
         trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900" } },
         nextMissionId: 2
     },
@@ -548,7 +548,7 @@ const DistortionEventPage = ({ event, onComplete }) => {
         if (event.visual.type === 'video' && videoRef.current) {
             videoRef.current.play().catch(e => {
                 console.error("Error al auto-reproducir video:", e);
-                setView('challenge'); 
+                setView('challenge');  
             });
         } else if (event.visual.type === 'image') {
             const timer = setTimeout(() => {
@@ -650,13 +650,13 @@ const DistortionEventPage = ({ event, onComplete }) => {
                     </div>
                 );
             case 'narrative_echo':
-                 return (
-                         <div className="distortion-container">
-                                 <h3>{challenge.title}</h3>
-                                 <p className="distortion-narrative-text">{challenge.message}</p>
-                                 <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                       </div>
-                 );
+                   return (
+                           <div className="distortion-container">
+                                   <h3>{challenge.title}</h3>
+                                   <p className="distortion-narrative-text">{challenge.message}</p>
+                                   <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                           </div>
+                   );
             default:
                 onComplete({ points: 0 });
                 return null;
@@ -709,7 +709,7 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
             
             const response = await fetch(validationUrl, { method: 'POST' });
             if (!response.ok) {
-                 throw new Error('Error en la respuesta del servidor.');
+                throw new Error('Error en la respuesta del servidor.');
             }
             const data = await response.json();
 
@@ -775,17 +775,61 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
     );
 };
 
+// --- NUEVO COMPONENTE DE BIENVENIDA ---
+const WelcomePage = ({ teamName, onContinue }) => {
+    const [showContent, setShowContent] = React.useState(false);
+
+    React.useEffect(() => {
+        // Pequeño retardo para la animación de entrada
+        const timer = setTimeout(() => {
+            setShowContent(true);
+        }, 500); // Aparece 0.5 segundos después de cargar la página
+        return () => clearTimeout(timer);
+    }, []);
+
+    return (
+        <div className="welcome-container" style={{ opacity: showContent ? 1 : 0, transition: 'opacity 1s ease-in-out' }}>
+            <img src="imagenes/welcome_portal.png" alt="Portal de Bienvenida" className="welcome-image"/>
+            <h2>¡BIENVENIDO, GUARDIÁN <span className="team-name-welcome">{teamName}</span>!</h2>
+            {/* MODIFICADO: Se quitaron los ** de "ACTIVADA" */}
+            <p className="welcome-message">Tu Guía del Tiempo ha sido ACTIVADA. El legado de San Juan cuenta contigo para restaurar la línea temporal.</p>
+            <p className="welcome-first-mission">Tu primera ancla te espera en:</p>
+            <p className="welcome-location">📍 Parroquia Santa Lucía</p>
+            <button className="primary-button welcome-button" onClick={onContinue}>
+                INICIAR
+            </button>
+            <p className="welcome-footer">Mantén tus sentidos alerta. Cada decisión cuenta.</p>
+        </div>
+    );
+};
+
+
 const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly }) => {
     const [isTraveling, setIsTraveling] = React.useState(true);
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
-        }, 10000); 
+        }, 10000);  
         return () => clearTimeout(travelTimer);
     }, []);
+
+    // Función para limpiar el nombre de la ubicación y generar el nombre del archivo de imagen
+    const getImageFileName = (locationName) => {
+        // Convierte a minúsculas, elimina caracteres especiales y reemplaza espacios con guiones bajos
+        return locationName.toLowerCase()
+                           .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Elimina acentos
+                           .replace(/[^a-z0-9\s]/g, "") // Elimina caracteres no alfanuméricos (excepto espacios)
+                           .replace(/\s+/g, "") // Elimina espacios
+                           .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u') // Asegura que las tildes se manejen
+                           + '.png';
+    };
+
+    const imageSrc = `imagenes/${getImageFileName(nextLocation)}`;
+
     return (
         <div className="en-ruta-container">
-            <img src="imagenes/VIAJANDO.png" alt="Portal Temporal Estilizado" className="portal-image" onError={(e) => { e.target.onerror = null; e.target.src='https://images.unsplash.com/photo-1520034475321-cbe63696469a?q=80&w=800&auto=format&fit=crop'; }} />
+            {/* MODIFICADO: src de la imagen ahora es dinámico */}
+            <img src={imageSrc} alt={`Viajando a ${nextLocation}`} className="portal-image" onError={(e) => { e.target.onerror = null; e.target.src='imagenes/VIAJANDO.png'; }} />
             <h3>VIAJANDO A TRAVÉS DEL TIEMPO...</h3>
             <p>Próxima Sincronización: <strong>{nextLocation}</strong> ({department})</p>
             <p className="progress-info">Sincronizando coordenadas temporales...</p>
@@ -1023,7 +1067,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
 
         <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
         
-        <div className="button-group-vertical"> 
+        <div className="button-group-vertical">    
             <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
             
             <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
@@ -1066,80 +1110,80 @@ const FinalSection = ({stage, onComplete}) => {
             <div className="button-group">
                 <button className="primary-button" onClick={handleUnlockInternal}>✨ SELLAR BRECHA TEMPORAL ✨</button>
             </div>
-            {error && <p className="feedback error">{error}</p>}
+            {error && <p className={`feedback ${error ? 'error' : ''}`}>{error}</p>}
         </div>
     );
 };
 
 const Leaderboard = () => {
- const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec'; 
+   const LEADERBOARD_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec'; 
 
- const [ranking, setRanking] = React.useState([]);
- const [isLoading, setIsLoading] = React.useState(true);
- const [error, setError] = React.useState(null);
+   const [ranking, setRanking] = React.useState([]);
+   const [isLoading, setIsLoading] = React.useState(true);
+   const [error, setError] = React.useState(null);
 
- React.useEffect(() => {
-  const fetchRanking = async () => {
-    if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
-      setError('URL del ranking no configurada.');
-      setIsLoading(false);
-      return;
-    }
-    
-    try {
-      const response = await fetch(LEADERBOARD_URL);
-      if (!response.ok) {
-        throw new Error('La respuesta del servidor no fue correcta.');
+   React.useEffect(() => {
+    const fetchRanking = async () => {
+      if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
+        setError('URL del ranking no configurada.');
+        setIsLoading(false);
+        return;
       }
-      const data = await response.json();
-      if (data.error) {
-         throw new Error(data.error);
+      
+      try {
+        const response = await fetch(LEADERBOARD_URL);
+        if (!response.ok) {
+          throw new Error('La respuesta del servidor no fue correcta.');
+        }
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        setRanking(data);
+      } catch (err) {
+        setError('No se pudo cargar el ranking. Intenta más tarde.');
+        console.error("Error al obtener el ranking:", err);
+      } finally {
+        setIsLoading(false);
       }
-      setRanking(data);
-    } catch (err) {
-      setError('No se pudo cargar el ranking. Intenta más tarde.');
-      console.error("Error al obtener el ranking:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  fetchRanking();
- }, []);
+    fetchRanking();
+   }, []);
 
- if (isLoading) {
-  return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
- }
+   if (isLoading) {
+    return <p className="feedback">Cargando el Ranking de Guardianes...</p>;
+   }
 
- if (error) {
-  return <p className="feedback error">{error}</p>;
- }
+   if (error) {
+    return <p className="feedback error">{error}</p>;
+   }
 
- return (
-  <div className="leaderboard-container">
-    <h3>CONCILIO DE GUARDIANES</h3>
-    <table className="leaderboard-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Guardián</th>
-          <th>Fragmentos</th>
-          <th>Tiempo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {ranking.slice(0, 10).map((team, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{team.teamName}</td>
-            <td>{team.score}</td>
-            <td>{team.time}</td>
+   return (
+    <div className="leaderboard-container">
+      <h3>CONCILIO DE GUARDIANES</h3>
+      <table className="leaderboard-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Guardián</th>
+            <th>Fragmentos</th>
+            <th>Tiempo</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
- );
+        </thead>
+        <tbody>
+          {ranking.slice(0, 10).map((team, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{team.teamName}</td>
+              <td>{team.score}</td>
+              <td>{team.time}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+   );
 };
 
 const BonusMissionModal = ({ bonusData, onComplete }) => {
@@ -1218,7 +1262,7 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
 
 // --- BLOQUE PRINCIPAL DE LA APP ---
 const getInitialState = () => ({ 
-    status: 'login', 
+    status: 'login', // Puede ser 'login', 'welcome', 'in_game', 'on_the_road', 'long_travel', 'distortion_event', 'finished', 'aborted'
     squadCode: null, 
     teamName: '', 
     currentMissionId: eventData.length > 0 ? eventData[0].id : 1, 
@@ -1233,7 +1277,8 @@ const getInitialState = () => ({
     postDistortionStatus: null,
     activeBonusMissionId: null,
     bonusPorthoOffered: false,
-    bonusLaProfeciaOffered: false
+    bonusLaProfeciaOffered: false,
+    bonusLaVeneOffered: false // ¡Asegúrate de tener esta propiedad también!
 });
 
 const App = () => {
@@ -1254,7 +1299,7 @@ const App = () => {
 
                 if ((now - lastSavedTime) < hours24inMs) {
                     console.log("Restaurando sesión. Menos de 24hs transcurridas.");
-                    return savedData.state; 
+                    return savedData.state;  
                 } else {
                     console.log("Sesión expirada. Han pasado más de 24hs. Reiniciando.");
                     localStorage.removeItem('guardianesAppState');
@@ -1281,7 +1326,7 @@ const App = () => {
 
     React.useEffect(() => {
         let interval;
-        if (appState.status !== 'login' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId) {
+        if (appState.status !== 'login' && appState.status !== 'welcome' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId) {
             interval = setInterval(() => {
                 setAppState(prev => ({ ...prev, mainTimer: prev.mainTimer + 1 }));
             }, 1000);
@@ -1296,9 +1341,19 @@ const App = () => {
 
     const handleLogin = (code, name) => {
         const initialState = getInitialState();
-        const fullState = { ...initialState, status: 'in_game', squadCode: code, teamName: name };
+        // CAMBIO CLAVE: Después del login, ve a la pantalla de bienvenida
+        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name };
         setAppState(fullState);
         sendResultsToBackend(fullState);
+    };
+    
+    // NUEVA FUNCIÓN: Para pasar de la pantalla de bienvenida a la primera misión
+    const handleStartFirstMission = () => {
+        setAppState(prev => ({
+            ...prev,
+            status: 'in_game', // Pasa al estado de juego
+            subStage: 'anchor', // Y directamente a la primera ancla
+        }));
     };
     
     const handleAnchorComplete = (anchorResult) => {
@@ -1340,7 +1395,8 @@ const handleTriviaComplete = (triviaResult) => {
     const triggeredBonus = allBonusData.find(b =>
         b.triggerMissionId === currentStageData.id &&
         (b.id === 'bonus_portho_1' ? !appState.bonusPorthoOffered : true) &&
-        (b.id === 'bonus_la_profecia_1' ? !appState.bonusLaProfeciaOffered : true)
+        (b.id === 'bonus_la_profecia_1' ? !appState.bonusLaProfeciaOffered : true) &&
+        (b.id === 'bonus_la_vene_1' ? !appState.bonusLaVeneOffered : true) // Verificar también el bonus de La Vene
     );
 
     if (triggeredBonus) {
@@ -1349,7 +1405,8 @@ const handleTriviaComplete = (triviaResult) => {
             ...baseStateForNextStep,
             activeBonusMissionId: triggeredBonus.id,
             bonusPorthoOffered: triggeredBonus.id === 'bonus_portho_1' ? true : appState.bonusPorthoOffered,
-            bonusLaProfeciaOffered: triggeredBonus.id === 'bonus_la_profecia_1' ? true : appState.bonusLaProfeciaOffered
+            bonusLaProfeciaOffered: triggeredBonus.id === 'bonus_la_profecia_1' ? true : appState.bonusLaProfeciaOffered,
+            bonusLaVeneOffered: triggeredBonus.id === 'bonus_la_vene_1' ? true : appState.bonusLaVeneOffered // Actualizar el estado de La Vene
         });
         return;
     }
@@ -1381,8 +1438,8 @@ const handleTriviaComplete = (triviaResult) => {
         const newState = {
             ...appState,
             score: newScore,
-            activeDistortionEventId: null, 
-            status: appState.postDistortionStatus, 
+            activeDistortionEventId: null,  
+            status: appState.postDistortionStatus,  
             postDistortionStatus: null,
         }
         setAppState(newState);
@@ -1423,11 +1480,11 @@ const handleTriviaComplete = (triviaResult) => {
             const finalTime = formatTime(totalSeconds);
             const finalScore = appState.score || 0;
             
-            const finalState = { 
-                ...appState, 
-                score: finalScore, 
+            const finalState = {  
+                ...appState,  
+                score: finalScore,  
                 status: 'aborted',
-                finalTimeDisplay: finalTime 
+                finalTimeDisplay: finalTime  
             };
             
             setAppState(finalState);
@@ -1524,6 +1581,9 @@ const handleBonusModalClose = (result) => {
             case 'login':
                 return <LoginPage onLogin={handleLogin} setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} errorMessage={appState.errorMessage} />;
             
+            case 'welcome': // NUEVO CASO para la pantalla de bienvenida
+                return <WelcomePage teamName={appState.teamName} onContinue={handleStartFirstMission} />;
+
             case 'long_travel': {
                 if (!currentStageData.nextMissionId) return null;
                 const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
@@ -1582,18 +1642,26 @@ const handleBonusModalClose = (result) => {
             {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
 
             <div className="dev-controls-container">
+                {/* Ocultamos los botones de bonus específicos para el deploy final
+                    {appState.status !== 'login' && (
+                        <>
+                            <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
+                                B.PORTHO
+                            </button>
+                            <button className="dev-reset-button dev-profecia" onClick={handleJumpToBonusLaProfecia}>
+                                B.PROFECIA
+                            </button>
+                            <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
+                                RESET
+                            </button>
+                        </>
+                    )}
+                */}
+                {/* Puedes dejar el botón de RESET para desarrollo si lo necesitas */}
                 {appState.status !== 'login' && (
-                    <>
-                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
-                            B.PORTHO
-                        </button>
-                        <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusLaProfecia}>
-                            B.PROFECIA
-                        </button>
-                        <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
-                            RESET
-                        </button>
-                    </>
+                    <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
+                        RESET (DEV)
+                    </button>
                 )}
             </div>
         </div>
