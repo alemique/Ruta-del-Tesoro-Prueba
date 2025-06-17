@@ -1,271 +1,45 @@
-// --- CONFIGURACIÓN DEL BACKEND ---
-// URL actualizada para incluir la función del ranking.
+// --- BACKEND CONFIGURATION ---
+// Updated URL to include ranking functionality.
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec';
 
-// --- LISTA DE USUARIOS AUTORIZADOS (LÓGICA) ---
-// La constante 'validUsers' ha sido eliminada. La validación ahora es responsabilidad del backend.
-
-// --- DATOS COMPLETOS DEL EVENTO (DATOS) ---
+// --- REDUCED EVENT DATA FOR THE TEST VERSION ---
+// 4 specific missions, 1 challenge, and 1 bonus have been selected for the test version.
 const eventData = [
-    // SANTA LUCÍA
+    // SANTA LUCÍA - Mission 1 (Original ID 1)
     {
         id: 1, department: "Santa Lucía", location: "Parroquia Santa Lucía",
-        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla." },
-        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900" } },
-        nextMissionId: 2
+        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla.", tutorialDescription: "El 'Ancla Temporal' es una información clave que debes encontrar en tu ubicación. Ingrésala aquí para avanzar." },
+        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900", tutorialDescription: "Responde estas preguntas para recuperar más 'Fragmentos de Historia'." } },
+        nextMissionId: 8 // Link to the next mission in the test version
     },
-    {
-        id: 2, department: "Santa Lucía", location: "Parroquia Santa Lucía",
-        anchor: { missionName: "Ancla: La Fe Reconstruida", enabler: "Consigna: Encuentren el año de inauguración de la iglesia moderna y actual.\nPista: Se inauguró durante las fiestas patronales de diciembre.", enablerKeyword: "1964", transmission: "La fe de un pueblo se manifiesta en su capacidad de renacer. Encuentra el año en que este templo moderno abrió sus puertas para sellar esta memoria." },
-        trivia: { missionName: "Trivia: Fervor Popular", challenge: { question: "¿Qué importante evento religioso se celebra cada diciembre en la parroquia?", options: ["La Fiesta del Sol", "El aniversario del departamento", "La Fiesta Patronal de Santa Lucía", "La peregrinación a la Difunta Correa"], correctAnswer: "La Fiesta Patronal de Santa Lucía" } },
-        nextMissionId: 3
-    },
-    {
-        id: 3, department: "Santa Lucía", location: "Monumento La Luz del Mundo",
-        anchor: { missionName: "Ancla: El Primer Destello", enabler: "Consigna: Identifiquen el año en que los primeros pobladores se reunían en esta zona.\nPista: El lugar era conocido históricamente como 'La Legua'.", enablerKeyword: "1869", transmission: "Detecto una débil señal de luz del pasado. Viaja al año de origen, cuando esta esquina se convirtió en un punto de encuentro vital para los pioneros." },
-        trivia: { missionName: "Trivia: La Lámpara Primitiva", challenge: { question: "Según la tradición, ¿qué se utilizaba en el mangrullo para orientar a los viajeros antes de la lámpara de carburo?", options: ["Una fogata", "Una lámpara de aceite", "Antorchas", "Un farol eléctrico"], correctAnswer: "Una lámpara de aceite" } },
-        nextMissionId: 4
-    },
-    {
-        id: 4, department: "Santa Lucía", location: "Monumento La Luz del Mundo",
-        anchor: { missionName: "Ancla: El Ojo del Pasado", enabler: "Consigna: ¿Qué tipo de institución de seguridad, con una torre 'bichadora', funcionó en esta esquina 'décadas atrás'?\nPista: Su función era velar por la seguridad de los viajeros.", enablerKeyword: "Un puesto policial", transmission: "La seguridad de los viajeros era crucial. En esta esquina existió una institución protectora. Ancla su nombre para recordar su labor." },
-        trivia: { missionName: "Trivia: El Fin del Mundo Iluminado", challenge: { question: "¿Qué apodo le daban los antiguos pobladores al lugar donde se encendía la luz?", options: ["El faro de La Legua", "El portal de la ciudad", "Donde terminaba el mundo", "La esquina del viajero"], correctAnswer: "Donde terminaba el mundo" } },
-        nextMissionId: 5
-    },
-    {
-        id: 5, department: "Santa Lucía", location: "Puente de Hierro",
-        anchor: { missionName: "Ancla: El Nacimiento del Gigante de Hierro", enabler: "Consigna: Encuentren el año de inauguración del puente, el más antiguo de su tipo en la provincia.\nPista: Su construcción fue una hazaña para cruzar el caudaloso río.", enablerKeyword: "1893", transmission: "Este gigante de metal fue una revolución. Anclar su año de nacimiento es vital para preservar la memoria del progreso." },
-        trivia: { missionName: "Trivia: El Propósito Original", challenge: { question: "¿Para qué medio de transporte fue construido originalmente este puente?", options: ["Peatones y carretas", "Tráfico carretero", "Ferrocarril", "Animales de carga"], correctAnswer: "Ferrocarril" } },
-        nextMissionId: 6
-    },
-    {
-        id: 6, department: "Santa Lucía", location: "Puente de Hierro",
-        anchor: { missionName: "Ancla: El Manto de la Historia", enabler: "Consigna: Busquen el año en que fue declarado Monumento Histórico Provincial.\nPista: Ocurrió después de la construcción de un puente nuevo y paralelo en 2012.", enablerKeyword: "2021", transmission: "El tiempo no pudo con él, y la ley lo protegió para siempre. Encuentra el año en que se reconoció su valor histórico." },
-        trivia: { missionName: "Trivia: La Medida del Coloso", challenge: { question: "¿Qué longitud tiene este histórico puente de un solo carril?", options: ["150 metros", "200 metros", "244 metros", "300 metros"], correctAnswer: "244 metros" } },
-        nextMissionId: 7
-    },
-    {
-        id: 7, department: "Santa Lucía", location: "Plaza General San Martín",
-        anchor: { missionName: "Ancla: El Corazón del Pueblo", enabler: "Consigna: ¿En qué siglo se remonta la existencia de esta plaza, corazón del departamento?\nPista: Ha sido el centro de la vida comunitaria desde la creación del pueblo.", enablerKeyword: "Siglo XIX", transmission: "Todo pueblo tiene un corazón que late al ritmo de su gente. Viaja al siglo en que este corazón comenzó a latir." },
-        trivia: { missionName: "Trivia: El Tesoro de la Infancia", challenge: { question: "¿Qué elemento histórico se puso en valor durante la remodelación de la plaza?", options: ["La fuente central", "El mástil principal", "La calesita", "El reloj de sol"], correctAnswer: "La calesita" } },
-        nextMissionId: 8
-    },
+    // SANTA LUCÍA - Mission 2 (Original ID 8)
     {
         id: 8, department: "Santa Lucía", location: "Plaza General San Martín",
-        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro." },
-        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía" } },
-        nextMissionId: 9
+        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro.", tutorialDescription: "Cada 'Ancla Temporal' es un dato específico del lugar que debes averiguar." },
+        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía", tutorialDescription: "Las 'Trivia' son preguntas de opción múltiple sobre el lugar." } },
+        nextMissionId: 16 // Link to the next mission in the test version
     },
-    {
-        id: 9, department: "Capital", location: "Plaza 25 de Mayo",
-        anchor: { missionName: "Ancla: La Primera Piedra", enabler: "Consigna: ¿En qué año se fundó San Juan de la Frontera, momento en que se reservó por primera vez el terreno para esta plaza?\nPista: Fue antes de que una inundación obligara a trasladar la ciudad.", enablerKeyword: "1562", transmission: "Toda gran ciudad tiene un punto de origen. Viaja al año fundacional para anclar el primer latido de San Juan." },
-        trivia: { missionName: "Trivia: El Bautismo de la Plaza", challenge: { question: "¿Qué ilustre sanjuanino propuso cambiar el nombre de 'Plaza de Armas' a '25 de Mayo'?", options: ["Francisco Narciso de Laprida", "Guillermo Rawson", "Agustín Gnecco", "Domingo F. Sarmiento"], correctAnswer: "Domingo F. Sarmiento" } },
-        nextMissionId: 10
-    },
-    {
-        id: 10, department: "Capital", location: "Plaza 25 de Mayo",
-        anchor: { missionName: "Ancla: El Renacer de las Aguas", enabler: "Consigna: Descubran el año en que la ciudad y la plaza fueron trasladadas a su ubicación actual después de una gran inundación.\nPista: Ocurrió 31 años después de la fundación original.", enablerKeyword: "1593", transmission: "La naturaleza obligó a un nuevo comienzo. Fija en la línea de tiempo el año en que la ciudad renació de las aguas y se estableció en su lugar definitivo." },
-        trivia: { missionName: "Trivia: Actividad Colonial", challenge: { question: "Además de leer bandos, ¿qué otra actividad pública se realizaba en la plaza durante la época colonial?", options: ["Justas de caballeros", "Corridas de toros", "Mercados de esclavos", "Obras de teatro"], correctAnswer: "Corridas de toros" } },
-        nextMissionId: 11
-    },
-    {
-        id: 11, department: "Capital", location: "Catedral de San Juan Bautista",
-        anchor: { missionName: "Ancla: La Semilla de la Fe", enabler: "Consigna: Encuentren el año de fundación del templo original, que sirvió como Iglesia Mayor durante 232 años.\nPista: Fue elevado a catedral a inicios del siglo XIX.", enablerKeyword: "1712", transmission: "Mucho antes del moderno campanil, una orden religiosa sembró la primera semilla de fe en este solar. Ancla su año de fundación." },
-        trivia: { missionName: "Trivia: Los Fundadores", challenge: { question: "¿Qué orden religiosa fundó la iglesia matriz original en este mismo solar?", options: ["Franciscanos", "Dominicos", "Agustinos", "Jesuitas"], correctAnswer: "Jesuitas" } },
-        nextMissionId: 12
-    },
-    {
-        id: 12, department: "Capital", location: "Catedral de San Juan Bautista",
-        anchor: { missionName: "Ancla: La Inauguración Moderna", enabler: "Consigna: Busquen la fecha exacta de inauguración de la actual y moderna catedral.\nPista: Ocurrió 35 años después del devastador terremoto de 1944.", enablerKeyword: "16 de diciembre de 1979", transmission: "De las ruinas emergió un símbolo de resiliencia. La fecha exacta de su inauguración es un testamento al espíritu sanjuanino. ¡Encuéntrala!" },
-        trivia: { missionName: "Trivia: El Ícono Urbano", challenge: { question: "¿Qué altura tiene el distintivo campanil de ladrillo rojo que se ha convertido en un ícono urbano?", options: ["44 metros", "51 metros", "62 metros", "79 metros"], correctAnswer: "51 metros" } },
-        nextMissionId: 13
-    },
-    {
-        id: 13, department: "Capital", location: "Convento de Santo Domingo",
-        anchor: { missionName: "Ancla: La Estadía del General", enabler: "Consigna: ¿En qué año se hospedó el General San Martín en una modesta celda de este convento?\nPista: Lo hizo mientras organizaba la campaña libertadora y el Cruce de los Andes.", enablerKeyword: "1815", transmission: "Los muros de este convento fueron testigos de la planificación de la gesta más grande de América. Ancla el año en que el Libertador caminó por estos pasillos." },
-        trivia: { missionName: "Trivia: Cuartel de Héroes", challenge: { question: "¿Qué división del Ejército de los Andes utilizó el convento como cuartel?", options: ["El Regimiento de Granaderos a Caballo", "La División Cabot", "La División del Sur", "La Artillería de Montaña"], correctAnswer: "La División Cabot" } },
-        nextMissionId: 14
-    },
-    {
-        id: 14, department: "Capital", location: "Convento de Santo Domingo",
-        anchor: { missionName: "Ancla: El Sismo Devastador", enabler: "Consigna: Identifiquen el año del sismo que afectó gravemente al edificio original del convento.\nPista: A pesar de la destrucción, la celda de San Martín fue rescatada.", enablerKeyword: "1944", transmission: "Nuevamente, la tierra tembló y la historia se partió en dos. Fija el año de la gran ruptura para comprender la reconstrucción." },
-        trivia: { missionName: "Trivia: El Sobreviviente de Piedra", challenge: { question: "¿Qué otra parte del convento original permaneció en pie tras el terremoto y fue restaurada?", options: ["El altar mayor", "La biblioteca", "El antiguo campanario dominico", "El portón principal"], correctAnswer: "El antiguo campanario dominico" } },
-        nextMissionId: 15
-    },
-    {
-        id: 15, department: "Capital", location: "Casa Natal de Sarmiento",
-        anchor: { missionName: "Ancla: El Nacimiento del Prócer", enabler: "Consigna: Descubran el año en que nació en esta humilde vivienda el futuro presidente de la Nación.\nPista: Es conocido como el 'padre de la educación argentina'.", enablerKeyword: "1811", transmission: "En esta casa de adobe comenzó todo. Ancla el año de nacimiento del hombre que cambiaría la educación del país." },
-        trivia: { missionName: "Trivia: La Higuera Histórica", challenge: { question: "¿Bajo la sombra de qué árbol hilaba doña Paula Albarracín mientras supervisaba la construcción de la casa?", options: ["Un algarrobo", "Una higuera", "Un olivo", "Un naranjo"], correctAnswer: "Una higuera" } },
-        nextMissionId: 16
-    },
+    // CAPITAL - Mission 3 (Original ID 16)
     {
         id: 16, department: "Capital", location: "Casa Natal de Sarmiento",
-        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico." },
-        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno" } },
-        nextMissionId: 17
+        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico.", tutorialDescription: "¡Atención! Hay 'pistas' ocultas que te pueden ayudar, pero a un costo." },
+        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno", tutorialDescription: "Tu tiempo en la 'Trivia' es crucial para obtener más puntos." } },
+        nextMissionId: 32 // Link to the next mission in the test version
     },
-    {
-        id: 17, department: "Capital", location: "Escuela Normal Sarmiento",
-        anchor: { missionName: "Ancla: La Fundación Pionera", enabler: "Consigna: ¿En qué año se fundó esta institution pionera en la formación de maestros?\nPista: Su fundación es anterior a la construcción de su imponente edificio actual.", enablerKeyword: "1879", transmission: "Antes del edificio, nació la idea. Ancla el año en que se fundó esta institution, un faro de la educación sarmientina." },
-        trivia: { missionName: "Trivia: El Coloso Antisísmico", challenge: { question: "¿Cuál es la particularidad más destacada del edificio de esta escuela, que le permitió sobrevivir a dos grandes terremotos?", options: ["Fue construido con mármol importado.", "Fue el primer edificio antisísmico de la ciudad.", "Sus cimientos son de acero.", "Tiene muros de 2 metros de espesor."], correctAnswer: "Fue el primer edificio antisísmico de la ciudad." } },
-        nextMissionId: 18
-    },
-    {
-        id: 18, department: "Capital", location: "Escuela Normal Sarmiento",
-        anchor: { missionName: "Ancla: Legado del Centenario", enabler: "Consigna: ¿Hacia qué año se inauguró el actual edificio, el único que queda en pie de la época del Centenario?\nPista: Fue edificado con técnicas reforzadas tras el terremoto de 1894.", enablerKeyword: "Hacia 1910", transmission: "Construido para durar y para celebrar a la patria. Encuentra la fecha aproximada en que este bastión educativo abrió sus puertas." },
-        trivia: { missionName: "Trivia: Refugio del Estado", challenge: { question: "Gracias a su resistente estructura, ¿qué importante institution albergó provisoriamente la escuela justo después del sismo de 1944?", options: ["El Hospital Rawson", "La Universidad Nacional de Cuyo", "La Gobernación de la provincia", "La Catedral de San Juan"], correctAnswer: "La Gobernación de la provincia" } },
-        nextMissionId: 19
-    },
-    {
-        id: 19, department: "Capital", location: "Museo Franklin Rawson",
-        anchor: { missionName: "Ancla: La Inauguración Original", enabler: "Consigna: Busquen el año de la inauguración original del museo.\nPista: Su sede fue destruida pocos años después por el sismo de 1944.", enablerKeyword: "1936", transmission: "El arte sanjuanino tuvo su primer hogar, aunque fue efímero. Ancla el año de su inauguración original." },
-        trivia: { missionName: "Trivia: El Dúo Dinámico", challenge: { question: "Además de Franklin Rawson, ¿qué dos famosos hermanos impulsaron la gestación de la colección fundacional del museo?", options: ["Los hermanos Cabot", "Los hermanos Gnecco", "Domingo y Procesa Sarmiento", "Los hermanos Laprida"], correctAnswer: "Domingo y Procesa Sarmiento" } },
-        nextMissionId: 20
-    },
-    {
-        id: 20, department: "Capital", location: "Museo Franklin Rawson",
-        anchor: { missionName: "Ancla: El Hogar Definitivo del Arte", enabler: "Consigna: Encuentren el año en que el museo finalmente abrió las puertas de su moderno y exclusivo edificio actual.\nPista: Ocurrió después de décadas de funcionar en instalaciones provisorias.", enablerKeyword: "2011", transmission: "Tras un largo peregrinaje, el arte sanjuanino encontró su templo definitivo. Fija el año en que se inauguró su espectacular sede moderna." },
-        trivia: { missionName: "Trivia: Un Refugio de Emergencia", challenge: { question: "¿En qué lugar tuvo que funcionar el museo durante un tiempo, en condiciones de emergencia, después de que el terremoto destruyera su sede?", options: ["En la Casa Natal de Sarmiento", "En el sótano del Auditorio Juan Victoria", "En el Convento de Santo Domingo", "En la Escuela Normal Sarmiento"], correctAnswer: "En el sótano del Auditorio Juan Victoria" } },
-        nextMissionId: 21
-    },
-    {
-        id: 21, department: "Capital", location: "Museo Agustín Gnecco",
-        anchor: { missionName: "Ancla: La Pasión del Coleccionista", enabler: "Consigna: ¿En qué año fue fundado formalmente este museo, considerado el más antiguo de la provincia?\nPista: Su creación fue impulsada por un apasionado coleccionista y erudito local.", enablerKeyword: "1911", transmission: "La pasión de un hombre por la historia dio origen al museo más antiguo de San Juan. Ancla el año de su fundación oficial." },
-        trivia: { missionName: "Trivia: Criterio Innovador", challenge: { question: "¿Qué criterio innovador para su tiempo utilizó Agustín Gnecco para formar su colección?", options: ["Coleccionar solo objetos de oro y plata.", "Preservar objetos de la vida cotidiana del pueblo común.", "Reunir únicamente artefactos militares.", "Adquirir solo arte religioso."], correctAnswer: "Preservar objetos de la vida cotidiana del pueblo común." } },
-        nextMissionId: 22
-    },
-    {
-        id: 22, department: "Capital", location: "Museo Agustín Gnecco",
-        anchor: { missionName: "Ancla: La Casona de las Escuelas", enabler: "Consigna: Hallen el año de construcción de la casona de estilo neoclásico italianizante que hoy es la sede del museo.\nPista: Fue declarada Monumento Histórico Arquitectónico Provincial en 2008.", enablerKeyword: "1926", transmission: "Este edificio no siempre albergó reliquias, antes fue un semillero de conocimiento. Fija el año en que se construyó esta histórica casona." },
-        trivia: { missionName: "Trivia: El Propósito Original de la Sede", challenge: { question: "La casona que hoy alberga el museo fue construida originalmente para alojar...", options: ["La residencia de la familia Gnecco", "Oficinas de gobierno", "Escuelas", "Un hospital"], correctAnswer: "Escuelas" } },
-        nextMissionId: 23
-    },
-    {
-        id: 23, department: "Capital", location: "Auditorio Juan Victoria",
-        anchor: { missionName: "Ancla: El Estreno de la Acústica", enabler: "Consigna: Identifiquen la fecha exacta de inauguración de este complejo, una obra única en Argentina en su momento.\nPista: Lleva el nombre del ingeniero que impulsó su construcción.", enablerKeyword: "21 de julio de 1970", transmission: "La música encontró su templo en San Juan. Ancla la fecha exacta en que este ícono cultural abrió sus puertas por primera vez." },
-        trivia: { missionName: "Trivia: El Sonido Perfecto", challenge: { question: "¿Qué característica del diseño de la sala de conciertos garantiza una calidad de sonido impecable desde cualquier punto?", options: ["Asientos de terciopelo", "Una cúpula de cristal", "Paneles de madera y relieves en las paredes", "Su forma perfectamente circular"], correctAnswer: "Paneles de madera y relieves en las paredes" } },
-        nextMissionId: 24
-    },
-    {
-        id: 24, department: "Capital", location: "Auditorio Juan Victoria",
-        anchor: { missionName: "Ancla: La Década Dorada", enabler: "Consigna: ¿De qué década es el estilo arquitectónico funcional y estético de este ícono cultural?\nPista: Se ha mantenido como un referente por más de 50 años.", enablerKeyword: "Años '70", transmission: "Su diseño audaz y su acústica perfecta son un reflejo de su época. Fija la década que lo vio nacer." },
-        trivia: { missionName: "Trivia: El Gigante Musical", challenge: { question: "¿Qué imponente instrumento musical, apto para grandes conciertos, se encuentra en la sala principal?", options: ["Un piano de cola imperial", "Un clavicordio del siglo XVIII", "Un órgano de tubos", "Un arpa de concierto"], correctAnswer: "Un órgano de tubos" } },
-        nextMissionId: 25
-    },
-    {
-        id: 25, department: "Capital", location: "Teatro del Bicentenario",
-        anchor: { missionName: "Ancla: El Silbato del Pasado", enabler: "Consigna: ¿En qué año se inauguró el ferrocarril cuya histórica estación se encontraba en el predio del teatro?\nPista: El teatro conserva la memoria de este histórico medio de transporte.", enablerKeyword: "1885", transmission: "Antes del aplauso, se escuchaba el silbato del tren. Ancla el año en que el ferrocarril llegó a este histórico predio." },
-        trivia: { missionName: "Trivia: Gala Inaugural", challenge: { question: "¿Qué ópera se presentó en la gala inaugural del teatro, con la participación de la compañía española La Fura dels Baus?", options: ["Aida", "La Traviata", "El Barbero de Sevilla", "Carmina Burana"], correctAnswer: "Carmina Burana" } },
-        nextMissionId: 26
-    },
-    {
-        id: 26, department: "Capital", location: "Teatro del Bicentenario",
-        anchor: { missionName: "Ancla: Nace un Coloso", enabler: "Consigna: ¿En qué fecha fue inaugurado este moderno centro de artes escénicas?\nPista: Su apertura fue parte de las celebraciones del Bicentenario de la patria.", enablerKeyword: "21 de octubre de 2016", transmission: "Un nuevo gigante cultural nació para celebrar a la patria. Fija la fecha exacta de su inauguración." },
-        trivia: { missionName: "Trivia: Diseño de Vanguardia", challenge: { question: "¿Qué elemento arquitectónico destaca en el exterior del teatro, combinando tradición y vanguardia?", options: ["Un techo de tejas coloniales", "Un gran arco de triunfo", "Fachadas de vidrio y un espejo de agua frontal", "Columnas de estilo griego"], correctAnswer: "Fachadas de vidrio y un espejo de agua frontal" } },
-        nextMissionId: 27
-    },
-    {
-        id: 27, department: "Rivadavia", location: "Jardín de los Poetas",
-        anchor: { missionName: "Ancla: El Edén Literario", enabler: "Consigna: Busquen la fecha de inauguración de este parque poético.\nPista: Fue concebido por la visionaria Ofelia Zúccoli Fidanza.", enablerKeyword: "11 de abril de 1958", transmission: "Donde la poesía y la naturaleza se unen. Ancla la fecha en que este jardín abrió sus puertas al público." },
-        trivia: { missionName: "Trivia: Símbolo Vegetal", challenge: { question: "¿Qué figura patriótica está representada en la ladera de la sierra utilizando flores, arbustos y árboles?", options: ["La Bandera Argentina", "El Escudo Nacional", "El rostro de San Martín", "El mapa de Argentina"], correctAnswer: "El Escudo Nacional" } },
-        nextMissionId: 28
-    },
-    {
-        id: 28, department: "Rivadavia", location: "Jardín de los Poetas",
-        anchor: { missionName: "Ancla: El Parque Original", enabler: "Consigna: ¿Cómo se conocía antiguamente il gran espacio verde del que forma parte este jardín?\nPista: Hoy se lo conoce como Parque Provincial Rivadavia.", enablerKeyword: "Parque Bernardino Rivadavia", transmission: "Antes de ser el parque provincial, este gran pulmón verde tenía otro nombre. Ancla su denominación original." },
-        trivia: { missionName: "Trivia: Homenaje en Piedra", challenge: { question: "¿A quiénes están dedicados los bustos y esculturas que se encuentran entre los senderos del jardín?", options: ["A los héroes de la independencia", "A los gobernadores de San Juan", "A los grandes poetas argentinos", "A los científicos más destacados"], correctAnswer: "A los grandes poetas argentinos" } },
-        nextMissionId: 29
-    },
-    {
-        id: 29, department: "Rivadavia", location: "Monumento a la Virgen del Líbano",
-        anchor: { missionName: "Ancla: La Época de la Fe", enabler: "Consigna: ¿A finales de qué década se instaló esta imagen en las peñas de la Sierra Chica de Zonda?\nPista: Desde entonces se ha convertido en un símbolo espiritual de Rivadavia.", enablerKeyword: "Década de 1980", transmission: "Una comunidad unida por la fe donó este símbolo de protección. Ancla la década en que fue erigida en lo alto de la sierra." },
-        trivia: { missionName: "Trivia: El Origen de la Estatua", challenge: { question: "¿Qué comunidad donó la monumental estatua de 6 metros de altura?", options: ["La comunidad italiana", "La comunidad de origen libanés", "La comunidad española", "La comunidad Huarpe"], correctAnswer: "La comunidad de origen libanés" } },
-        nextMissionId: 30
-    },
-    {
-        id: 30, department: "Rivadavia", location: "Monumento a la Virgen del Líbano",
-        anchor: { missionName: "Ancla: El Otro Hito Mariano", enabler: "Consigna: ¿Qué otra devoción, venerada en el distrito La Bebida, constituye junto a la Virgen del Líbano uno de los hitos marianos más importantes del departamento?\nPista: Es otra advocación de la Virgen muy arraigada en Rivadavia.", enablerKeyword: "La Virgen de Andacollo", transmission: "La fe de Rivadavia tiene dos grandes protectoras. Ancla el nombre de la otra Virgen venerada en el departamento." },
-        trivia: { missionName: "Trivia: Legado Cultural", challenge: { question: "Además de su valor devocional, ¿qué testimonia y embellece este monumento?", options: ["La riqueza minera de la zona", "El aporte cultural de los inmigrantes de Medio Oriente", "La historia del ferrocarril", "La fundación del departamento"], correctAnswer: "El aporte cultural de los inmigrantes de Medio Oriente" } },
-        nextMissionId: 31
-    },
-    {
-        id: 31, department: "Rivadavia", location: "Autódromo El Zonda",
-        anchor: { missionName: "Ancla: Templo de la Velocidad", enabler: "Consigna: Hallen la fecha exacta de inauguración de este circuito, considerado un 'templo del automovilismo cuyano'.\nPista: Lleva el nombre de un célebre piloto sanjuanino.", enablerKeyword: "8 de octubre de 1967", transmission: "El rugir de los motores resonó por primera vez en la quebrada. Ancla la fecha exacta de su inauguración." },
-        trivia: { missionName: "Trivia: Tribunas Naturales", challenge: { question: "¿Qué característica única, aprovechando la geografía, ofrece este circuito al público para ver las carreras?", options: ["Una torre giratoria central", "Palcos de vidrio climatizados", "Tribunas naturales en las laderas de los cerros", "Túneles de observación subterráneos"], correctAnswer: "Tribunas naturales en las laderas de los cerros" } },
-        nextMissionId: 32
-    },
+    // RIVADAVIA - Mission 4 (Original ID 32) - This will be the last mission of the demo before the end.
     {
         id: 32, department: "Rivadavia", location: "Autódromo El Zonda",
-        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí." },
-        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros" } },
-        nextMissionId: 33
+        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí.", tutorialDescription: "Cada Ancla y Trivia te suma 'Fragmentos de Historia'." },
+        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros", tutorialDescription: "Al final, tu 'Tiempo Total' y 'Fragmentos' determinarán tu puesto." } },
+        nextMissionId: null // Marks as the last mission for the normal flow
     },
-    {
-        id: 33, department: "Rivadavia", location: "Cavas de Zonda",
-        anchor: { missionName: "Ancla: Origen Minero", enabler: "Consigna: ¿En qué período de tiempo fue fundada esta champañera, aprovechando una antigua mina?\nPista: Hoy es parte de la Ruta del Vino sanjuanina.", enablerKeyword: "A mediados del siglo XX", transmission: "Antes de albergar vinos espumosos, estas galerías tenían otro propósito. Ancla el período de su fundación como bodega." },
-        trivia: { missionName: "Trivia: El Método Francés", challenge: { question: "¿Qué métodos franceses se utilizan de forma totalmente artesanal para producir champaña en esta cava?", options: ["Charmat y Prosecco", "Champenoise y Charmat", "Champenoise y Asti", "Maloláctico y Charmat"], correctAnswer: "Champenoise y Charmat" } },
-        nextMissionId: 34
-    },
-    {
-        id: 34, department: "Rivadavia", location: "Cavas de Zonda",
-        anchor: { missionName: "Ancla: El Secreto de las Burbujas", enabler: "Consigna: ¿Qué se puede observar en las galerías subterráneas donde reposan miles de botellas?\nPista: Es una estructura de madera clave en el método Champenoise.", enablerKeyword: "Pupitres de madera", transmission: "El secreto de las burbujas perfectas descansa en la oscuridad. Ancla el nombre de las estructuras que sostienen las botellas durante su maduración." },
-        trivia: { missionName: "Trivia: La Temperatura Ideal", challenge: { question: "¿Cuál es la temperatura constante que se mantiene de forma natural dentro de la cava, ideal para la fermentación?", options: ["12°C", "15°C", "18°C", "22°C"], correctAnswer: "18°C" } },
-        nextMissionId: 35
-    },
-    {
-        id: 35, department: "Rivadavia", location: "Parque Faunístico y El Pinar",
-        anchor: { missionName: "Ancla: La Razón del Nombre", enabler: "Consigna: ¿Por qué motivo el camping municipal se llama 'El Pinar'?\nPista: Estos árboles ofrecen un reparo valioso en la aridez cuyana.", enablerKeyword: "Por los bosquecillos de pinos", transmission: "El nombre de este lugar de esparcimiento proviene de la flora que lo caracteriza. Ancla la razón de su nombre." },
-        trivia: { missionName: "Trivia: Diversión de Verano", challenge: { question: "¿Qué atractivo acuático, apoyado en la pendiente natural, es muy popular en el balneario de 'El Pinar' durante el verano?", options: ["Una piscina de olas", "Un tobogán acuático", "Trampolines de salto", "Un río artificial lento"], correctAnswer: "Un tobogán acuático" } },
-        nextMissionId: 36
-    },
-    {
-        id: 36, department: "Rivadavia", location: "Parque Faunístico y El Pinar",
-        anchor: { missionName: "Ancla: Capacidad de Acampe", enabler: "Consigna: ¿Cuál es la capacidad de acampe del Camping 'El Pinar'?\nPista: El lugar ofrece parcelas con parrilleros, mesas y sanitarios.", enablerKeyword: "Hasta 250 sitios", transmission: "Este camping es un refugio para muchos aventureros. Ancla la cantidad de sitios disponibles para acampar." },
-        trivia: { missionName: "Trivia: Huéspedes Exóticos", challenge: { question: "Además de fauna autóctona como llamas y pumas, ¿qué tipo de animales rescatados se pueden encontrar en el Parque Faunístico?", options: ["Osos polares", "Tigres de bengala", "Leones africanos y monos", "Pingüinos"], correctAnswer: "Leones africanos y monos" } },
-        nextMissionId: 37
-    },
-    {
-        id: 37, department: "Rivadavia", location: "Centro Ambiental Anchipurac",
-        anchor: { missionName: "Ancla: De Desecho a Tesoro", enabler: "Consigna: ¿Qué funcionaba en el predio de Anchipurac hasta la década de 1990?\nPista: Fue un gran pasivo ambiental para la provincia.", enablerKeyword: "El mayor basural a cielo abierto de la provincia", transmission: "Este lugar es el máximo símbolo de transformación. Ancla lo que fue antes de convertirse en un modelo de sustentabilidad." },
-        trivia: { missionName: "Trivia: El Significado del Rayo", challenge: { question: "¿Qué significa la palabra de origen huarpe 'Anchipurac'?", options: ["Tierra Limpia", "Agua Pura", "Montaña Sagrada", "Rayo"], correctAnswer: "Rayo" } },
-        nextMissionId: 38
-    },
-    {
-        id: 38, department: "Rivadavia", location: "Centro Ambiental Anchipurac",
-        anchor: { missionName: "Ancla: El Año del Cambio", enabler: "Consigna: Encuentren el año de inauguración del moderno edificio de Anchipurac.\nPista: Su nombre simboliza energía y renovación.", enablerKeyword: "2018", transmission: "La conciencia ambiental se materializó en este edificio. Ancla el año en que se inauguró este faro de esperanza para el planeta." },
-        trivia: { missionName: "Trivia: Energía Limpia", challenge: { question: "¿Qué se puede encontrar en el exterior del complejo, además de senderos interpretativos y miradores?", options: ["Un vivero de plantas nativas", "Un parque solar con paneles fotovoltaicos", "Un lago artificial", "Una granja educativa"], correctAnswer: "Un parque solar con paneles fotovoltaicos" } },
-        nextMissionId: 39
-    },
-    {
-        id: 39, type: 'final', department: "Rivadavia Ancestral", location: "Parque de Rivadavia (Punto de Llegada)",
-        missionName: "Misión: Sellar la Brecha Temporal",
-        enabler: "¡Guardián, has llegado al nexo! El 'Ancla Temporal Final' para estabilizar la línea del tiempo de San Juan te será revelada por el Guardián Mayor al completar tu informe en la 'Guía del Tiempo'. Ingresa la palabra 'LEGADO' para confirmar la restauración.",
-        enablerKeyword: "LEGADO",
-        transmission: "Mensaje Urgente del Guardián Mayor: '¡Lo lograron! La Amenaza del Olvido retrocede gracias a su valor. Ingresen el Ancla Final. ¡El legado de San Juan está a salvo!'",
-        nextMissionId: null
-    }
 ];
 
-// --- POOL DE EVENTOS DE DISTORSIÓN CON DISPARADORES ESPECÍFICOS ---
+// --- REDUCED DISTORTION EVENT POOL WITH SPECIFIC TRIGGERS ---
 const distortionEventsData = [
     {
-        id: 'distorsion_1',
-        trigger: { onMissionComplete: 3 },
-        visual: { type: 'video', src: 'imagenes/AMENAZA2.mp4' },
-        challenge: {
-            type: 'corrupt_transmission',
-            title: "¡Transmisión Corrupta!",
-            message: "La Amenaza del Olvido intercepta tu señal. Responde rápido o la conexión se perderá...",
-            question: "Mis espías dicen que el Libertador se alojó en la celda del convento en 181... ¿Cuál es el último dígito? ¡Rápido!",
-            correctAnswer: "5",
-            timeLimit: 15,
-            bonusPoints: 30,
-            penaltyPoints: -10
-        }
-    },
-    {
-        id: 'distorsion_2',
-        trigger: { onMissionComplete: 8 },
+        id: 'distorsion_2', // Selecting only this one for the test version
+        trigger: { onMissionComplete: 8 }, // Will trigger after completing mission with ID 8
         visual: { type: 'video', src: 'imagenes/AMENAZA.mp4' },
         challenge: {
             type: 'multiple_choice',
@@ -280,25 +54,16 @@ const distortionEventsData = [
             ],
             correctAnswer: "Conmemorar el Centenario de la Revolución de Mayo",
             bonusPoints: 30,
-            penaltyPoints: 0
-        }
-    },
-    {
-        id: 'distorsion_3',
-        trigger: { onMissionComplete: 24 },
-        visual: { type: 'video', src: 'imagenes/amenaza1.mp4' },
-        challenge: {
-            type: 'narrative_echo',
-            title: "Eco del Olvido...",
-            message: "Te acercas a un lugar de poder. Un lugar que me pertenece. Ten cuidado, Guardián, o te convertirás en otro recuerdo olvidado."
+            penaltyPoints: 0,
+            tutorialDescription: "¡Cuidado! Las 'Distorsiones Temporales' son desafíos inesperados. Responde correctamente para ganar Fragmentos o, si fallas, podrías perderlos."
         }
     }
 ];
 
-// --- DATOS DE LAS MISIONES BONUS ---
-const bonusMissionData = {
+// --- REDUCED BONUS MISSION DATA ---
+const bonusMissionData = { // This is the 'Portho' bonus
     id: 'bonus_portho_1',
-    triggerMissionId: 26,
+    triggerMissionId: 16, // Will trigger after completing mission with ID 16
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
     logoSrc: 'imagenes/portho.jpg',
@@ -308,48 +73,15 @@ const bonusMissionData = {
         question: 'Portho tiene un famoso sabor que refleja un dulce muy característico de San Juan. ¿Cuál es?',
         options: ['Uva', 'Pistacho', 'Membrillo', 'Dulce de Leche'],
         correctAnswer: 'Membrillo',
-        points: 200
+        points: 200,
+        tutorialDescription: "Las 'Misiones Bonus' son oportunidades únicas para ganar muchos Fragmentos. ¡Pero el tiempo sigue corriendo!"
     }
 };
 
-const bonusLaProfeciaData = {
-    id: 'bonus_la_profecia_1',
-    triggerMissionId: 6,
-    sponsorName: 'Familia Monserrat - La Profecía',
-    title: 'Misión Bonus: El Sabor del Terruño',
-    logoSrc: 'imagenes/la profecia.jpg',
-    description: "Guardián, hemos detectado una poderosa concentración de memoria ancestral en 'La Profecía' de Familia Monserrat. Sus sabores son un ancla al pasado sanjuanino. Desvíate de tu ruta para probar un dulce tradicional y reclama una recompensa de 200 fragmentos. El tiempo sigue corriendo. ¿Aceptas el desafío?",
-    mapsLink: 'https://maps.app.goo.gl/cbffANJXPhTGh3nDA',
-    challenge: {
-        question: 'El maestro dulcero de La Profecía te ha dado a probar una de sus creaciones más emblemáticas, un sabor que define la tradición sanjuanina. ¿Qué dulce has probado?',
-        options: ['Dulce de Uva', 'Dulce de Tomate', 'Dulce de Membrillo', 'Mermelada de Naranja'],
-        correctAnswer: 'Dulce de Membrillo',
-        points: 200
-    }
-};
-
-// --- NUEVO BONUS PARA "LA VENE" ---
-const bonusLaVeneData = {
-    id: 'bonus_la_vene_1',
-    triggerMissionId: 20,
-    sponsorName: 'La Vene',
-    title: 'Misión Bonus: El Sabor de la Tradición',
-    logoSrc: 'imagenes/lavene.png',
-    description: "Guardián, detectamos una anomalía temporal exquisita proveniente de 'La Vene'. Desde 1959, han perfeccionado sus recetas. Desvíate de tu ruta para descifrar el secreto de uno de sus platos más codiciados y reclama una recompensa de 200 fragmentos. ¡El tiempo corre!",
-    mapsLink: 'https://maps.app.goo.gl/mCBt6hLp1yaikzyv8',
-    challenge: {
-        question: 'Has interceptado una receta secreta de los famosos sorrentinos premium de La Vene. ¿Qué combinación de ingredientes le da su sabor inconfundible?',
-        options: ['Salmón y queso azul', 'Carne braseada y provolone', 'Camarones y muzzarella', 'Espinaca y ricota de oveja'],
-        correctAnswer: 'CAMARONES Y MUZZARELLA',
-        points: 200
-    }
-};
+const allBonusData = [bonusMissionData];
 
 
-const allBonusData = [bonusMissionData, bonusLaProfeciaData, bonusLaVeneData];
-
-
-// --- FUNCIONES GLOBALES DE AYUDA ---
+// --- GLOBAL HELPER FUNCTIONS (NO CHANGES) ---
 const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
     const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
@@ -399,30 +131,38 @@ const generarPistaDinamica = (respuesta) => {
     return pistaGenerada;
 };
 
-// --- INICIO: FUNCIONES DE FEEDBACK SENSORIAL (VIBRACIÓN Y ANIMACIÓN) ---
 const triggerVibration = (duration = 100) => {
-    // Esta función depende de la configuración del navegador y del dispositivo del usuario.
     if ('vibrate' in navigator) {
         navigator.vibrate(duration);
     }
 };
 
-// <<< INICIO: MODIFICACIÓN DE ANIMACIÓN DE PUNTOS >>>
+const playSound = (soundPath) => {
+    const audio = new Audio(soundPath);
+    audio.play().catch(e => console.error("Error playing sound:", e));
+};
+
+const playCorrectSound = () => {
+    playSound('imagenes/sonidos/correct.wav');
+};
+
+const playWrongSound = () => {
+    playSound('imagenes/sonidos/wrong.wav');
+};
+
 const animatePoints = (points, originElementId) => {
     const destination = document.getElementById('score-display');
     const origin = document.getElementById(originElementId);
 
-    // Se verifica que ambos elementos existan para evitar errores.
     if (!destination || !origin) {
-        console.error("Elemento de destino u origen no encontrado para la animación.");
+        console.error("Destination or origin element not found for animation.");
         return;
     }
 
     const pointsFlyer = document.createElement('div');
     pointsFlyer.textContent = `+${points}`;
     
-    // Estilos para que la animación sea prominente y visible.
-    pointsFlyer.style.position = 'fixed'; // Clave: Posición relativa a la ventana del navegador.
+    pointsFlyer.style.position = 'fixed';
     pointsFlyer.style.zIndex = '10000';
     pointsFlyer.style.padding = '8px 16px';
     pointsFlyer.style.backgroundColor = 'var(--color-feedback-success-dark, #2a9d8f)';
@@ -433,22 +173,19 @@ const animatePoints = (points, originElementId) => {
     pointsFlyer.style.border = '2px solid #FFFFFF';
     pointsFlyer.style.boxShadow = '0 0 15px rgba(0,0,0,0.5)';
     pointsFlyer.style.pointerEvents = 'none';
-    pointsFlyer.style.transform = 'translate(-50%, -50%)'; // Ayuda a centrar el elemento en sus coordenadas.
+    pointsFlyer.style.transform = 'translate(-50%, -50%)';
 
     document.body.appendChild(pointsFlyer);
 
     const destRect = destination.getBoundingClientRect();
     const originRect = origin.getBoundingClientRect();
 
-    // Punto de partida: Centro horizontal de la pantalla, a la altura del botón presionado.
     const startX = window.innerWidth / 2;
     const startY = originRect.top + originRect.height / 2;
 
-    // Punto final: El centro del marcador de puntaje en el encabezado.
     const endX = destRect.left + destRect.width / 2;
     const endY = destRect.top + destRect.height / 2;
 
-    // Secuencia de animación con GSAP para un efecto más dinámico.
     gsap.fromTo(pointsFlyer, 
         { 
             left: startX, 
@@ -457,109 +194,136 @@ const animatePoints = (points, originElementId) => {
             opacity: 0,
         }, 
         { 
-            scale: 1.2, // Crece hasta ser grande para llamar la atención.
+            scale: 1.2,
             opacity: 1,
-            duration: 0.6, // Duración corta para un efecto de "pop".
+            duration: 0.6,
             ease: 'power3.out',
             onComplete: () => {
-                // Después de aparecer, espera un momento y luego viaja hacia el marcador.
                 gsap.to(pointsFlyer, {
                     left: endX,
                     top: endY,
-                    scale: 0.1, // Se encoge al llegar al destino.
+                    scale: 0.1,
                     opacity: 0,
-                    duration: 1.0, // Un viaje más lento para que sea fácil de seguir.
+                    duration: 1.0,
                     ease: 'power1.in',
-                    delay: 0.4, // Pausa en el centro antes de viajar.
+                    delay: 0.4,
                     onComplete: () => {
-                        pointsFlyer.remove(); // Limpieza del DOM para no dejar elementos basura.
+                        pointsFlyer.remove();
                     }
                 });
             }
         }
     );
 };
-// <<< FIN: MODIFICACIÓN DE ANIMACIÓN DE PUNTOS >>>
-
 
 async function sendResultsToBackend(data) {
     const timeToSend = data.finalTimeDisplay || formatTime(data.mainTimer);
-
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('URL_QUE_COPIASTE')) {
-        console.warn("URL del script no configurada. No se enviarán los datos.");
-        return;
-    }
-    const payload = {
-        teamName: data.teamName,
-        totalTime: timeToSend,
-        totalScore: data.score,
-        missionResults: data.missionResults
-    };
-    try {
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify(payload));
-        
-        await fetch(`${GOOGLE_SCRIPT_URL}?action=saveResults`, {
-            method: 'POST',
-            body: formData,
-        });
-    } catch (error) {
-        console.error("Error al enviar la actualización al backend:", error);
-    }
+    console.warn("Test version: Result submission to the backend is disabled.");
+    return;
 }
-
 
 async function sendBonusResultToBackend(data) {
-    console.log('%c[ETAPA 3] Intentando enviar datos del bonus al backend.', 'color: #22CC22; font-size: 14px; font-weight: bold;');
-    console.log('Datos que se enviarán:', data);
-
-    if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('URL_QUE_COPIASTE')) {
-        console.warn("URL del script no configurada. No se enviarán los datos del bonus.");
-        return;
-    }
-
-    const params = new URLSearchParams({
-        action: 'saveBonusResult',
-        teamName: data.teamName,
-        bonusId: data.bonusId,
-        points: data.points
-    });
-
-    try {
-        await fetch(`${GOOGLE_SCRIPT_URL}?${params.toString()}`, {
-            method: 'POST'
-        });
-        console.log(`%cResultado del bonus ${data.bonusId} enviado (supuestamente) con éxito.`, 'color: #22CC22;');
-    } catch (error) {
-        console.error("Error CRÍTICO al enviar el resultado del bonus al backend:", error);
-    }
+    console.log('%c[STAGE 3] Attempting to send bonus data to backend.', 'color: #22CC22; font-size: 14px; font-weight: bold;');
+    console.log('Data to be sent:', data);
+    console.warn("Test version: Bonus result submission to the backend is disabled.");
+    return;
 }
 
 
-// --- COMPONENTES DE REACT ---
+// --- NEW TUTORIAL POPUP COMPONENT ---
+const TutorialPopup = ({ message, targetId, onDismiss, style = {}, arrowPosition = 'bottom' }) => {
+    const [position, setPosition] = React.useState({ top: 0, left: 0 });
+    const popupRef = React.useRef(null);
 
-const DistortionEventPage = ({ event, onComplete }) => {
+    React.useLayoutEffect(() => {
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement || !popupRef.current) return;
+
+        const targetRect = targetElement.getBoundingClientRect();
+        const popupRect = popupRef.current.getBoundingClientRect();
+
+        let top, left;
+
+        // Default position: below the target
+        top = targetRect.bottom + 10; // 10px below the target
+        left = targetRect.left + targetRect.width / 2 - popupRect.width / 2;
+
+        // Adjust if it goes off-screen
+        if (left < 0) left = 0;
+        if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width;
+
+        // If 'arrowPosition' is 'top', place the popup above
+        if (arrowPosition === 'top') {
+            top = targetRect.top - popupRect.height - 10;
+        } else if (arrowPosition === 'left') {
+            left = targetRect.left - popupRect.width - 10;
+            top = targetRect.top + targetRect.height / 2 - popupRect.height / 2;
+        } else if (arrowPosition === 'right') {
+            left = targetRect.right + 10;
+            top = targetRect.top + targetRect.height / 2 - popupRect.height / 2;
+        }
+
+
+        // Ensure popup is within viewport
+        if (top < 0) top = 0; // Don't go above the screen
+        if (top + popupRect.height > window.innerHeight) top = window.innerHeight - popupRect.height;
+
+
+        setPosition({ top: top + window.scrollY, left: left + window.scrollX });
+    }, [targetId, message, arrowPosition]);
+
+
+    return ReactDOM.createPortal(
+        <div ref={popupRef} className={`tutorial-popup tutorial-arrow-${arrowPosition}`} style={{ ...position, ...style }}>
+            <p>{message}</p>
+            <button onClick={onDismiss} className="tutorial-dismiss-button">Entendido</button>
+        </div>,
+        document.body
+    );
+};
+
+
+const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTutorialStep, handleDismissTutorial }) => {
     const [view, setView] = React.useState('visual');
     const videoRef = React.useRef(null);
+    const [videoPlaying, setVideoPlaying] = React.useState(false);
+    const [autoplayBlocked, setAutoplayBlocked] = React.useState(false);
 
     React.useEffect(() => {
-        if (view !== 'visual') return;
+        if (view !== 'visual' || !videoRef.current) return;
 
-        if (event.visual.type === 'video' && videoRef.current) {
-            videoRef.current.play().catch(e => {
-                console.error("Error al auto-reproducir video:", e);
-                setView('challenge');  
+        videoRef.current.play()
+            .then(() => {
+                setVideoPlaying(true);
+                setAutoplayBlocked(false);
+            })
+            .catch(e => {
+                console.warn("Autoplay blocked or playback error:", e);
+                setAutoplayBlocked(true);
+                setVideoPlaying(false);
             });
-        } else if (event.visual.type === 'image') {
-            const timer = setTimeout(() => {
-                setView('challenge');
-            }, event.visual.duration);
-            return () => clearTimeout(timer);
-        }
-    }, [event, view]);
+        
+        const currentVideoRef = videoRef.current;
+        const handleEnded = () => {
+            setView('challenge');
+            if(tutorialActive) handleNextTutorialStep(); // Move tutorial step after video ends
+        };
+        currentVideoRef.addEventListener('ended', handleEnded);
 
-    const handleVisualEnd = () => {
-        setView('challenge');
+        return () => {
+            if (currentVideoRef) {
+                currentVideoRef.removeEventListener('ended', handleEnded);
+            }
+        };
+    }, [event, view, tutorialActive, handleNextTutorialStep]);
+
+    const handlePlayVideo = () => {
+        if (videoRef.current) {
+            videoRef.current.play().then(() => {
+                setVideoPlaying(true);
+                setAutoplayBlocked(false);
+            }).catch(e => console.error("Error playing video manually:", e));
+        }
     };
 
     const ChallengeRenderer = () => {
@@ -591,6 +355,10 @@ const DistortionEventPage = ({ event, onComplete }) => {
                     : '❌ Respuesta incorrecta. La conexión se perdió.');
 
             setFeedback({ message, type: isCorrect ? 'success' : 'error' });
+
+            if (isCorrect) playCorrectSound();
+            else playWrongSound();
+
             setTimeout(() => onComplete({ points }), 3000);
         };
         
@@ -604,6 +372,10 @@ const DistortionEventPage = ({ event, onComplete }) => {
                 : `❌ Respuesta incorrecta. No has recuperado fragmentos.`;
             
             setFeedback({ message, type: isCorrect ? 'success' : 'error' });
+            
+            if (isCorrect) playCorrectSound();
+            else playWrongSound();
+
             setTimeout(() => onComplete({ points }), 3000);
         };
 
@@ -624,6 +396,14 @@ const DistortionEventPage = ({ event, onComplete }) => {
                         <input type="text" placeholder="Último dígito" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={isLocked} />
                         <button className="primary-button" onClick={() => handleSubmit(false)} disabled={isLocked}>RESPONDER</button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+                        {tutorialActive && (
+                            <TutorialPopup
+                                message={event.challenge.tutorialDescription}
+                                targetId="distortion-challenge-input" // Assuming an ID for the input field
+                                onDismiss={handleDismissTutorial}
+                                arrowPosition="bottom"
+                            />
+                        )}
                     </div>
                 );
             case 'multiple_choice':
@@ -633,9 +413,10 @@ const DistortionEventPage = ({ event, onComplete }) => {
                         <p>{challenge.message}</p>
                         <p className="distortion-challenge-text">{challenge.question}</p>
                         <ul className="trivia-options">
-                            {challenge.options.map(option => (
+                            {challenge.options.map((option, index) => (
                                 <li 
                                     key={option} 
+                                    id={`distortion-option-${index}`} // Added ID for tutorial targeting
                                     className={selectedOption === option ? 'selected' : ''} 
                                     onClick={() => !isLocked && setSelectedOption(option)}
                                 >
@@ -643,20 +424,28 @@ const DistortionEventPage = ({ event, onComplete }) => {
                                 </li>
                             ))}
                         </ul>
-                        <button className="primary-button" onClick={handleMultipleChoiceSubmit} disabled={isLocked || !selectedOption}>
+                        <button id="distortion-submit-button" className="primary-button" onClick={handleMultipleChoiceSubmit} disabled={isLocked || !selectedOption}>
                             VERIFICAR
                         </button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+                        {tutorialActive && (
+                            <TutorialPopup
+                                message={event.challenge.tutorialDescription}
+                                targetId="distortion-submit-button"
+                                onDismiss={handleDismissTutorial}
+                                arrowPosition="bottom"
+                            />
+                        )}
                     </div>
                 );
             case 'narrative_echo':
-                   return (
-                           <div className="distortion-container">
-                                   <h3>{challenge.title}</h3>
-                                   <p className="distortion-narrative-text">{challenge.message}</p>
-                                   <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
-                           </div>
-                   );
+                    return (
+                            <div className="distortion-container">
+                                    <h3>{challenge.title}</h3>
+                                    <p className="distortion-narrative-text">{challenge.message}</p>
+                                    <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                            </div>
+                    );
             default:
                 onComplete({ points: 0 });
                 return null;
@@ -667,10 +456,38 @@ const DistortionEventPage = ({ event, onComplete }) => {
         <div className="amenaza-modal-overlay">
             <div className="amenaza-modal-content">
                 {view === 'visual' && event.visual.type === 'video' && (
-                    <video ref={videoRef} className="amenaza-visual" src={event.visual.src} onEnded={handleVisualEnd} muted playsInline />
+                    <>
+                        <video ref={videoRef} className="amenaza-visual" src={event.visual.src} autoPlay playsInline />
+                        {autoplayBlocked && (
+                            <button className="video-play-button" onClick={handlePlayVideo}>
+                                ▶️ Activar Video / Sonido
+                            </button>
+                        )}
+                        {!videoPlaying && !autoplayBlocked && (
+                            <p className="video-loading-message">Cargando video...</p>
+                        )}
+                        {tutorialActive && (
+                            <TutorialPopup
+                                message="¡Alerta! Una 'Distorsión Temporal' interrumpe tu viaje. Presta atención al video o imagen."
+                                targetId={autoplayBlocked ? "video-play-button" : "amenaza-visual-element"} // Target video or play button
+                                onDismiss={handleDismissTutorial}
+                                arrowPosition={autoplayBlocked ? "top" : "bottom"}
+                            />
+                        )}
+                    </>
                 )}
                 {view === 'visual' && event.visual.type === 'image' && (
-                    <img className="amenaza-visual" src={event.visual.src} alt="Interrupción de la Amenaza" />
+                    <>
+                        <img id="amenaza-visual-element" className="amenaza-visual" src={event.visual.src} alt="Interrupción de la Amenaza" />
+                        {tutorialActive && (
+                            <TutorialPopup
+                                message="¡Alerta! Una 'Distorsión Temporal' interrumpe tu viaje. Observa la imagen para el desafío."
+                                targetId="amenaza-visual-element"
+                                onDismiss={handleDismissTutorial}
+                                arrowPosition="bottom"
+                            />
+                        )}
+                    </>
                 )}
                 {view === 'challenge' && <ChallengeRenderer />}
             </div>
@@ -692,7 +509,7 @@ const Header = ({ teamName, score, timer }) => (
     </div>
 );
 
-const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
+const LoginPage = ({ onLogin, setErrorMessage, errorMessage, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [squadCode, setSquadCode] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const logoUrl = "imagenes/LOGO 3 (1).png";
@@ -704,26 +521,15 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
         setIsLoading(true);
         setErrorMessage('');
 
-        try {
-            const validationUrl = `${GOOGLE_SCRIPT_URL}?action=validateUser&squadCode=${enteredCode}`;
-            
-            const response = await fetch(validationUrl, { method: 'POST' });
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor.');
-            }
-            const data = await response.json();
+        const isValid = true;
+        const isAdmin = false;
 
-            if (data.valid) {
-                onLogin(enteredCode, enteredCode);
-            } else {
-                setErrorMessage('⚠️ Código de Guardián no válido. Verifica tus credenciales.');
-            }
-        } catch (error) {
-            console.error("Error de conexión al validar:", error);
-            setErrorMessage('❌ Error de conexión. No se pudo verificar el código.');
-        } finally {
-            setIsLoading(false);
+        if (isValid) {
+            onLogin(enteredCode, enteredCode, isAdmin);
+        } else {
+            setErrorMessage('⚠️ Código de Guardián no válido. Verifica tus credenciales.');
         }
+        setIsLoading(false);
     };
 
     return (
@@ -742,6 +548,7 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
                 disabled={isLoading}
             />
             <button 
+                id="activate-button" // ID for tutorial targeting
                 className="primary-button" 
                 onClick={handleLoginInternal} 
                 disabled={isLoading}
@@ -775,84 +582,128 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
     );
 };
 
-// --- NUEVO COMPONENTE DE BIENVENIDA ---
-const WelcomePage = ({ teamName, onContinue }) => {
+const WelcomePage = ({ teamName, onContinue, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [showContent, setShowContent] = React.useState(false);
 
     React.useEffect(() => {
-        // Pequeño retardo para la animación de entrada
         const timer = setTimeout(() => {
             setShowContent(true);
-        }, 500); // Aparece 0.5 segundos después de cargar la página
+        }, 500);
         return () => clearTimeout(timer);
     }, []);
+
+    React.useEffect(() => {
+        if (showContent && tutorialActive) {
+            handleNextTutorialStep(); // Trigger first tutorial step on welcome page
+        }
+    }, [showContent, tutorialActive, handleNextTutorialStep]);
 
     return (
         <div className="welcome-container" style={{ opacity: showContent ? 1 : 0, transition: 'opacity 1s ease-in-out' }}>
             <img src="imagenes/welcome_portal.png" alt="Portal de Bienvenida" className="welcome-image"/>
             <h2>¡BIENVENIDO, GUARDIÁN <span className="team-name-welcome">{teamName}</span>!</h2>
-            {/* MODIFICADO: Se quitaron los ** de "ACTIVADA" */}
             <p className="welcome-message">Tu Guía del Tiempo ha sido ACTIVADA. El legado de San Juan cuenta contigo para restaurar la línea temporal.</p>
+            
+            <p id="welcome-fragments-desc" className="welcome-first-mission">
+                Los "Fragmentos de Historia" son tus puntos. Acumula la mayor cantidad posible.
+            </p>
+            {tutorialActive && tutorialStep === 1 && (
+                <TutorialPopup
+                    message="Aquí verás los 'Fragmentos de Historia' que recuperes, ¡son tus puntos!"
+                    targetId="welcome-fragments-desc"
+                    onDismiss={handleNextTutorialStep}
+                    arrowPosition="bottom"
+                />
+            )}
+
+            <p id="welcome-time-desc" className="welcome-first-mission">
+                El "Tiempo Total" es tu marcador más valioso. ¡Cada segundo cuenta!
+            </p>
+            {tutorialActive && tutorialStep === 2 && (
+                <TutorialPopup
+                    message="Este es tu 'Tiempo Total' de misión. ¡Sé veloz, el tiempo es crucial!"
+                    targetId="welcome-time-desc"
+                    onDismiss={handleNextTutorialStep}
+                    arrowPosition="bottom"
+                />
+            )}
+
             <p className="welcome-first-mission">Tu primera ancla te espera en:</p>
             <p className="welcome-location">📍 Parroquia Santa Lucía</p>
-            <button className="primary-button welcome-button" onClick={onContinue}>
+            <button id="start-mission-button" className="primary-button welcome-button" onClick={onContinue}>
                 INICIAR
             </button>
+            {tutorialActive && tutorialStep === 3 && (
+                <TutorialPopup
+                    message="Cuando estés listo para tu primera misión, presiona 'Iniciar'."
+                    targetId="start-mission-button"
+                    onDismiss={handleDismissTutorial} // Last step of welcome tutorial
+                    arrowPosition="top"
+                />
+            )}
+
             <p className="welcome-footer">Mantén tus sentidos alerta. Cada decisión cuenta.</p>
         </div>
     );
 };
 
 
-const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly }) => {
+const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [isTraveling, setIsTraveling] = React.useState(true);
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
+            if(tutorialActive && tutorialStep === 4) handleNextTutorialStep(); // Trigger tutorial step after travel
         }, 10000);  
         return () => clearTimeout(travelTimer);
-    }, []);
+    }, [tutorialActive, handleNextTutorialStep, tutorialStep]);
 
-    // Función para limpiar el nombre de la ubicación y generar el nombre del archivo de imagen
     const getImageFileName = (locationName) => {
-        // Convierte a minúsculas, elimina caracteres especiales y reemplaza espacios con guiones bajos
         return locationName.toLowerCase()
-                           .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Elimina acentos
-                           .replace(/[^a-z0-9\s]/g, "") // Elimina caracteres no alfanuméricos (excepto espacios)
-                           .replace(/\s+/g, "") // Elimina espacios
-                           .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u') // Asegura que las tildes se manejen
-                           + '.png';
+                                       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                                       .replace(/[^a-z0-9\s]/g, "")
+                                       .replace(/\s+/g, "")
+                                       .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u')
+                                       + '.png';
     };
 
     const imageSrc = `imagenes/${getImageFileName(nextLocation)}`;
 
     return (
         <div className="en-ruta-container">
-            {/* MODIFICADO: src de la imagen ahora es dinámico */}
             <img src={imageSrc} alt={`Viajando a ${nextLocation}`} className="portal-image" onError={(e) => { e.target.onerror = null; e.target.src='imagenes/VIAJANDO.png'; }} />
             <h3>VIAJANDO A TRAVÉS DEL TIEMPO...</h3>
             <p>Próxima Sincronización: <strong>{nextLocation}</strong> ({department})</p>
             <p className="progress-info">Sincronizando coordenadas temporales...</p>
             <div className="progress-bar-container"><div className="progress-bar-filler"></div></div>
             <p>¡Mantén el rumbo, Guardián! Evita las 'distorsiones temporales' (¡y las multas de tránsito!).</p>
-            <button className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'SINCRONIZANDO...' : 'LLEGADA CONFIRMADA'}</button>
+            <button id="arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'SINCRONIZANDO...' : 'LLEGADA CONFIRMADA'}</button>
             <button className="finish-early-button" onClick={onFinishEarly}>Terminar Aquí</button>
+            {tutorialActive && tutorialStep === 4 && (
+                <TutorialPopup
+                    message="En esta pantalla viajarás a la siguiente ubicación. Cuando la barra de progreso se complete, presiona 'Llegada Confirmada'."
+                    targetId="arrival-button"
+                    onDismiss={handleDismissTutorial}
+                    arrowPosition="top"
+                />
+            )}
         </div>
     );
 };
 
-const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly }) => {
+const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [isTraveling, setIsTraveling] = React.useState(true);
     
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
+            if(tutorialActive && tutorialStep === 4) handleNextTutorialStep(); // Trigger tutorial step after travel
         }, 10000);
 
         return () => {
             clearTimeout(travelTimer);
         }
-    }, []);
+    }, [tutorialActive, handleNextTutorialStep, tutorialStep]);
     
     const imageUrl = nextDepartment === 'Capital' ? 'imagenes/VIAJANDO1.png' : nextDepartment === 'Rivadavia' ? 'imagenes/VIAJANDO2.png' : 'imagenes/VIAJANDO.png';
     return (
@@ -863,8 +714,16 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly }) => {
             <p className="progress-info">Abriendo portal de largo alcance...</p>
             <div className="progress-bar-container"><div className="progress-bar-filler"></div></div>
             <p style={{fontStyle: 'italic', fontSize: '0.9rem', opacity: 0.8}}>Es importante que respetes las señales de tránsito, hay controles secretos que pueden restarte puntos.</p>
-            <button className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'VIAJANDO...' : 'HEMOS LLEGADO'}</button>
+            <button id="long-travel-arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'VIAJANDO...' : 'HEMOS LLEGADO'}</button>
             <button className="finish-early-button" onClick={onFinishEarly}>Terminar Aquí</button>
+            {tutorialActive && tutorialStep === 4 && (
+                <TutorialPopup
+                    message="Si el viaje es largo, la barra de progreso te indicará cuánto falta. Presiona 'Hemos Llegado' al finalizar."
+                    targetId="long-travel-arrival-button"
+                    onDismiss={handleDismissTutorial}
+                    arrowPosition="top"
+                />
+            )}
         </div>
     );
 };
@@ -874,8 +733,8 @@ const EndGamePage = ({ score, finalTime, teamName }) => (
         <img src="https://cdn-icons-png.flaticon.com/512/784/784408.png" alt="Medalla o Trofeo Guardián" className="medal-image"/>
         <h3>¡MISIÓN TEMPORAL COMPLETADA, {teamName}!</h3>
         <p>Has estabilizado la línea del tiempo de San Juan. ¡La 'Amenaza del Olvido' ha sido contenida gracias a tu escuadrón!</p>
-        <p><strong>Fragmentos de Historia Restaurados: {score}</strong></p>
-        <p><strong>Tiempo Total de la Misión: {finalTime}</strong></p>
+        <p id="final-score-display"><strong>Fragmentos de Historia Restaurados: {score}</strong></p>
+        <p id="final-time-display"><strong>Tiempo Total de la Misión: {finalTime}</strong></p>
         <p>¡Has ganado tu Medalla "Guardián del Tiempo"! 🏅 Los "Custodios Mayores" y otros reconocimientos serán anunciados en el Concilio de Guardianes.</p>
         <p style={{fontSize: "0.9rem", marginTop: "20px"}}><em>No olvides compartir tu hazaña y prepararte para la celebración.</em></p>
         
@@ -900,22 +759,31 @@ const AbortedGamePage = ({ score, finalTime, teamName }) => (
     </div>
 );
 
-const TriviaSection = ({ stage, onComplete }) => {
+const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const { challenge, missionName } = stage.trivia;
     const [selectedOption, setSelectedOption] = React.useState('');
     const [feedback, setFeedback] = React.useState({ message: '', type: ''});
     const [triviaTimer, setTriviaTimer] = React.useState(0);
     const [glowClass, setGlowClass] = React.useState('');
+
     React.useEffect(() => {
         const interval = setInterval(() => setTriviaTimer(prev => prev + 1), 1000);
         return () => clearInterval(interval);
     }, []);
+
+    React.useEffect(() => {
+        if(tutorialActive && tutorialStep === 6) { // Step for trivia options/button
+            handleNextTutorialStep();
+        }
+    }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
+
     const calculatePoints = (timeInSeconds) => {
         if (timeInSeconds <= 30) return 50;
         if (timeInSeconds <= 60) return 35;
         if (timeInSeconds <= 90) return 20;
         return 10;
     };
+
     const handleSubmit = () => {
         const finalTime = triviaTimer;
         const isCorrect = selectedOption.toUpperCase() === challenge.correctAnswer.toUpperCase();
@@ -927,8 +795,12 @@ const TriviaSection = ({ stage, onComplete }) => {
             type: isCorrect ? 'success' : 'error'
         });
 
+        if (isCorrect) playCorrectSound();
+        else playWrongSound();
+
         setTimeout(() => {
             onComplete({ points: pointsWon, time: finalTime });
+            if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial after submit
         }, 2500);
 
         if (isCorrect) {
@@ -939,22 +811,42 @@ const TriviaSection = ({ stage, onComplete }) => {
     return (
         <div className={`challenge-container ${glowClass}`}>
             <h3>{missionName}</h3>
+            <p id="trivia-description-text">{stage.trivia.challenge.tutorialDescription}</p>
             <div className="challenge-timer">⏱️ {triviaTimer}s</div>
             <p>{challenge.question}</p>
             <ul className="trivia-options">
-                {challenge.options.map(option => (
-                    <li key={option} className={selectedOption === option ? 'selected' : ''} onClick={() => !feedback.message && setSelectedOption(option)}>
+                {challenge.options.map((option, index) => (
+                    <li key={option} 
+                        id={`trivia-option-${index}`} // Added ID for tutorial targeting
+                        className={selectedOption === option ? 'selected' : ''} 
+                        onClick={() => !feedback.message && setSelectedOption(option)}>
                         {option}
                     </li>
                 ))}
             </ul>
             <button id="trivia-button" className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>VERIFICAR TRANSMISIÓN</button>
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+            {tutorialActive && tutorialStep === 6 && (
+                <TutorialPopup
+                    message="Elige la opción correcta para ganar puntos. Tu tiempo de respuesta influye en los 'Fragmentos' obtenidos."
+                    targetId="trivia-option-0" // Target the first option
+                    onDismiss={handleNextTutorialStep} // Move to next step (submit button)
+                    arrowPosition="right"
+                />
+            )}
+            {tutorialActive && tutorialStep === 7 && (
+                <TutorialPopup
+                    message="Presiona 'Verificar Transmisión' para confirmar tu respuesta."
+                    targetId="trivia-button"
+                    onDismiss={handleDismissTutorial} // Dismiss after this
+                    arrowPosition="top"
+                />
+            )}
         </div>
     );
 };
 
-const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
+const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const { anchor } = stage;
     const [keyword, setKeyword] = React.useState('');
     const [error, setError] = React.useState('');
@@ -972,11 +864,18 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
         return () => clearInterval(interval);
     }, [isLocked]);
     
+    React.useEffect(() => {
+        if(tutorialActive && tutorialStep === 5) { // Step for anchor input/button
+            handleNextTutorialStep();
+        }
+    }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
+
     const handleHintRequest = () => {
         if (score >= 25 && !pistaGenerada) {
             onHintRequest();
             const pista = generarPistaDinamica(anchor.enablerKeyword);
             setPistaGenerada(pista);
+            if(tutorialActive) handleNextTutorialStep(); // Move tutorial step after hint
         }
     };
 
@@ -1000,7 +899,12 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
             setGlowClass('success-glow');
             setFeedback({ message: `✔️ ¡Ancla estabilizada! Has recuperado ${points} Fragmentos.`, type: 'success' });
             
-            setTimeout(() => onComplete({ points: points, time: anchorTimer }), 2500);
+            playCorrectSound();
+
+            setTimeout(() => {
+                onComplete({ points: points, time: anchorTimer });
+                if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial after submit
+            }, 2500);
 
             triggerVibration();
             animatePoints(points, 'anchor-button');
@@ -1011,11 +915,16 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
             setGlowClass('error-glow');
             setTimeout(() => setGlowClass(''), 1500);
 
+            playWrongSound();
+
             if (newAttemptCount >= 3) {
                 setError('');
                 setIsLocked(true);
                 setFeedback({ message: `❌ ¡Se agotaron los intentos! La distorsión se consolida. Avanzando...`, type: 'error' });
-                setTimeout(() => onComplete({ points: 0, time: anchorTimer }), 2500);
+                setTimeout(() => {
+                    onComplete({ points: 0, time: anchorTimer });
+                    if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial after submit
+                }, 2500);
             } else {
                 const attemptsLeft = 3 - newAttemptCount;
                 setError(`🚫 Ancla Temporal incorrecta. Quedan ${attemptsLeft} ${attemptsLeft === 1 ? 'intento' : 'intentos'}.`);
@@ -1029,7 +938,11 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
         setError('');
         setGlowClass('error-glow');
         setFeedback({ message: `Misión de anclaje omitida. No se han recuperado Fragmentos.`, type: 'error' });
-        setTimeout(() => onComplete({ points: 0, time: anchorTimer }), 2500);
+        playWrongSound();
+        setTimeout(() => {
+            onComplete({ points: 0, time: anchorTimer });
+            if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial after skip
+        }, 2500);
     };
 
     const handleInputChange = (e) => {
@@ -1039,43 +952,77 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score }) => {
     };
 
     return (
-    <div className={`stage-container ${glowClass}`}>
-        <h3>{anchor.missionName}</h3>
-        <div className="challenge-timer">⏱️ {anchorTimer}s</div>
-        <p><strong>Departamento:</strong> {stage.department}</p>
-        {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
-        <p><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
+        <div className={`stage-container ${glowClass}`}>
+            <h3>{anchor.missionName}</h3>
+            <p id="anchor-description-text"><strong>Descripción:</strong> {stage.anchor.tutorialDescription}</p>
+            <div className="challenge-timer">⏱️ {anchorTimer}s</div>
+            <p><strong>Departamento:</strong> {stage.department}</p>
+            {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
+            <p><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
 
-        {error && <p className="feedback error">{error}</p>}
-        
-        {!pistaGenerada && (
-            <div className="hint-request-container">
-                <button
-                    className="primary-button"
-                    onClick={handleHintRequest}
-                    disabled={score < 25 || isLocked}>
-                    SOLICITAR PISTA (-25 Fragmentos)
-                </button>
-            </div>
-        )}
-        
-        {pistaGenerada && (
-            <div className="hint-box hint-dynamic">
-                <p><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
-            </div>
-        )}
-
-        <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
-        
-        <div className="button-group-vertical">    
-            <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
+            {error && <p className="feedback error">{error}</p>}
             
-            <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
+            {!pistaGenerada && (
+                <div className="hint-request-container">
+                    <button
+                        id="hint-button" // ID for tutorial targeting
+                        className="primary-button"
+                        onClick={handleHintRequest}
+                        disabled={score < 25 || isLocked}>
+                        SOLICITAR PISTA (-25 Fragmentos)
+                    </button>
+                    {tutorialActive && tutorialStep === 8 && (
+                        <TutorialPopup
+                            message="Si te quedas atascado, puedes pedir una pista, pero te costará 'Fragmentos'. Úsala con sabiduría."
+                            targetId="hint-button"
+                            onDismiss={handleNextTutorialStep}
+                            arrowPosition="bottom"
+                        />
+                    )}
+                </div>
+            )}
+            
+            {pistaGenerada && (
+                <div className="hint-box hint-dynamic">
+                    <p><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
+                </div>
+            )}
+
+            <input id="anchor-input" type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
+            {tutorialActive && tutorialStep === 5 && (
+                <TutorialPopup
+                    message="Ingresa la 'Ancla Temporal' que encuentres en el lugar. ¡Es clave para estabilizar la línea de tiempo!"
+                    targetId="anchor-input"
+                    onDismiss={handleNextTutorialStep}
+                    arrowPosition="bottom"
+                />
+            )}
+            
+            <div className="button-group-vertical">    
+                <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
+                {tutorialActive && tutorialStep === 9 && (
+                    <TutorialPopup
+                        message="Cuando estés seguro, presiona 'Anclar Recuerdo' para validar la información."
+                        targetId="anchor-button"
+                        onDismiss={handleNextTutorialStep}
+                        arrowPosition="top"
+                    />
+                )}
+                
+                <button id="skip-button" className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
+                {tutorialActive && tutorialStep === 10 && (
+                    <TutorialPopup
+                        message="Si no puedes resolver el Ancla, puedes omitirla, pero no ganarás 'Fragmentos'."
+                        targetId="skip-button"
+                        onDismiss={handleDismissTutorial}
+                        arrowPosition="top"
+                    />
+                )}
+            </div>
+            
+            {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
         </div>
-        
-        {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
-    </div>
-);
+    );
 };
 
 
@@ -1088,9 +1035,11 @@ const FinalSection = ({stage, onComplete}) => {
         if (keyword.toUpperCase().trim() === stage.enablerKeyword.toUpperCase().trim()) {
             setGlowClass('success-glow');
             onComplete(200);
+            playCorrectSound();
         } else {
             setError('🚫 Código final incorrecto.');
             setGlowClass('error-glow');
+            playWrongSound();
             setTimeout(() => setGlowClass(''), 1500);
         }
     };
@@ -1124,28 +1073,10 @@ const Leaderboard = () => {
 
    React.useEffect(() => {
     const fetchRanking = async () => {
-      if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
-        setError('URL del ranking no configurada.');
-        setIsLoading(false);
-        return;
-      }
-      
-      try {
-        const response = await fetch(LEADERBOARD_URL);
-        if (!response.ok) {
-          throw new Error('La respuesta del servidor no fue correcta.');
-        }
-        const data = await response.json();
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        setRanking(data);
-      } catch (err) {
-        setError('No se pudo cargar el ranking. Intenta más tarde.');
-        console.error("Error al obtener el ranking:", err);
-      } finally {
-        setIsLoading(false);
-      }
+      console.warn("Test version: Ranking is disabled.");
+      setIsLoading(false);
+      setError("Ranking not available in the test version.");
+      return;
     };
 
     fetchRanking();
@@ -1161,7 +1092,7 @@ const Leaderboard = () => {
 
    return (
     <div className="leaderboard-container">
-      <h3>CONCILIO DE GUARDIANES</h3>
+      <h3 id="leaderboard-title">CONCILIO DE GUARDIANES</h3>
       <table className="leaderboard-table">
         <thead>
           <tr>
@@ -1186,24 +1117,35 @@ const Leaderboard = () => {
    );
 };
 
-const BonusMissionModal = ({ bonusData, onComplete }) => {
+const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [view, setView] = React.useState('offer');
     const [feedback, setFeedback] = React.useState({ message: '', type: '' });
     const [glowClass, setGlowClass] = React.useState('');
     const [selectedOption, setSelectedOption] = React.useState('');
 
+    React.useEffect(() => {
+        if (view === 'offer' && tutorialActive && tutorialStep === 11) { // When bonus is offered
+            handleNextTutorialStep(); // Move to next tutorial step (offer explanation)
+        } else if (view === 'challenge' && tutorialActive && tutorialStep === 13) { // When challenge starts
+            handleNextTutorialStep(); // Move to next tutorial step (challenge explanation)
+        }
+    }, [view, tutorialActive, tutorialStep, handleNextTutorialStep]);
+
+
     const handleAccept = () => {
         setView('challenge');
+        if(tutorialActive && tutorialStep === 12) handleNextTutorialStep(); // Trigger tutorial step after accepting
     };
 
     const handleDecline = () => {
         onComplete({ points: 0, participated: false });
+        if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial if bonus declined
     };
 
     const handleSubmitChallenge = () => {
         if (feedback.message) return;
 
-        const isCorrect = selectedOption === bonusData.challenge.correctAnswer;
+        const isCorrect = selectedOption.toUpperCase() === bonusData.challenge.correctAnswer.toUpperCase();
         const pointsWon = isCorrect ? bonusData.challenge.points : 0;
         setGlowClass(isCorrect ? 'success-glow' : 'error-glow');
         setFeedback({
@@ -1212,8 +1154,13 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
                 : `❌ Respuesta Incorrecta. No has recuperado fragmentos.`,
             type: isCorrect ? 'success' : 'error'
         });
+
+        if (isCorrect) playCorrectSound();
+        else playWrongSound();
+
         setTimeout(() => {
             onComplete({ points: pointsWon, participated: true });
+            if(tutorialActive) handleDismissTutorial(); // Dismiss tutorial after submit
         }, 3000);
     };
 
@@ -1227,31 +1174,67 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
                         <div className="transmission-box">
                             <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
                         </div>
-                        <p>{bonusData.description}</p>
-                        <a href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
+                        <p id="bonus-offer-description">{bonusData.description}</p>
+                        {tutorialActive && tutorialStep === 11 && (
+                            <TutorialPopup
+                                message="Una 'Misión Bonus' te ofrece muchos 'Fragmentos' extra, pero el tiempo sigue corriendo en tu misión principal."
+                                targetId="bonus-offer-description"
+                                onDismiss={handleNextTutorialStep}
+                                arrowPosition="bottom"
+                            />
+                        )}
+                        <a id="bonus-maps-link" href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
                             📍 ABRIR EN GOOGLE MAPS
                         </a>
+                        {tutorialActive && tutorialStep === 12 && (
+                            <TutorialPopup
+                                message="Puedes abrir el mapa para llegar al lugar, luego decide si aceptas o rechazas el desvío."
+                                targetId="bonus-maps-link"
+                                onDismiss={handleNextTutorialStep} // Move to accept/decline buttons
+                                arrowPosition="top"
+                            />
+                        )}
                         <div className="button-group">
-                            <button className="secondary-button" onClick={handleDecline}>Rechazar Desvío</button>
-                            <button className="primary-button" onClick={handleAccept}>¡ACEPTO EL DESAFÍO!</button>
+                            <button id="bonus-decline-button" className="secondary-button" onClick={handleDecline}>Rechazar Desvío</button>
+                            <button id="bonus-accept-button" className="primary-button" onClick={handleAccept}>¡ACEPTO EL DESAFÍO!</button>
+                            {tutorialActive && tutorialStep === 13 && (
+                                <TutorialPopup
+                                    message="Elige 'Acepto el desafío' para intentar ganar los Fragmentos, o 'Rechazar Desvío' para continuar tu misión principal."
+                                    targetId="bonus-accept-button"
+                                    onDismiss={handleNextTutorialStep} // Move to challenge explanation
+                                    arrowPosition="top"
+                                />
+                            )}
                         </div>
                     </div>
                 )}
                 {view === 'challenge' && (
                     <div className="challenge-container">
                         <h3>{bonusData.sponsorName} - Desafío</h3>
+                        <p id="bonus-challenge-description">{bonusData.challenge.tutorialDescription}</p>
                         <p>{bonusData.challenge.question}</p>
                         <ul className="trivia-options">
-                            {bonusData.challenge.options.map(option => (
-                                <li key={option} className={selectedOption === option ? 'selected' : ''} onClick={() => !feedback.message && setSelectedOption(option)}>
+                            {bonusData.challenge.options.map((option, index) => (
+                                <li key={option} 
+                                    id={`bonus-option-${index}`} // Added ID for tutorial targeting
+                                    className={selectedOption === option ? 'selected' : ''} 
+                                    onClick={() => !feedback.message && setSelectedOption(option)}>
                                     {option}
                                 </li>
                             ))}
                         </ul>
-                        <button className="primary-button" onClick={handleSubmitChallenge} disabled={!selectedOption || feedback.message}>
+                        <button id="bonus-submit-button" className="primary-button" onClick={handleSubmitChallenge} disabled={!selectedOption || feedback.message}>
                             CONFIRMAR RESPUESTA
                         </button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
+                        {tutorialActive && tutorialStep === 14 && (
+                            <TutorialPopup
+                                message="Selecciona la respuesta correcta y confirma para ganar los 'Fragmentos' del bonus."
+                                targetId="bonus-submit-button"
+                                onDismiss={handleDismissTutorial} // Dismiss after this
+                                arrowPosition="top"
+                            />
+                        )}
                     </div>
                 )}
             </div>
@@ -1260,9 +1243,9 @@ const BonusMissionModal = ({ bonusData, onComplete }) => {
 };
 
 
-// --- BLOQUE PRINCIPAL DE LA APP ---
+// --- MAIN APP BLOCK ---
 const getInitialState = () => ({ 
-    status: 'login', // Puede ser 'login', 'welcome', 'in_game', 'on_the_road', 'long_travel', 'distortion_event', 'finished', 'aborted'
+    status: 'login',
     squadCode: null, 
     teamName: '', 
     currentMissionId: eventData.length > 0 ? eventData[0].id : 1, 
@@ -1276,9 +1259,9 @@ const getInitialState = () => ({
     activeDistortionEventId: null,
     postDistortionStatus: null,
     activeBonusMissionId: null,
-    bonusPorthoOffered: false,
-    bonusLaProfeciaOffered: false,
-    bonusLaVeneOffered: false // ¡Asegúrate de tener esta propiedad también!
+    isAdmin: false,
+    tutorialActive: true, // NEW: Start tutorial active
+    tutorialStep: 0,     // NEW: Initial tutorial step
 });
 
 const App = () => {
@@ -1291,22 +1274,21 @@ const App = () => {
 
         try {
             const savedData = JSON.parse(savedDataJSON);
-
             if (savedData && savedData.state && savedData.timestamp) {
                 const now = Date.now();
                 const lastSavedTime = savedData.timestamp;
                 const hours24inMs = 24 * 60 * 60 * 1000;
 
                 if ((now - lastSavedTime) < hours24inMs) {
-                    console.log("Restaurando sesión. Menos de 24hs transcurridas.");
+                    console.log("Restoring session. Less than 24 hours elapsed.");
                     return savedData.state;  
                 } else {
-                    console.log("Sesión expirada. Han pasado más de 24hs. Reiniciando.");
+                    console.log("Session expired. More than 24 hours have passed. Restarting.");
                     localStorage.removeItem('guardianesAppState');
                 }
             }
         } catch (e) {
-            console.error("Error al procesar datos guardados. Reiniciando.", e);
+            console.error("Error processing saved data. Restarting.", e);
             localStorage.removeItem('guardianesAppState');
         }
 
@@ -1315,13 +1297,13 @@ const App = () => {
 
     
     React.useEffect(() => {
-    if (appState.status !== 'login') {
-        const dataToSave = {
-            state: appState,
-            timestamp: Date.now()
-        };
-        localStorage.setItem('guardianesAppState', JSON.stringify(dataToSave));
-    }
+        if (appState.status !== 'login') {
+            const dataToSave = {
+                state: appState,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('guardianesAppState', JSON.stringify(dataToSave));
+        }
     }, [appState]);
 
     React.useEffect(() => {
@@ -1339,99 +1321,101 @@ const App = () => {
     const activeBonusData = appState.activeBonusMissionId ? allBonusData.find(b => b.id === appState.activeBonusMissionId) : null;
 
 
-    const handleLogin = (code, name) => {
+    const handleLogin = (code, name, isAdmin = false) => {
         const initialState = getInitialState();
-        // CAMBIO CLAVE: Después del login, ve a la pantalla de bienvenida
-        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name };
+        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name, isAdmin: isAdmin };
         setAppState(fullState);
         sendResultsToBackend(fullState);
     };
     
-    // NUEVA FUNCIÓN: Para pasar de la pantalla de bienvenida a la primera misión
     const handleStartFirstMission = () => {
         setAppState(prev => ({
             ...prev,
-            status: 'in_game', // Pasa al estado de juego
-            subStage: 'anchor', // Y directamente a la primera ancla
+            status: 'in_game',
+            subStage: 'anchor',
+            tutorialStep: 5, // Start anchor tutorial
         }));
     };
     
     const handleAnchorComplete = (anchorResult) => {
         if (!currentStageData) return;
         const newScore = appState.score + anchorResult.points;
-        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult }));
+        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: 6 })); // Go to trivia tutorial
     };
     
     const handleRequestHint = () => {
         setAppState(prev => ({
             ...prev,
-            score: Math.max(0, prev.score - 25)
+            score: Math.max(0, prev.score - 25),
+            tutorialStep: 8, // Go to hint tutorial
         }));
     };
     
-const handleTriviaComplete = (triviaResult) => {
-    if (!currentStageData || !appState.pendingAnchorResult) return;
+    const handleTriviaComplete = (triviaResult) => {
+        if (!currentStageData || !appState.pendingAnchorResult) return;
 
-    const newScore = appState.score + triviaResult.points;
-    const completeMissionRecord = {
-        missionId: currentStageData.id,
-        missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
-        anchorTime: appState.pendingAnchorResult.time,
-        anchorPoints: appState.pendingAnchorResult.points,
-        triviaTime: triviaResult.time,
-        triviaPoints: triviaResult.points
-    };
-    const updatedResults = [...appState.missionResults, completeMissionRecord];
+        const newScore = appState.score + triviaResult.points;
+        const completeMissionRecord = {
+            missionId: currentStageData.id,
+            missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
+            anchorTime: appState.pendingAnchorResult.time,
+            anchorPoints: appState.pendingAnchorResult.points,
+            triviaTime: triviaResult.time,
+            triviaPoints: triviaResult.points
+        };
+        const updatedResults = [...appState.missionResults, completeMissionRecord];
 
-    let baseStateForNextStep = {
-        ...appState,
-        score: newScore,
-        missionResults: updatedResults,
-        pendingAnchorResult: null,
-    };
+        let baseStateForNextStep = {
+            ...appState,
+            score: newScore,
+            missionResults: updatedResults,
+            pendingAnchorResult: null,
+        };
 
-    sendResultsToBackend(baseStateForNextStep);
+        sendResultsToBackend(baseStateForNextStep);
 
-    const triggeredBonus = allBonusData.find(b =>
-        b.triggerMissionId === currentStageData.id &&
-        (b.id === 'bonus_portho_1' ? !appState.bonusPorthoOffered : true) &&
-        (b.id === 'bonus_la_profecia_1' ? !appState.bonusLaProfeciaOffered : true) &&
-        (b.id === 'bonus_la_vene_1' ? !appState.bonusLaVeneOffered : true) // Verificar también el bonus de La Vene
-    );
+        let triggeredEvent = null;
+        let triggeredBonus = null;
 
-    if (triggeredBonus) {
-        console.log(`%c[ETAPA 1] Disparando Bonus: ${triggeredBonus.id}`, 'color: #00AACC; font-size: 14px; font-weight: bold;');
-        setAppState({
-            ...baseStateForNextStep,
-            activeBonusMissionId: triggeredBonus.id,
-            bonusPorthoOffered: triggeredBonus.id === 'bonus_portho_1' ? true : appState.bonusPorthoOffered,
-            bonusLaProfeciaOffered: triggeredBonus.id === 'bonus_la_profecia_1' ? true : appState.bonusLaProfeciaOffered,
-            bonusLaVeneOffered: triggeredBonus.id === 'bonus_la_vene_1' ? true : appState.bonusLaVeneOffered // Actualizar el estado de La Vene
-        });
-        return;
-    }
+        if (currentStageData.id === 8) {
+            triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === 8);
+        } else if (currentStageData.id === 16) {
+            triggeredBonus = allBonusData.find(b => b.triggerMissionId === 16);
+        }
 
-    const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
-    const nextStatus = nextMission
-        ? (nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road')
-        : 'finished';
-    const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-
-    if (triggeredEvent && nextMission) {
-        setAppState({
-            ...baseStateForNextStep,
-            status: 'distortion_event',
-            activeDistortionEventId: triggeredEvent.id,
-            postDistortionStatus: nextStatus,
-        });
-    } else {
-        if (!nextMission) {
-            handleFinalComplete(0);
+        if (triggeredBonus) {
+            console.log(`%c[STAGE 1] Triggering Bonus: ${triggeredBonus.id}`, 'color: #00AACC; font-size: 14px; font-weight: bold;');
+            setAppState({
+                ...baseStateForNextStep,
+                status: 'in_game',
+                activeBonusMissionId: triggeredBonus.id,
+                tutorialStep: 11, // Start bonus tutorial
+            });
             return;
         }
-        setAppState({ ...baseStateForNextStep, status: nextStatus });
-    }
-};
+
+        const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
+        
+        if (triggeredEvent && nextMission) {
+            setAppState({
+                ...baseStateForNextStep,
+                status: 'distortion_event',
+                activeDistortionEventId: triggeredEvent.id,
+                postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
+                tutorialStep: 15, // Start distortion tutorial
+            });
+        } else {
+            if (!nextMission) {
+                handleFinalComplete(0);
+                return;
+            }
+            setAppState({  
+                ...baseStateForNextStep,  
+                status: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
+                tutorialStep: 4, // Start travel tutorial
+            });
+        }
+    };
     
     const handleDistortionComplete = (result) => {
         const newScore = Math.max(0, appState.score + (result?.points || 0));
@@ -1441,6 +1425,8 @@ const handleTriviaComplete = (triviaResult) => {
             activeDistortionEventId: null,  
             status: appState.postDistortionStatus,  
             postDistortionStatus: null,
+            tutorialActive: false, // End distortion tutorial, proceed normally
+            tutorialStep: 0,
         }
         setAppState(newState);
         sendResultsToBackend(newState);
@@ -1451,17 +1437,20 @@ const handleTriviaComplete = (triviaResult) => {
         const finalTime = formatTime(totalSeconds);
         const finalScore = (appState.score || 0) + (bonusPoints || 0);
         
-        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime };
+        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialActive: false, tutorialStep: 0 };
         
         setAppState(finalState);
         sendResultsToBackend(finalState);
     };
 
     const handleArrival = () => {
-        if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') return;
+        if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
+            handleFinalComplete(0); 
+            return; 
+        }
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
         if (nextMission) {
-            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor' }));
+            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: 5 })); // Go to anchor tutorial
         } else {
             handleFinalComplete(0);
         }
@@ -1484,7 +1473,9 @@ const handleTriviaComplete = (triviaResult) => {
                 ...appState,  
                 score: finalScore,  
                 status: 'aborted',
-                finalTimeDisplay: finalTime  
+                finalTimeDisplay: finalTime,
+                tutorialActive: false,
+                tutorialStep: 0,
             };
             
             setAppState(finalState);
@@ -1492,85 +1483,71 @@ const handleTriviaComplete = (triviaResult) => {
         }
     };
 
-const handleBonusModalClose = (result) => {
-    console.log('%c[ETAPA 2] Se cierra el modal del bonus.', 'color: #FF6600; font-size: 14px; font-weight: bold;');
-    console.log('Datos recibidos del modal:', result);
+    const handleBonusModalClose = (result) => {
+        console.log('%c[STAGE 2] Closing bonus modal.', 'color: #FF6600; font-size: 14px; font-weight: bold;');
+        console.log('Data received from modal:', result);
 
-    const pointsWon = result?.points || 0;
-    const participated = result?.participated || false;
+        const pointsWon = result?.points || 0;
+        const participated = result?.participated || false;
 
-    if (participated) {
-        sendBonusResultToBackend({
-            teamName: appState.teamName,
-            bonusId: appState.activeBonusMissionId,
-            points: pointsWon
-        });
-    }
+        if (participated) {
+            sendBonusResultToBackend({
+                teamName: appState.teamName,
+                bonusId: appState.activeBonusMissionId,
+                points: pointsWon
+            });
+        }
 
-    const newScore = appState.score + pointsWon;
-    const baseStateAfterBonus = {
-        ...appState,
-        score: newScore,
-        activeBonusMissionId: null
+        const newScore = appState.score + pointsWon;
+        const baseStateAfterBonus = {
+            ...appState,
+            score: newScore,
+            activeBonusMissionId: null
+        };
+
+        const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
+        const nextMission = eventData.find(m => m.id === missionThatTriggeredBonus.nextMissionId);
+
+        if (!nextMission) {
+            handleFinalComplete(0);
+            return;
+        }
+
+        const nextStatus = nextMission.department !== missionThatTriggeredBonus.department
+            ? 'long_travel'
+            : 'on_the_road';
+
+        const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
+
+        let finalState;
+        if (triggeredEvent) {
+            finalState = {
+                ...baseStateAfterBonus,
+                status: 'distortion_event',
+                activeDistortionEventId: triggeredEvent.id,
+                postDistortionStatus: nextStatus,
+                tutorialStep: 15, // Start distortion tutorial
+            };
+        } else {
+            finalState = {
+                ...baseStateAfterBonus,
+                status: nextStatus,
+                tutorialStep: 4, // Start travel tutorial
+            };
+        }
+
+        setAppState(finalState);
+        sendResultsToBackend(finalState);
     };
-
-    const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
-    const nextMission = eventData.find(m => m.id === missionThatTriggeredBonus.nextMissionId);
-
-    if (!nextMission) {
-        handleFinalComplete(0);
-        return;
-    }
-
-    const nextStatus = nextMission.department !== missionThatTriggeredBonus.department
-        ? 'long_travel'
-        : 'on_the_road';
-
-    const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-
-    let finalState;
-    if (triggeredEvent) {
-        finalState = {
-            ...baseStateAfterBonus,
-            status: 'distortion_event',
-            activeDistortionEventId: triggeredEvent.id,
-            postDistortionStatus: nextStatus,
-        };
-    } else {
-        finalState = {
-            ...baseStateAfterBonus,
-            status: nextStatus
-        };
-    }
-
-    setAppState(finalState);
-    sendResultsToBackend(finalState);
-};
     
-    const handleJumpToBonusPortho = () => {
-        if (window.confirm("Saltar a la pantalla de viaje con el bonus Portho? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'long_travel',
-                currentMissionId: 26,
-                activeBonusMissionId: bonusMissionData.id,
-                bonusPorthoOffered: true,
-            }));
-        }
+    // Tutorial Navigation
+    const handleNextTutorialStep = () => {
+        setAppState(prev => ({ ...prev, tutorialStep: prev.tutorialStep + 1 }));
     };
 
-    const handleJumpToBonusLaProfecia = () => {
-        if (window.confirm("Saltar a la pantalla de viaje con el bonus La Profecía? (DEV)")) {
-            setAppState(prev => ({
-                ...prev,
-                status: 'on_the_road',
-                currentMissionId: 6,
-                activeBonusMissionId: bonusLaProfeciaData.id,
-                bonusLaProfeciaOffered: true,
-            }));
-        }
+    const handleDismissTutorial = () => {
+        setAppState(prev => ({ ...prev, tutorialActive: false, tutorialStep: 0 }));
     };
-
 
     const renderContent = () => {
         if (appState.status === 'in_game' && !currentStageData) {
@@ -1579,22 +1556,44 @@ const handleBonusModalClose = (result) => {
 
         switch (appState.status) {
             case 'login':
-                return <LoginPage onLogin={handleLogin} setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} errorMessage={appState.errorMessage} />;
+                return <LoginPage 
+                            onLogin={handleLogin} 
+                            setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} 
+                            errorMessage={appState.errorMessage} 
+                            tutorialActive={appState.tutorialActive}
+                            handleNextTutorialStep={handleNextTutorialStep}
+                            handleDismissTutorial={handleDismissTutorial}
+                            tutorialStep={appState.tutorialStep}
+                        />;
             
-            case 'welcome': // NUEVO CASO para la pantalla de bienvenida
-                return <WelcomePage teamName={appState.teamName} onContinue={handleStartFirstMission} />;
+            case 'welcome':
+                return <WelcomePage 
+                            teamName={appState.teamName} 
+                            onContinue={handleStartFirstMission} 
+                            tutorialActive={appState.tutorialActive}
+                            handleNextTutorialStep={handleNextTutorialStep}
+                            handleDismissTutorial={handleDismissTutorial}
+                            tutorialStep={appState.tutorialStep}
+                        />;
 
             case 'long_travel': {
-                if (!currentStageData.nextMissionId) return null;
+                if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
+                    handleFinalComplete(0); 
+                    return null; 
+                }
                 const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
                 if (!nextMission) { handleFinalComplete(0); return null; }
                 const toDept = nextMission.department;
 
                 return <LongTravelPage 
-                            nextDepartment={toDept} 
-                            onArrival={handleArrival} 
-                            onFinishEarly={handleFinishEarly}
-                        />;
+                                nextDepartment={toDept} 
+                                onArrival={handleArrival} 
+                                onFinishEarly={handleFinishEarly}
+                                tutorialActive={appState.tutorialActive}
+                                handleNextTutorialStep={handleNextTutorialStep}
+                                handleDismissTutorial={handleDismissTutorial}
+                                tutorialStep={appState.tutorialStep}
+                            />;
             }
             
             case 'on_the_road': {
@@ -1603,19 +1602,37 @@ const handleBonusModalClose = (result) => {
                     return <EndGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
                 }
                 return <EnRutaPage 
-                            nextLocation={nextMission.location} 
-                            department={nextMission.department} 
-                            onArrival={handleArrival}
-                            onFinishEarly={handleFinishEarly}
-                        />;
+                                nextLocation={nextMission.location} 
+                                department={nextMission.department} 
+                                onArrival={handleArrival}
+                                onFinishEarly={handleFinishEarly}
+                                tutorialActive={appState.tutorialActive}
+                                handleNextTutorialStep={handleNextTutorialStep}
+                                handleDismissTutorial={handleDismissTutorial}
+                                tutorialStep={appState.tutorialStep}
+                            />;
             }
 
             case 'in_game': {
-                if(currentStageData.type === 'final') return <FinalSection stage={currentStageData} onComplete={handleFinalComplete} />;
+                if (appState.subStage === 'anchor') return <AnchorSection 
+                                                                stage={currentStageData} 
+                                                                onComplete={handleAnchorComplete} 
+                                                                onHintRequest={handleRequestHint} 
+                                                                score={appState.score} 
+                                                                tutorialActive={appState.tutorialActive}
+                                                                handleNextTutorialStep={handleNextTutorialStep}
+                                                                handleDismissTutorial={handleDismissTutorial}
+                                                                tutorialStep={appState.tutorialStep}
+                                                            />;
                 
-                if (appState.subStage === 'anchor') return <AnchorSection stage={currentStageData} onComplete={handleAnchorComplete} onHintRequest={handleRequestHint} score={appState.score} />;
-                
-                if (appState.subStage === 'trivia') return <TriviaSection stage={currentStageData} onComplete={handleTriviaComplete} />;
+                if (appState.subStage === 'trivia') return <TriviaSection 
+                                                                stage={currentStageData} 
+                                                                onComplete={handleTriviaComplete} 
+                                                                tutorialActive={appState.tutorialActive}
+                                                                handleNextTutorialStep={handleNextTutorialStep}
+                                                                handleDismissTutorial={handleDismissTutorial}
+                                                                tutorialStep={appState.tutorialStep}
+                                                            />;
                 break;
             }
 
@@ -1626,7 +1643,7 @@ const handleBonusModalClose = (result) => {
                 return <AbortedGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
             
             default:
-                return <p>Error: Estado desconocido.</p>;
+                return <p>Error: Unknown state.</p>;
         }
     };
 
@@ -1638,32 +1655,42 @@ const handleBonusModalClose = (result) => {
                 {renderContent()}
             </div>
             
-            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
-            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
+            {activeDistortionEvent && <DistortionEventPage 
+                                            event={activeDistortionEvent} 
+                                            onComplete={handleDistortionComplete} 
+                                            tutorialActive={appState.tutorialActive}
+                                            handleNextTutorialStep={handleNextTutorialStep}
+                                            handleDismissTutorial={handleDismissTutorial}
+                                            tutorialStep={appState.tutorialStep}
+                                        />}
+            {activeBonusData && <BonusMissionModal 
+                                    bonusData={{...activeBonusData, teamName: appState.teamName}} 
+                                    onComplete={handleBonusModalClose} 
+                                    tutorialActive={appState.tutorialActive}
+                                    handleNextTutorialStep={handleNextTutorialStep}
+                                    handleDismissTutorial={handleDismissTutorial}
+                                    tutorialStep={appState.tutorialStep}
+                                />}
 
-            <div className="dev-controls-container">
-                {/* Ocultamos los botones de bonus específicos para el deploy final
-                    {appState.status !== 'login' && (
+            {(appState.isAdmin || appState.status !== 'login') && (
+                <div className="dev-controls-container">
+                    {appState.isAdmin && (
                         <>
-                            <button className="dev-reset-button dev-bonus" onClick={handleJumpToBonusPortho}>
-                                B.PORTHO
+                            <button className="dev-reset-button dev-bonus" onClick={() => handleAdminJumpToBonus('bonus_portho_1')}>
+                                Jump Portho
                             </button>
-                            <button className="dev-reset-button dev-profecia" onClick={handleJumpToBonusLaProfecia}>
-                                B.PROFECIA
-                            </button>
-                            <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
-                                RESET
+                            <button className="dev-reset-button dev-distortion" onClick={() => handleAdminJumpToDistortion('distorsion_2')}>
+                                Jump Dist. 2
                             </button>
                         </>
                     )}
-                */}
-                {/* Puedes dejar el botón de RESET para desarrollo si lo necesitas */}
-                {appState.status !== 'login' && (
-                    <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
-                        RESET (DEV)
-                    </button>
-                )}
-            </div>
+                    {appState.status !== 'login' && (
+                        <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
+                            RESET (DEV)
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
