@@ -8,8 +8,8 @@ const eventData = [
     // SANTA LUCÍA - Misión 1 (Original ID 1)
     {
         id: 1, department: "Santa Lucía", location: "Parroquia Santa Lucía",
-        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla.", tutorialDescription: "El **Ancla Temporal** es la información clave que debes encontrar en el lugar. Ingrésala para avanzar en la misión." },
-        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900", tutorialDescription: "En la **Trivia**, tu velocidad en responder correctamente te dará más **Fragmentos de Historia**. ¡Elige con sabiduría!" } },
+        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla.", tutorialDescription: "El **Ancla Temporal** es la información clave que debes encontrar en el lugar. Ingrésala en el **casillero** para avanzar en la misión." },
+        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900", tutorialDescription: "En la **Trivia**, tu velocidad en responder correctamente te dará más **Fragmentos de Historia**. **Selecciona una opción** y luego verifica. ¡Elige con sabiduría!" } },
         nextMissionId: 8 // Enlace a la siguiente misión de la versión de prueba
     },
     // SANTA LUCÍA - Misión 2 (Original ID 8)
@@ -824,9 +824,9 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, tutori
             )}
             {tutorialActive && tutorialStep === 5 && (
                 <TutorialOverlay
-                    message="Cuando la barra de progreso esté completa, presiona **Llegada Confirmada** para iniciar el siguiente desafío."
+                    message="Cuando la barra de progreso esté completa y el botón se active, presiona **Llegada Confirmada** para iniciar el siguiente desafío."
                     targetId="arrival-button"
-                    onNext={handleNextTutorialStep} // This will increment step beyond total for this page
+                    onNext={onArrival} // Directly trigger arrival and dismiss tutorial
                     onDismiss={handleDismissTutorial}
                     currentStep={tutorialStep}
                     totalSteps={5}
@@ -878,9 +878,9 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly, tutorialActi
             )}
             {tutorialActive && tutorialStep === 5 && (
                 <TutorialOverlay
-                    message="Cuando el viaje finalice, presiona **Hemos Llegado** para continuar con la misión."
+                    message="Cuando el viaje finalice y el botón se active, presiona **Hemos Llegado** para continuar con la misión."
                     targetId="long-travel-arrival-button"
-                    onNext={handleNextTutorialStep}
+                    onNext={onArrival} // Directly trigger arrival and dismiss tutorial
                     onDismiss={handleDismissTutorial}
                     currentStep={tutorialStep}
                     totalSteps={5}
@@ -908,7 +908,7 @@ const EndGamePage = ({ score, finalTime, teamName }) => (
 const AbortedGamePage = ({ score, finalTime, teamName }) => (
     <div className="end-container">
         <img src="https://cdn-icons-png.flaticon.com/512/784/784408.png" alt="Medalla o Trofeo Guardián" className="medal-image"/>
-        <h3>MISIÓN TEMPORAL DETENIDA</h3>
+        <h3>MISION TEMPORAL DETENIDA</h3>
         <p><strong>{teamName}</strong></p>
         <p>Has estabilizado sólo una parte del tiempo de San Juan. ¡La ´Amenaza del Olvido´ ha logrado avanzar en la línea del tiempo.</p>
         
@@ -934,8 +934,9 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
         return () => clearInterval(interval);
     }, []);
 
+    // Trigger trivia question tutorial after stage description
     React.useEffect(() => {
-        if(tutorialActive && tutorialStep === 7) { // Tutorial step for trivia options/button
+        if(tutorialActive && tutorialStep === 7) {
             handleNextTutorialStep();
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
@@ -991,7 +992,7 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
             {tutorialActive && tutorialStep === 7 && (
                 <TutorialOverlay
-                    message="Aquí debes elegir la opción correcta. Tu tiempo en esta etapa influye en los puntos obtenidos."
+                    message="Aquí debes elegir la opción correcta de la lista. Tu tiempo en esta etapa influye en los puntos obtenidos."
                     targetId="trivia-question"
                     onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
@@ -1002,7 +1003,7 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
             )}
             {tutorialActive && tutorialStep === 8 && (
                 <TutorialOverlay
-                    message="Selecciona una opción y presiona **Verificar Transmisión** para confirmar tu respuesta."
+                    message="Una vez seleccionada la opción, presiona **Verificar Transmisión** para confirmar tu respuesta."
                     targetId="trivia-button"
                     onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
@@ -1176,7 +1177,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             <input id="anchor-input" type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
             {tutorialActive && tutorialStep === 6 && (
                 <TutorialOverlay
-                    message="Ingresa la **Ancla Temporal** que encuentres en el lugar. ¡Es clave para estabilizar la línea de tiempo!"
+                    message="Ingresa la **Ancla Temporal** que encuentres en el lugar dentro de este casillero."
                     targetId="anchor-input"
                     onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
@@ -1190,7 +1191,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
                 <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
                 {tutorialActive && tutorialStep === 11 && (
                     <TutorialOverlay
-                        message="Cuando estés seguro de tu respuesta, presiona **Anclar Recuerdo** para validarla."
+                        message="Cuando estés seguro de tu respuesta, presiona **Anclar Recuerdo** para validarla y continuar."
                         targetId="anchor-button"
                         onNext={handleNextTutorialStep}
                         onDismiss={handleDismissTutorial}
@@ -1553,7 +1554,7 @@ const App = () => {
         setAppState(prev => ({
             ...prev,
             score: Math.max(0, prev.score - 25),
-            tutorialStep: 10, // Go to hint generation tutorial step 10
+            tutorialStep: 9, // Go to hint request tutorial step 9
         }));
     };
     
@@ -1607,7 +1608,7 @@ const App = () => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-                tutorialStep: 10, // Start distortion visual tutorial step 10 (adjust for distortion steps)
+                tutorialStep: 10, // Start distortion visual tutorial step 10
             });
         } else {
             if (!nextMission) {
@@ -1649,13 +1650,22 @@ const App = () => {
     };
 
     const handleArrival = () => {
+        // This function is now directly called by TutorialOverlay's onNext,
+        // so it should not manage tutorialStep anymore. It just handles the app logic.
         if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
             handleFinalComplete(0); 
             return; 
         }
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
         if (nextMission) {
-            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: 6 })); // Go to anchor tutorial step 6
+            setAppState(prev => ({ 
+                ...prev, 
+                currentMissionId: nextMission.id, 
+                status: 'in_game', 
+                subStage: 'anchor', 
+                tutorialActive: true, // Re-enable tutorial for next mission
+                tutorialStep: 6 // Start Anchor tutorial step 6
+            }));
         } else {
             handleFinalComplete(0);
         }
