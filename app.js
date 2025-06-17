@@ -15,22 +15,22 @@ const eventData = [
     // SANTA LUCÍA - Misión 2 (Original ID 8)
     {
         id: 8, department: "Santa Lucía", location: "Plaza General San Martín",
-        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro.", tutorialDescription: "Esta es la descripción del Ancla en la misión 2." },
-        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía", tutorialDescription: "Esta es la descripción de la Trivia en la misión 2." } },
+        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro.", tutorialDescription: "En cada Ancla, busca la información requerida en el lugar y escríbela con precisión." },
+        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía", tutorialDescription: "Las preguntas de Trivia te esperan después de cada Ancla. Responde rápido para sumar puntos." } },
         nextMissionId: 16 // Enlace a la siguiente misión de la versión de prueba
     },
     // CAPITAL - Misión 3 (Original ID 16)
     {
         id: 16, department: "Capital", location: "Casa Natal de Sarmiento",
-        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico.", tutorialDescription: "Esta es la descripción del Ancla en la misión 3." },
-        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno", tutorialDescription: "Esta es la descripción de la Trivia en la misión 3." } },
+        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico.", tutorialDescription: "Los Monumentos Nacionales son puntos clave. Ancla su fecha para restaurar la línea temporal." },
+        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno", tutorialDescription: "Sarmiento fue una figura crucial. Demuestra tus conocimientos históricos." } },
         nextMissionId: 32 // Enlace a la siguiente misión de la versión de prueba
     },
     // RIVADAVIA - Misión 4 (Original ID 32) - Esta será la última misión del demo antes del final.
     {
         id: 32, department: "Rivadavia", location: "Autódromo El Zonda",
-        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí.", tutorialDescription: "Esta es la descripción del Ancla en la misión 4." },
-        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros", tutorialDescription: "Esta es la descripción de la Trivia en la misión 4." } },
+        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí.", tutorialDescription: "El Autódromo es un ícono. Ancla la categoría más famosa para estabilizar su historia." },
+        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros", tutorialDescription: "Conoce los detalles de los circuitos para ser un Guardián completo. ¡Tu conocimiento suma!" } },
         nextMissionId: null // Marca como la última misión para el flujo normal
     },
 ];
@@ -78,7 +78,7 @@ const bonusMissionData = { // Este es el bonus 'Portho'
     }
 };
 
-const allBonusData = [bonusMissionData]; // Solo incluimos el bonus 'Portho' para esta versión.
+const allBonusData = [bonusMissionData];
 
 
 // --- FUNCIONES GLOBALES DE AYUDA ---
@@ -826,7 +826,7 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, tutori
                 <TutorialOverlay
                     message="Cuando la barra de progreso esté completa y el botón se active, presiona **Llegada Confirmada** para iniciar el siguiente desafío."
                     targetId="arrival-button"
-                    onNext={onArrival} // Directly trigger arrival and dismiss tutorial
+                    onNext={() => { onArrival(); handleDismissTutorial(); }} // Call onArrival directly and dismiss tutorial
                     onDismiss={handleDismissTutorial}
                     currentStep={tutorialStep}
                     totalSteps={5}
@@ -880,7 +880,7 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly, tutorialActi
                 <TutorialOverlay
                     message="Cuando el viaje finalice y el botón se active, presiona **Hemos Llegado** para continuar con la misión."
                     targetId="long-travel-arrival-button"
-                    onNext={onArrival} // Directly trigger arrival and dismiss tutorial
+                    onNext={() => { onArrival(); handleDismissTutorial(); }} // Call onArrival directly and dismiss tutorial
                     onDismiss={handleDismissTutorial}
                     currentStep={tutorialStep}
                     totalSteps={5}
@@ -975,7 +975,7 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
     return (
         <div className={`challenge-container ${glowClass}`}>
             <h3>{missionName}</h3>
-            <p id="trivia-description-text"><strong>Descripción:</strong> {stage.trivia.challenge.tutorialDescription}</p>
+            {/* Removed direct tutorial description, it will be in the overlay */}
             <div className="challenge-timer">⏱️ {triviaTimer}s</div>
             <p id="trivia-question">{challenge.question}</p>
             <ul className="trivia-options">
@@ -992,7 +992,7 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
             {tutorialActive && tutorialStep === 7 && (
                 <TutorialOverlay
-                    message="Aquí debes elegir la opción correcta de la lista. Tu tiempo en esta etapa influye en los puntos obtenidos."
+                    message={stage.trivia.challenge.tutorialDescription}
                     targetId="trivia-question"
                     onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
@@ -1034,8 +1034,9 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
         return () => clearInterval(interval);
     }, [isLocked]);
     
+    // Trigger anchor input tutorial
     React.useEffect(() => {
-        if(tutorialActive && tutorialStep === 6) { // Tutorial step for anchor input/button
+        if(tutorialActive && tutorialStep === 6) {
             handleNextTutorialStep();
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
@@ -1126,7 +1127,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
     return (
         <div className={`stage-container ${glowClass}`}>
             <h3>{anchor.missionName}</h3>
-            <p id="anchor-description-text"><strong>Descripción:</strong> {stage.anchor.tutorialDescription}</p>
+            {/* Removed direct tutorial description, it will be in the overlay */}
             <div className="challenge-timer">⏱️ {anchorTimer}s</div>
             <p><strong>Departamento:</strong> {stage.department}</p>
             {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
@@ -1177,7 +1178,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             <input id="anchor-input" type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
             {tutorialActive && tutorialStep === 6 && (
                 <TutorialOverlay
-                    message="Ingresa la **Ancla Temporal** que encuentres en el lugar dentro de este casillero."
+                    message={stage.anchor.tutorialDescription}
                     targetId="anchor-input"
                     onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
@@ -1478,11 +1479,9 @@ const App = () => {
 
                 if ((now - lastSavedTime) < hours24inMs) {
                     console.log("Restaurando sesión. Menos de 24hs transcurridas.");
-                    // Ensure tutorial is active if the session is being restored
-                    // But also ensure it starts from where it left off, or dismiss if already completed
+                    // Restore tutorial state if active and not finished
                     const restoredState = savedData.state;
                     if (restoredState.tutorialActive && restoredState.tutorialStep > 0 && restoredState.status !== 'finished' && restoredState.status !== 'aborted') {
-                        // Restore tutorial state if active and not finished
                         return restoredState;
                     } else {
                         // If tutorial was inactive or finished, or if game was finished/aborted,
@@ -1515,7 +1514,8 @@ const App = () => {
 
     React.useEffect(() => {
         let interval;
-        if (appState.status !== 'login' && appState.status !== 'welcome' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId && appState.tutorialActive === false) { // Only run timer if tutorial is not active
+        // Solo ejecuta el timer si el tutorial NO está activo
+        if (appState.status !== 'login' && appState.status !== 'welcome' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId && appState.tutorialActive === false) {
             interval = setInterval(() => {
                 setAppState(prev => ({ ...prev, mainTimer: prev.mainTimer + 1 }));
             }, 1000);
@@ -1540,21 +1540,21 @@ const App = () => {
             ...prev,
             status: 'in_game',
             subStage: 'anchor',
-            tutorialStep: 6, // Start anchor tutorial step 6
+            tutorialStep: 6, // Go to Anchor tutorial (step 6)
         }));
     };
     
     const handleAnchorComplete = (anchorResult) => {
         if (!currentStageData) return;
         const newScore = appState.score + anchorResult.points;
-        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: 7 })); // Go to trivia tutorial step 7
+        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: 7 })); // Go to Trivia tutorial (step 7)
     };
     
     const handleRequestHint = () => {
         setAppState(prev => ({
             ...prev,
             score: Math.max(0, prev.score - 25),
-            tutorialStep: 9, // Go to hint request tutorial step 9
+            tutorialStep: 9, // Go to Hint button tutorial (step 9)
         }));
     };
     
@@ -1595,7 +1595,8 @@ const App = () => {
                 ...baseStateForNextStep,
                 status: 'in_game',
                 activeBonusMissionId: triggeredBonus.id,
-                tutorialStep: 14, // Start bonus tutorial step 14
+                tutorialActive: true, // Activate tutorial for bonus
+                tutorialStep: 14, // Start Bonus tutorial (step 14)
             });
             return;
         }
@@ -1608,7 +1609,8 @@ const App = () => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-                tutorialStep: 10, // Start distortion visual tutorial step 10
+                tutorialActive: true, // Activate tutorial for distortion
+                tutorialStep: 10, // Start Distortion visual tutorial (step 10)
             });
         } else {
             if (!nextMission) {
@@ -1618,7 +1620,8 @@ const App = () => {
             setAppState({  
                 ...baseStateForNextStep,  
                 status: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-                tutorialStep: 4, // Start travel tutorial step 4
+                tutorialActive: true, // Activate tutorial for travel
+                tutorialStep: 4, // Start Travel tutorial (step 4)
             });
         }
     };
@@ -1631,8 +1634,8 @@ const App = () => {
             activeDistortionEventId: null,  
             status: appState.postDistortionStatus,  
             postDistortionStatus: null,
-            tutorialActive: false, // End distortion tutorial, proceed normally
-            tutorialStep: 0,
+            tutorialActive: true, // Re-activate tutorial after distortion
+            tutorialStep: appState.postDistortionStatus === 'long_travel' ? 4 : 6, // Go to travel or next mission tutorial
         }
         setAppState(newState);
         sendResultsToBackend(newState);
@@ -1643,7 +1646,7 @@ const App = () => {
         const finalTime = formatTime(totalSeconds);
         const finalScore = (appState.score || 0) + (bonusPoints || 0);
         
-        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialActive: true, tutorialStep: 18 }; // Start final screen tutorial
+        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialActive: true, tutorialStep: 18 }; // Start final screen tutorial (step 18)
         
         setAppState(finalState);
         sendResultsToBackend(finalState);
@@ -1651,7 +1654,7 @@ const App = () => {
 
     const handleArrival = () => {
         // This function is now directly called by TutorialOverlay's onNext,
-        // so it should not manage tutorialStep anymore. It just handles the app logic.
+        // so it should not manage tutorialStep anymore, but set the next mission tutorial state.
         if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
             handleFinalComplete(0); 
             return; 
@@ -1663,8 +1666,8 @@ const App = () => {
                 currentMissionId: nextMission.id, 
                 status: 'in_game', 
                 subStage: 'anchor', 
-                tutorialActive: true, // Re-enable tutorial for next mission
-                tutorialStep: 6 // Start Anchor tutorial step 6
+                tutorialActive: true, // Activate tutorial for next mission
+                tutorialStep: 6 // Start Anchor tutorial (step 6)
             }));
         } else {
             handleFinalComplete(0);
@@ -1690,7 +1693,7 @@ const App = () => {
                 status: 'aborted',
                 finalTimeDisplay: finalTime,
                 tutorialActive: true, // Enable tutorial on aborted screen
-                tutorialStep: 18, // Start final screen tutorial
+                tutorialStep: 18, // Start final screen tutorial (step 18)
             };
             
             setAppState(finalState);
@@ -1738,13 +1741,15 @@ const App = () => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: nextStatus,
-                tutorialStep: 10, // Start distortion visual tutorial step 10
+                tutorialActive: true, // Activate tutorial for distortion
+                tutorialStep: 10, // Start Distortion visual tutorial (step 10)
             };
         } else {
             finalState = {
                 ...baseStateAfterBonus,
                 status: nextStatus,
-                tutorialStep: 4, // Start travel tutorial step 4
+                tutorialActive: true, // Activate tutorial for travel
+                tutorialStep: 4, // Start Travel tutorial (step 4)
             };
         }
 
@@ -1907,7 +1912,7 @@ const App = () => {
                 <TutorialOverlay
                     message="Finalmente, aquí se muestra el **Concilio de Guardianes**, el ranking de todos los equipos."
                     targetId="leaderboard-title"
-                    onNext={handleNextTutorialStep} // This will dismiss the tutorial
+                    onNext={handleDismissTutorial} // This will dismiss the tutorial as it's the final step
                     onDismiss={handleDismissTutorial}
                     currentStep={appState.tutorialStep}
                     totalSteps={20}
