@@ -347,7 +347,7 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         10: {
             title: "Paso 10: Bonus de Patrocinadores",
-            description: "A veces, encontrarás **misiones bonus** de nuestros patrocinadores. Estas son opcionales y te darán la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detiene! Puedes aceptar el desafío o rechazarlo.",
+            description: "A veces, encontrarás **misiones bonus** de nuestros patrocinadores. Estas son opcionales y te darán la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Puedes aceptar el desafío o rechazarlo.",
             targetElementId: "bonus-mission-modal-accept" // O el botón de aceptar
         }
     };
@@ -380,8 +380,9 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
 
     React.useEffect(() => {
         // Disparar el tutorial cuando se renderiza la página de distorsión
-        onTutorialStepComplete(8);
-
+        // Este useEffect se ejecuta ANTES que el video termine, por eso el tutorial se superponía.
+        // Lo disparamos DESPUÉS de que se complete el desafío o se reproduzca el video.
+        
         if (view !== 'visual' || !videoRef.current) return;
 
         // Intentar reproducir el video
@@ -454,7 +455,12 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
                 playWrongSound();
             }
 
-            setTimeout(() => onComplete({ points }), 3000);
+            // Disparar el tutorial DESPUÉS de que se muestre el feedback de la distorsión
+            // y antes de completar el evento.
+            setTimeout(() => {
+                onTutorialStepComplete(8); // Activa el tutorial del paso 8
+                setTimeout(() => onComplete({ points }), 3000); // Luego de un breve tiempo, completa el evento
+            }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
         };
         
         const handleMultipleChoiceSubmit = () => {
@@ -474,13 +480,20 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
                 playWrongSound();
             }
 
-            setTimeout(() => onComplete({ points }), 3000);
+            // Disparar el tutorial DESPUÉS de que se muestre el feedback de la distorsión
+            // y antes de completar el evento.
+            setTimeout(() => {
+                onTutorialStepComplete(8); // Activa el tutorial del paso 8
+                setTimeout(() => onComplete({ points }), 3000); // Luego de un breve tiempo, completa el evento
+            }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
         };
 
         const handleNarrativeContinue = () => {
              if (isLocked) return;
              setIsLocked(true);
-             onComplete({ points: 0 });
+             // Para narrativa, el tutorial puede aparecer inmediatamente al "continuar"
+             onTutorialStepComplete(8); // Activa el tutorial del paso 8
+             onComplete({ points: 0 }); // Completa el evento
         }
 
         switch (challenge.type) {
@@ -1136,16 +1149,16 @@ const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) =>
     const [glowClass, setGlowClass] = React.useState('');
     const [selectedOption, setSelectedOption] = React.useState('');
 
-    React.useEffect(() => {
-        // Disparar el tutorial cuando se renderiza el modal de bonus
-        onTutorialStepComplete(10);
-    }, []);
+    // Eliminado el useEffect aquí para disparar el tutorial
+    // El tutorial se dispara después de que se aceptan o rechazan las condiciones
+    // o después de que se resuelve el desafío, para que el modal de bonus aparezca primero.
 
     const handleAccept = () => {
         setView('challenge');
     };
 
     const handleDecline = () => {
+        onTutorialStepComplete(10); // Activa el tutorial del paso 10 al DECLINAR
         onComplete({ points: 0, participated: false });
     };
 
@@ -1168,9 +1181,11 @@ const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) =>
             playWrongSound();
         }
 
+        // Disparar el tutorial DESPUÉS de que se muestre el feedback del bonus
         setTimeout(() => {
-            onComplete({ points: pointsWon, participated: true });
-        }, 3000);
+            onTutorialStepComplete(10); // Activa el tutorial del paso 10
+            setTimeout(() => onComplete({ points: pointsWon, participated: true }), 3000); // Luego de un breve tiempo, completa el bonus
+        }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
     };
 
     return (
@@ -1298,7 +1313,14 @@ const App = () => {
     // --- NUEVA FUNCIÓN: Manejador de tutoriales ---
     const handleTutorialStepComplete = (stepNumber) => {
         // Solo avanza el tutorial si no está ya en un paso mayor o si no ha terminado
-        if (appState.tutorialStep === null || stepNumber === appState.tutorialStep + 1 || (stepNumber === 1 && appState.status === 'welcome')) {
+        // o si es un tutorial que se activa sobre un evento (distorsión/bonus)
+        // en cuyo caso permitimos la activación.
+        if (appState.tutorialStep === null || 
+            stepNumber === appState.tutorialStep + 1 || 
+            (stepNumber === 1 && appState.status === 'welcome') ||
+            (stepNumber === 8 && appState.activeDistortionEventId) || // Permitir tutorial 8 sobre distorsión activa
+            (stepNumber === 10 && appState.activeBonusMissionId)     // Permitir tutorial 10 sobre bonus activo
+        ) {
             setAppState(prev => ({ ...prev, tutorialStep: stepNumber }));
         }
     };
@@ -1392,7 +1414,8 @@ const handleTriviaComplete = (triviaResult) => {
             ...baseStateForNextStep,
             status: 'in_game', 
             activeBonusMissionId: triggeredBonus.id,
-            tutorialStep: 10, // Muestra Paso 10 para el bonus
+            // Eliminamos el set de tutorialStep aquí. Lo hará el BonusMissionModal en su useEffect
+            // tutorialStep: 10, 
         });
         return;
     }
@@ -1406,7 +1429,8 @@ const handleTriviaComplete = (triviaResult) => {
             status: 'distortion_event',
             activeDistortionEventId: triggeredEvent.id,
             postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-            tutorialStep: 8, // Muestra Paso 8 para la distorsión
+            // Eliminamos el set de tutorialStep aquí. Lo hará el DistortionEventPage en su useEffect
+            // tutorialStep: 8, 
         });
     } else {
         if (!nextMission) {
@@ -1553,7 +1577,8 @@ const handleBonusModalClose = (result) => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: 'in_game', // Para simplicidad, volvemos al estado 'in_game' después de la distorsión del admin
-                tutorialStep: 8, // Muestra Paso 8 para la distorsión
+                // Eliminamos el set de tutorialStep aquí, lo hará el componente DistortionEventPage
+                // tutorialStep: 8, 
             }));
         }
     };
@@ -1565,7 +1590,8 @@ const handleBonusModalClose = (result) => {
                 ...prev,
                 status: 'in_game', // Mostrar el modal del bonus directamente en el estado de juego
                 activeBonusMissionId: bonus.id,
-                tutorialStep: 10, // Muestra Paso 10 para el bonus
+                // Eliminamos el set de tutorialStep aquí, lo hará el componente BonusMissionModal
+                // tutorialStep: 10, 
             }));
         }
     };
@@ -1643,13 +1669,14 @@ const handleBonusModalClose = (result) => {
                 {renderContent()}
             </div>
             
-            {/* El PopUpTutorial se renderiza aquí, condicionalmente */}
+            {/* Renderizar los modales de evento y bonus PRIMERO para que estén en la capa inferior */}
+            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} onTutorialStepComplete={handleTutorialStepComplete} />}
+            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} onTutorialStepComplete={handleTutorialStepComplete} />}
+
+            {/* El PopUpTutorial se renderiza AL FINAL para que siempre esté en la capa superior */}
             {appState.tutorialStep && (
                 <PopUpTutorial step={appState.tutorialStep} onClose={handleCloseTutorial} />
             )}
-
-            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} onTutorialStepComplete={handleTutorialStepComplete} />} {/* Pasa el handler de tutorial */}
-            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} onTutorialStepComplete={handleTutorialStepComplete} />} {/* Pasa el handler de tutorial */}
 
             {/* MODIFICADO: Controles de desarrollo ahora se muestran si isAdmin es true O si el status no es 'login' para el RESET */}
             {(appState.isAdmin || appState.status !== 'login') && ( // Si es admin O no está en login (para mostrar RESET)
