@@ -337,7 +337,7 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         8: {
             title: "Paso 8: Distorsiones Temporales",
-            description: "¡Cuidado! Las **distorsiones** son desafíos especiales. Presta atención al mensaje y responde al enigma para evitar perder Fragmentos. Si el video lo requiere, dale click al botón para activarlo. ¡Actúa rápido!",
+            description: "¡Cuidado! Una **distorsión** está a punto de aparecer. Son desafíos especiales. Presta atención al mensaje y responde al enigma para ganar fragmentos o evitar perderlos. ¡Actúa rápido!",
             targetElementId: null // No hay un elemento específico, es una pantalla completa
         },
         9: {
@@ -347,7 +347,7 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         10: {
             title: "Paso 10: Bonus de Patrocinadores",
-            description: "A veces, encontrarás **misiones bonus** de nuestros patrocinadores. Estas son opcionales y te darán la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Puedes aceptar el desafío o rechazarlo.",
+            description: "¡Atención! Has encontrado una **misión bonus** opcional de un patrocinador. Te dará la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Decide si aceptas el desafío.",
             targetElementId: "bonus-mission-modal-accept" // O el botón de aceptar
         }
     };
@@ -371,18 +371,14 @@ const PopUpTutorial = ({ step, onClose }) => {
     );
 };
 
-
-const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => { // Agregado onTutorialStepComplete
+// CÓDIGO MODIFICADO: Se elimina el prop 'onTutorialStepComplete' que ya no es necesario.
+const DistortionEventPage = ({ event, onComplete }) => {
     const [view, setView] = React.useState('visual');
     const videoRef = React.useRef(null);
     const [videoPlaying, setVideoPlaying] = React.useState(false);
     const [autoplayBlocked, setAutoplayBlocked] = React.useState(false);
 
     React.useEffect(() => {
-        // Disparar el tutorial cuando se renderiza la página de distorsión
-        // Este useEffect se ejecuta ANTES que el video termine, por eso el tutorial se superponía.
-        // Lo disparamos DESPUÉS de que se complete el desafío o se reproduzca el video.
-        
         if (view !== 'visual' || !videoRef.current) return;
 
         // Intentar reproducir el video
@@ -449,18 +445,10 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
 
             setFeedback({ message, type: isCorrect ? 'success' : 'error' });
 
-            if (isCorrect) { // Play sound for correct answer in distortion challenge
-                playCorrectSound();
-            } else { // Play sound for incorrect answer in distortion challenge
-                playWrongSound();
-            }
+            if (isCorrect) { playCorrectSound(); } else { playWrongSound(); }
 
-            // Disparar el tutorial DESPUÉS de que se muestre el feedback de la distorsión
-            // y antes de completar el evento.
-            setTimeout(() => {
-                onTutorialStepComplete(8); // Activa el tutorial del paso 8
-                setTimeout(() => onComplete({ points }), 3000); // Luego de un breve tiempo, completa el evento
-            }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
+            // Ya no se llama al tutorial desde aquí
+            setTimeout(() => onComplete({ points }), 2500);
         };
         
         const handleMultipleChoiceSubmit = () => {
@@ -474,25 +462,16 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
             
             setFeedback({ message, type: isCorrect ? 'success' : 'error' });
             
-            if (isCorrect) { // Play sound for correct answer in distortion challenge
-                playCorrectSound();
-            } else { // Play sound for incorrect answer in distortion challenge
-                playWrongSound();
-            }
+            if (isCorrect) { playCorrectSound(); } else { playWrongSound(); }
 
-            // Disparar el tutorial DESPUÉS de que se muestre el feedback de la distorsión
-            // y antes de completar el evento.
-            setTimeout(() => {
-                onTutorialStepComplete(8); // Activa el tutorial del paso 8
-                setTimeout(() => onComplete({ points }), 3000); // Luego de un breve tiempo, completa el evento
-            }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
+            // Ya no se llama al tutorial desde aquí
+            setTimeout(() => onComplete({ points }), 2500);
         };
 
         const handleNarrativeContinue = () => {
              if (isLocked) return;
              setIsLocked(true);
-             // Para narrativa, el tutorial puede aparecer inmediatamente al "continuar"
-             onTutorialStepComplete(8); // Activa el tutorial del paso 8
+             // Ya no se llama al tutorial desde aquí
              onComplete({ points: 0 }); // Completa el evento
         }
 
@@ -535,9 +514,9 @@ const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => {
             case 'narrative_echo':
                     return (
                             <div className="distortion-container">
-                                   <h3>{challenge.title}</h3>
-                                   <p className="distortion-narrative-text">{challenge.message}</p>
-                                   <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                                    <h3>{challenge.title}</h3>
+                                    <p className="distortion-narrative-text">{challenge.message}</p>
+                                    <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
                             </div>
                     );
             default:
@@ -597,42 +576,15 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
         setIsLoading(true);
         setErrorMessage('');
 
-        // Simular validación del backend para la versión de prueba
-        // Para la versión de prueba, cualquier código es 'válido' y no se considera admin.
         const isValid = true; 
         const isAdmin = false; 
 
         if (isValid) {
-            onLogin(enteredCode, enteredCode, isAdmin); // Pasar el isAdmin simulado
+            onLogin(enteredCode, enteredCode, isAdmin);
         } else {
-            // Esto nunca debería ocurrir en la versión de prueba con la lógica actual.
             setErrorMessage('⚠️ Código de Guardián no válido. Verifica tus credenciales.');
         }
         setIsLoading(false);
-
-        /*
-        // Lógica de backend original (comentada para deshabilitar en demo)
-        try {
-            const validationUrl = `${GOOGLE_SCRIPT_URL}?action=validateUser&squadCode=${enteredCode}`;
-            
-            const response = await fetch(validationUrl, { method: 'POST' });
-            if (!response.ok) {
-                throw new Error('Error en la respuesta del servidor.');
-            }
-            const data = await response.json();
-
-            if (data.valid) {
-                onLogin(enteredCode, enteredCode, data.isAdmin);
-            } else {
-                setErrorMessage('⚠️ Código de Guardián no válido. Verifica tus credenciales.');
-            }
-        } catch (error) {
-            console.error("Error de conexión al validar:", error);
-            setErrorMessage('❌ Error de conexión. No se pudo verificar el código.');
-        } finally {
-            setIsLoading(false);
-        }
-        */
     };
 
     return (
@@ -689,12 +641,10 @@ const WelcomePage = ({ teamName, onContinue, onTutorialStepComplete }) => {
     const [showContent, setShowContent] = React.useState(false);
 
     React.useEffect(() => {
-        // Pequeño retardo para la animación de entrada
         const timer = setTimeout(() => {
             setShowContent(true);
-        }, 500); // Aparece 0.5 segundos después de cargar la página
+        }, 500);
         
-        // Iniciar el tutorial desde el paso 1 cuando la página de bienvenida se carga
         onTutorialStepComplete(1); 
 
         return () => clearTimeout(timer);
@@ -707,7 +657,7 @@ const WelcomePage = ({ teamName, onContinue, onTutorialStepComplete }) => {
             <p className="welcome-message">Tu Guía del Tiempo ha sido ACTIVADA. El legado de San Juan cuenta contigo para restaurar la línea temporal.</p>
             <p className="welcome-first-mission">Tu primera ancla te espera en:</p>
             <p className="welcome-location">📍 Parroquia Santa Lucía</p>
-            <button id="welcome-start-button" className="primary-button welcome-button" onClick={onContinue}> {/* Agregado ID para tutorial */}
+            <button id="welcome-start-button" className="primary-button welcome-button" onClick={onContinue}>
                 INICIAR
             </button>
             <p className="welcome-footer">Mantén tus sentidos alerta. Cada decisión cuenta.</p>
@@ -721,20 +671,18 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, onTuto
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
-            onTutorialStepComplete(7); // Muestra Paso 7 cuando el botón de llegada está activo
-        }, 5000); // Reducido el tiempo de viaje para el tutorial
+            onTutorialStepComplete(7);
+        }, 5000);
         return () => clearTimeout(travelTimer);
     }, []);
 
-    // Función para limpiar el nombre de la ubicación y generar el nombre del archivo de imagen
     const getImageFileName = (locationName) => {
-        // Convierte a minúsculas, elimina caracteres especiales y reemplaza espacios con guiones bajos
         return locationName.toLowerCase()
-                               .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Elimina acentos
-                               .replace(/[^a-z0-9\s]/g, "") // Elimina caracteres no alfanuméricos (excepto espacios)
-                               .replace(/\s+/g, "") // Elimina espacios
-                               .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u') // Asegura que las tildes se manejen
-                               + '.png';
+                           .normalize("NFD").replace(/[\u0300-\u036f]/g, "") 
+                           .replace(/[^a-z0-9\s]/g, "")
+                           .replace(/\s+/g, "")
+                           .replace(/á/g, 'a').replace(/é/g, 'e').replace(/í/g, 'i').replace(/ó/g, 'o').replace(/ú/g, 'u')
+                           + '.png';
     };
 
     const imageSrc = `imagenes/${getImageFileName(nextLocation)}`;
@@ -747,7 +695,7 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, onTuto
             <p className="progress-info">Sincronizando coordenadas temporales...</p>
             <div className="progress-bar-container"><div className="progress-bar-filler"></div></div>
             <p>¡Mantén el rumbo, Guardián! Evita las 'distorsiones temporales' (¡y las multas de tránsito!).</p>
-            <button id="en-ruta-arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'SINCRONIZANDO...' : 'LLEGADA CONFIRMADA'}</button> {/* Agregado ID para tutorial */}
+            <button id="en-ruta-arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'SINCRONIZANDO...' : 'LLEGADA CONFIRMADA'}</button>
             <button className="finish-early-button" onClick={onFinishEarly}>Terminar Aquí</button>
         </div>
     );
@@ -783,7 +731,7 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly }) => {
 
 const EndGamePage = ({ score, finalTime, teamName, onTutorialStepComplete }) => {
     React.useEffect(() => {
-        onTutorialStepComplete(9); // Muestra Paso 9 al final del juego
+        onTutorialStepComplete(9);
     }, []);
     return (
         <div className="end-container">
@@ -802,7 +750,7 @@ const EndGamePage = ({ score, finalTime, teamName, onTutorialStepComplete }) => 
 
 const AbortedGamePage = ({ score, finalTime, teamName, onTutorialStepComplete }) => {
     React.useEffect(() => {
-        onTutorialStepComplete(9); // Muestra Paso 9 al final del juego (aunque sea abortado)
+        onTutorialStepComplete(9);
     }, []);
     return (
         <div className="end-container">
@@ -1013,7 +961,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, onTutorialStep
 
         <input type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
         
-        <div className="button-group-vertical">    
+        <div className="button-group-vertical">   
             <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button> {/* Agregado ID para tutorial */}
             
             <button className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
@@ -1081,26 +1029,26 @@ const Leaderboard = () => {
       /*
       // Código original (comentado para deshabilitar en demo)
       if (!LEADERBOARD_URL || LEADERBOARD_URL.includes('URL_QUE_COPIASTE')) {
-        setError('URL del ranking no configurada.');
-        setIsLoading(false);
-        return;
+       setError('URL del ranking no configurada.');
+       setIsLoading(false);
+       return;
       }
       
       try {
-        const response = await fetch(LEADERBOARD_URL);
-        if (!response.ok) {
-          throw new Error('La respuesta del servidor no fue correcta.');
-        }
-        const data = await response.json();
-        if (data.error) {
-            throw new Error(data.error);
-        }
-        setRanking(data);
+       const response = await fetch(LEADERBOARD_URL);
+       if (!response.ok) {
+        throw new Error('La respuesta del servidor no fue correcta.');
+       }
+       const data = await response.json();
+       if (data.error) {
+           throw new Error(data.error);
+       }
+       setRanking(data);
       } catch (err) {
-        setError('No se pudo cargar el ranking. Intenta más tarde.');
-        console.error("Error al obtener el ranking:", err);
+       setError('No se pudo cargar el ranking. Intenta más tarde.');
+       console.error("Error al obtener el ranking:", err);
       } finally {
-        setIsLoading(false);
+       setIsLoading(false);
       }
       */
     };
@@ -1143,22 +1091,19 @@ const Leaderboard = () => {
    );
 };
 
-const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) => { // Agregado onTutorialStepComplete
+// CÓDIGO MODIFICADO: Se elimina el prop 'onTutorialStepComplete' que ya no es necesario.
+const BonusMissionModal = ({ bonusData, onComplete }) => {
     const [view, setView] = React.useState('offer');
     const [feedback, setFeedback] = React.useState({ message: '', type: '' });
     const [glowClass, setGlowClass] = React.useState('');
     const [selectedOption, setSelectedOption] = React.useState('');
-
-    // Eliminado el useEffect aquí para disparar el tutorial
-    // El tutorial se dispara después de que se aceptan o rechazan las condiciones
-    // o después de que se resuelve el desafío, para que el modal de bonus aparezca primero.
 
     const handleAccept = () => {
         setView('challenge');
     };
 
     const handleDecline = () => {
-        onTutorialStepComplete(10); // Activa el tutorial del paso 10 al DECLINAR
+        // Ya no se llama al tutorial desde aquí
         onComplete({ points: 0, participated: false });
     };
 
@@ -1175,17 +1120,10 @@ const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) =>
             type: isCorrect ? 'success' : 'error'
         });
 
-        if (isCorrect) { // Play sound for correct answer
-            playCorrectSound();
-        } else { // Play sound for incorrect answer
-            playWrongSound();
-        }
-
-        // Disparar el tutorial DESPUÉS de que se muestre el feedback del bonus
-        setTimeout(() => {
-            onTutorialStepComplete(10); // Activa el tutorial del paso 10
-            setTimeout(() => onComplete({ points: pointsWon, participated: true }), 3000); // Luego de un breve tiempo, completa el bonus
-        }, 500); // Pequeño retraso para que el feedback del desafío sea visible primero
+        if (isCorrect) { playCorrectSound(); } else { playWrongSound(); }
+        
+        // Ya no se llama al tutorial desde aquí
+        setTimeout(() => onComplete({ points: pointsWon, participated: true }), 2500);
     };
 
     return (
@@ -1232,11 +1170,11 @@ const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) =>
 
 
 // --- BLOQUE PRINCIPAL DE LA APP ---
+// CÓDIGO MODIFICADO: Añadimos 'pendingActionAfterTutorial' al estado inicial.
 const getInitialState = () => ({ 
-    status: 'login', // Puede ser 'login', 'welcome', 'in_game', 'on_the_road', 'long_travel', 'distortion_event', 'finished', 'aborted'
+    status: 'login',
     squadCode: null, 
     teamName: '', 
-    // MODIFICADO: Empezar con la primera misión de nuestra lista reducida
     currentMissionId: eventData.length > 0 ? eventData[0].id : 1, 
     subStage: 'anchor', 
     score: 0, 
@@ -1249,7 +1187,8 @@ const getInitialState = () => ({
     postDistortionStatus: null,
     activeBonusMissionId: null,
     isAdmin: false,
-    tutorialStep: null, // NUEVO ESTADO para el tutorial
+    tutorialStep: null,
+    pendingActionAfterTutorial: null, // Para manejar acciones que deben esperar a que se cierre un tutorial.
 });
 
 const App = () => {
@@ -1270,8 +1209,8 @@ const App = () => {
 
                 if ((now - lastSavedTime) < hours24inMs) {
                     console.log("Restaurando sesión. Menos de 24hs transcurridas.");
-                    // IMPORTANTE: Al restaurar el estado, no queremos iniciar el tutorial de nuevo a menos que sea explícito
-                    return { ...savedData.state, tutorialStep: null }; 
+                    // CÓDIGO MODIFICADO: Aseguramos que el estado pendiente también se reinicie al restaurar.
+                    return { ...savedData.state, tutorialStep: null, pendingActionAfterTutorial: null }; 
                 } else {
                     console.log("Sesión expirada. Han pasado más de 24hs. Reiniciando.");
                     localStorage.removeItem('guardianesAppState');
@@ -1310,32 +1249,45 @@ const App = () => {
     const activeDistortionEvent = distortionEventsData.find(e => e.id === appState.activeDistortionEventId);
     const activeBonusData = appState.activeBonusMissionId ? allBonusData.find(b => b.id === appState.activeBonusMissionId) : null;
 
-    // --- NUEVA FUNCIÓN: Manejador de tutoriales ---
     const handleTutorialStepComplete = (stepNumber) => {
-        // Solo avanza el tutorial si no está ya en un paso mayor o si no ha terminado
-        // o si es un tutorial que se activa sobre un evento (distorsión/bonus)
-        // en cuyo caso permitimos la activación.
-        if (appState.tutorialStep === null || 
-            stepNumber === appState.tutorialStep + 1 || 
-            (stepNumber === 1 && appState.status === 'welcome') ||
-            (stepNumber === 8 && appState.activeDistortionEventId) || // Permitir tutorial 8 sobre distorsión activa
-            (stepNumber === 10 && appState.activeBonusMissionId)     // Permitir tutorial 10 sobre bonus activo
-        ) {
-            setAppState(prev => ({ ...prev, tutorialStep: stepNumber }));
-        }
+        setAppState(prev => ({ ...prev, tutorialStep: stepNumber }));
     };
 
+    // CÓDIGO MODIFICADO: Esta función ahora es más inteligente y maneja las acciones pendientes.
     const handleCloseTutorial = () => {
-        // Lógica para avanzar al siguiente paso del tutorial
-        if (appState.tutorialStep === 1) { // Después de explicar Fragmentos
-            setAppState(prev => ({ ...prev, tutorialStep: 2 })); // Explicar Tiempo General
-        } else if (appState.tutorialStep === 2) { // Después de explicar Tiempo General
-            setAppState(prev => ({ ...prev, tutorialStep: 3 })); // Explicar Tiempos Parciales
-        } else if (appState.tutorialStep === 3) { // Después de explicar Tiempos Parciales
-            setAppState(prev => ({ ...prev, tutorialStep: 4 })); // Explicar Botón Iniciar
+        const pendingAction = appState.pendingActionAfterTutorial;
+
+        // Si hay una acción pendiente (como mostrar un bonus o distorsión)...
+        if (pendingAction) {
+            // Limpiamos el estado del tutorial y la acción pendiente.
+            setAppState(prev => ({ ...prev, tutorialStep: null, pendingActionAfterTutorial: null }));
+
+            // Y ahora ejecutamos la acción que estaba esperando.
+            if (pendingAction.type === 'bonus') {
+                setAppState(prev => ({
+                    ...prev,
+                    status: 'in_game', // Mantenemos el estado de juego
+                    activeBonusMissionId: pendingAction.id, // Activamos el modal del bonus
+                }));
+            } else if (pendingAction.type === 'distortion') {
+                setAppState(prev => ({
+                    ...prev,
+                    status: 'distortion_event', // Cambiamos el estado para mostrar la distorsión
+                    activeDistortionEventId: pendingAction.id,
+                    postDistortionStatus: pendingAction.nextStatus,
+                }));
+            }
+            return; // Salimos de la función porque ya manejamos el caso.
+        }
+
+        // Si no había ninguna acción pendiente, la función se comporta como antes.
+        if (appState.tutorialStep === 1) {
+            setAppState(prev => ({ ...prev, tutorialStep: 2 }));
+        } else if (appState.tutorialStep === 2) {
+            setAppState(prev => ({ ...prev, tutorialStep: 3 }));
+        } else if (appState.tutorialStep === 3) {
+            setAppState(prev => ({ ...prev, tutorialStep: 4 }));
         } else {
-            // Para todos los demás pasos (5, 6, 7, 8, 9, 10), simplemente cierra el tutorial.
-            // La siguiente pantalla o interacción disparará el próximo tutorial si es necesario.
             setAppState(prev => ({ ...prev, tutorialStep: null }));
         }
     };
@@ -1343,25 +1295,24 @@ const App = () => {
 
     const handleLogin = (code, name, isAdmin = false) => {
         const initialState = getInitialState();
-        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name, isAdmin: isAdmin }; // Almacenar isAdmin
+        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name, isAdmin: isAdmin };
         setAppState(fullState);
-        sendResultsToBackend(fullState); // Aunque deshabilitado, la llamada está aquí.
+        sendResultsToBackend(fullState);
     };
     
-    // NUEVA FUNCIÓN: Para pasar de la pantalla de bienvenida a la primera misión
     const handleStartFirstMission = () => {
         setAppState(prev => ({
             ...prev,
-            status: 'in_game', // Pasa al estado de juego
-            subStage: 'anchor', // Y directamente a la primera ancla
-            tutorialStep: null, // Asegurarse de que el tutorial se cierre si no se ha cerrado manualmente.
+            status: 'in_game',
+            subStage: 'anchor',
+            tutorialStep: null,
         }));
     };
     
     const handleAnchorComplete = (anchorResult) => {
         if (!currentStageData) return;
         const newScore = appState.score + anchorResult.points;
-        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: null })); // Cierra tutorial de ancla
+        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: null }));
     };
     
     const handleRequestHint = () => {
@@ -1371,79 +1322,67 @@ const App = () => {
         }));
     };
     
-const handleTriviaComplete = (triviaResult) => {
-    if (!currentStageData || !appState.pendingAnchorResult) return;
+    // CÓDIGO MODIFICADO: Esta función ahora activa el tutorial ANTES de mostrar el modal.
+    const handleTriviaComplete = (triviaResult) => {
+        if (!currentStageData || !appState.pendingAnchorResult) return;
 
-    const newScore = appState.score + triviaResult.points;
-    const completeMissionRecord = {
-        missionId: currentStageData.id,
-        missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
-        anchorTime: appState.pendingAnchorResult.time,
-        anchorPoints: appState.pendingAnchorResult.points,
-        triviaTime: triviaResult.time,
-        triviaPoints: triviaResult.points
-    };
-    const updatedResults = [...appState.missionResults, completeMissionRecord];
+        const newScore = appState.score + triviaResult.points;
+        const completeMissionRecord = {
+            missionId: currentStageData.id,
+            missionName: currentStageData.anchor.missionName.replace("Ancla: ", ""),
+            anchorTime: appState.pendingAnchorResult.time,
+            anchorPoints: appState.pendingAnchorResult.points,
+            triviaTime: triviaResult.time,
+            triviaPoints: triviaResult.points
+        };
+        const updatedResults = [...appState.missionResults, completeMissionRecord];
 
-    let baseStateForNextStep = {
-        ...appState,
-        score: newScore,
-        missionResults: updatedResults,
-        pendingAnchorResult: null,
-        tutorialStep: null // Cierra tutorial de trivia
-    };
+        let baseStateForNextStep = {
+            ...appState,
+            score: newScore,
+            missionResults: updatedResults,
+            pendingAnchorResult: null,
+            tutorialStep: null
+        };
 
-    sendResultsToBackend(baseStateForNextStep); // Aunque deshabilitado, la llamada está aquí.
+        sendResultsToBackend(baseStateForNextStep);
 
-    // MODIFICADO: Lógica de disparador para la versión de prueba
-    // La distorsión se dispara después de la misión 8.
-    // El bonus se dispara después de la misión 16.
-    let triggeredEvent = null;
-    let triggeredBonus = null;
+        const triggeredBonus = allBonusData.find(b => b.triggerMissionId === currentStageData.id);
+        if (triggeredBonus) {
+            setAppState({
+                ...baseStateForNextStep,
+                tutorialStep: 10, // 1. Mostrar el tutorial del bonus.
+                pendingActionAfterTutorial: { type: 'bonus', id: triggeredBonus.id } // 2. Guardar la acción para después.
+            });
+            return; // Esperar a que el usuario cierre el tutorial.
+        }
 
-    if (currentStageData.id === 8) { // Misión 8 de la lista reducida (original ID 8)
-        triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === 8);
-    } else if (currentStageData.id === 16) { // Misión 16 de la lista reducida (original ID 16)
-        triggeredBonus = allBonusData.find(b => b.triggerMissionId === 16);
-    }
+        const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
+        const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
+        
+        if (triggeredEvent && nextMission) {
+            setAppState({
+                ...baseStateForNextStep,
+                tutorialStep: 8, // 1. Mostrar el tutorial de la distorsión.
+                pendingActionAfterTutorial: { // 2. Guardar la acción para después.
+                    type: 'distortion',
+                    id: triggeredEvent.id,
+                    nextStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road'
+                }
+            });
+            return; // Esperar a que el usuario cierre el tutorial.
+        }
 
-
-    if (triggeredBonus) {
-        console.log(`%c[ETAPA 1] Disparando Bonus: ${triggeredBonus.id}`, 'color: #00AACC; font-size: 14px; font-weight: bold;');
-        setAppState({
-            ...baseStateForNextStep,
-            status: 'in_game', 
-            activeBonusMissionId: triggeredBonus.id,
-            // Eliminamos el set de tutorialStep aquí. Lo hará el BonusMissionModal en su useEffect
-            // tutorialStep: 10, 
-        });
-        return;
-    }
-
-
-    const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
-    
-    if (triggeredEvent && nextMission) {
-        setAppState({
-            ...baseStateForNextStep,
-            status: 'distortion_event',
-            activeDistortionEventId: triggeredEvent.id,
-            postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-            // Eliminamos el set de tutorialStep aquí. Lo hará el DistortionEventPage en su useEffect
-            // tutorialStep: 8, 
-        });
-    } else {
         if (!nextMission) {
-            // Si no hay siguiente misión en el eventData reducido, es el final del demo
             handleFinalComplete(0);
             return;
         }
+
         setAppState({ 
             ...baseStateForNextStep, 
             status: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road' 
         });
-    }
-};
+    };
     
     const handleDistortionComplete = (result) => {
         const newScore = Math.max(0, appState.score + (result?.points || 0));
@@ -1453,10 +1392,10 @@ const handleTriviaComplete = (triviaResult) => {
             activeDistortionEventId: null,  
             status: appState.postDistortionStatus,  
             postDistortionStatus: null,
-            tutorialStep: null, // Cierra tutorial de distorsión
+            tutorialStep: null,
         }
         setAppState(newState);
-        sendResultsToBackend(newState); // Aunque deshabilitado, la llamada está aquí.
+        sendResultsToBackend(newState);
     };
 
     const handleFinalComplete = (bonusPoints) => {
@@ -1464,21 +1403,20 @@ const handleTriviaComplete = (triviaResult) => {
         const finalTime = formatTime(totalSeconds);
         const finalScore = (appState.score || 0) + (bonusPoints || 0);
         
-        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialStep: 9 }; // Muestra Paso 9 al final
+        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialStep: 9 };
         
         setAppState(finalState);
-        sendResultsToBackend(finalState); // Aunque deshabilitado, la llamada está aquí.
+        sendResultsToBackend(finalState);
     };
 
     const handleArrival = () => {
         if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
-            // Si no hay currentStageData o nextMissionId no es un número, forzar el final.
             handleFinalComplete(0); 
             return; 
         }
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
         if (nextMission) {
-            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: null })); // Cierra tutorial de viaje
+            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: null }));
         } else {
             handleFinalComplete(0);
         }
@@ -1502,73 +1440,51 @@ const handleTriviaComplete = (triviaResult) => {
                 score: finalScore,  
                 status: 'aborted',
                 finalTimeDisplay: finalTime,
-                tutorialStep: 9 // Muestra Paso 9 si se aborta
+                tutorialStep: 9
             };
             
             setAppState(finalState);
-            sendResultsToBackend(finalState); // Aunque deshabilitado, la llamada está aquí.
+            sendResultsToBackend(finalState);
         }
     };
 
-const handleBonusModalClose = (result) => {
-    console.log('%c[ETAPA 2] Se cierra el modal del bonus.', 'color: #FF6600; font-size: 14px; font-weight: bold;');
-    console.log('Datos recibidos del modal:', result);
+    const handleBonusModalClose = (result) => {
+        const pointsWon = result?.points || 0;
+        const participated = result?.participated || false;
 
-    const pointsWon = result?.points || 0;
-    const participated = result?.participated || false;
+        if (participated) {
+            sendBonusResultToBackend({
+                teamName: appState.teamName,
+                bonusId: appState.activeBonusMissionId,
+                points: pointsWon
+            });
+        }
 
-    if (participated) {
-        sendBonusResultToBackend({
-            teamName: appState.teamName,
-            bonusId: appState.activeBonusMissionId,
-            points: pointsWon
-        });
-    }
+        const newScore = appState.score + pointsWon;
+        const baseStateAfterBonus = {
+            ...appState,
+            score: newScore,
+            activeBonusMissionId: null,
+            tutorialStep: null,
+        };
 
-    const newScore = appState.score + pointsWon;
-    const baseStateAfterBonus = {
-        ...appState,
-        score: newScore,
-        activeBonusMissionId: null,
-        tutorialStep: null, // Cierra el tutorial de bonus
+        const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
+        const nextMission = eventData.find(m => m.id === missionThatTriggeredBonus.nextMissionId);
+
+        if (!nextMission) {
+            handleFinalComplete(0);
+            return;
+        }
+
+        const nextStatus = nextMission.department !== missionThatTriggeredBonus.department
+            ? 'long_travel'
+            : 'on_the_road';
+
+        const finalState = { ...baseStateAfterBonus, status: nextStatus };
+        setAppState(finalState);
+        sendResultsToBackend(finalState);
     };
-
-    const missionThatTriggeredBonus = eventData.find(m => m.id === currentStageData.id);
-    const nextMission = eventData.find(m => m.id === missionThatTriggeredBonus.nextMissionId);
-
-    if (!nextMission) {
-        handleFinalComplete(0);
-        return;
-    }
-
-    const nextStatus = nextMission.department !== missionThatTriggeredBonus.department
-        ? 'long_travel'
-        : 'on_the_road';
-
-    // No debería haber distorsiones después del bonus en este flujo simplificado
-    // Pero mantenemos la estructura general del original por seguridad.
-    const triggeredEvent = distortionEventsData.find(e => e.trigger?.onMissionComplete === currentStageData.id);
-
-    let finalState;
-    if (triggeredEvent) {
-        finalState = {
-            ...baseStateAfterBonus,
-            status: 'distortion_event',
-            activeDistortionEventId: triggeredEvent.id,
-            postDistortionStatus: nextStatus,
-        };
-    } else {
-        finalState = {
-            ...baseStateAfterBonus,
-            status: nextStatus
-        };
-    }
-
-    setAppState(finalState);
-    sendResultsToBackend(finalState); // Aunque deshabilitado, la llamada está aquí.
-};
     
-    // NUEVAS FUNCIONES PARA SALTO DIRECTO DE ADMIN (Mantenidas para flexibilidad de desarrollo)
     const handleAdminJumpToDistortion = (distortionId) => {
         const triggeredEvent = distortionEventsData.find(e => e.id === distortionId);
         if (triggeredEvent) {
@@ -1576,9 +1492,7 @@ const handleBonusModalClose = (result) => {
                 ...prev,
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
-                postDistortionStatus: 'in_game', // Para simplicidad, volvemos al estado 'in_game' después de la distorsión del admin
-                // Eliminamos el set de tutorialStep aquí, lo hará el componente DistortionEventPage
-                // tutorialStep: 8, 
+                postDistortionStatus: 'in_game',
             }));
         }
     };
@@ -1588,10 +1502,8 @@ const handleBonusModalClose = (result) => {
         if (bonus) {
             setAppState(prev => ({
                 ...prev,
-                status: 'in_game', // Mostrar el modal del bonus directamente en el estado de juego
+                status: 'in_game',
                 activeBonusMissionId: bonus.id,
-                // Eliminamos el set de tutorialStep aquí, lo hará el componente BonusMissionModal
-                // tutorialStep: 10, 
             }));
         }
     };
@@ -1606,12 +1518,11 @@ const handleBonusModalClose = (result) => {
             case 'login':
                 return <LoginPage onLogin={handleLogin} setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} errorMessage={appState.errorMessage} />;
             
-            case 'welcome': // NUEVO CASO para la pantalla de bienvenida
+            case 'welcome':
                 return <WelcomePage teamName={appState.teamName} onContinue={handleStartFirstMission} onTutorialStepComplete={handleTutorialStepComplete} />;
 
             case 'long_travel': {
                 if (!currentStageData || typeof currentStageData.nextMissionId !== 'number') {
-                    // Si no hay currentStageData o nextMissionId no es un número, forzar el final.
                     handleFinalComplete(0); 
                     return null; 
                 }
@@ -1620,10 +1531,10 @@ const handleBonusModalClose = (result) => {
                 const toDept = nextMission.department;
 
                 return <LongTravelPage 
-                                nextDepartment={toDept} 
-                                onArrival={handleArrival} 
-                                onFinishEarly={handleFinishEarly}
-                            />;
+                            nextDepartment={toDept} 
+                            onArrival={handleArrival} 
+                            onFinishEarly={handleFinishEarly}
+                        />;
             }
             
             case 'on_the_road': {
@@ -1632,18 +1543,15 @@ const handleBonusModalClose = (result) => {
                     return <EndGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} onTutorialStepComplete={handleTutorialStepComplete} />;
                 }
                 return <EnRutaPage 
-                                nextLocation={nextMission.location} 
-                                department={nextMission.department} 
-                                onArrival={handleArrival}
-                                onFinishEarly={handleFinishEarly}
-                                onTutorialStepComplete={handleTutorialStepComplete} // Pasa el handler de tutorial
-                            />;
+                            nextLocation={nextMission.location} 
+                            department={nextMission.department} 
+                            onArrival={handleArrival}
+                            onFinishEarly={handleFinishEarly}
+                            onTutorialStepComplete={handleTutorialStepComplete}
+                        />;
             }
 
             case 'in_game': {
-                // En la versión de prueba, la misión 32 es la última, por lo que no tenemos 'final' type.
-                // if(currentStageData.type === 'final') return <FinalSection stage={currentStageData} onComplete={handleFinalComplete} />;
-                
                 if (appState.subStage === 'anchor') return <AnchorSection stage={currentStageData} onComplete={handleAnchorComplete} onHintRequest={handleRequestHint} score={appState.score} onTutorialStepComplete={handleTutorialStepComplete} />;
                 
                 if (appState.subStage === 'trivia') return <TriviaSection stage={currentStageData} onComplete={handleTriviaComplete} onTutorialStepComplete={handleTutorialStepComplete} />;
@@ -1669,32 +1577,26 @@ const handleBonusModalClose = (result) => {
                 {renderContent()}
             </div>
             
-            {/* Renderizar los modales de evento y bonus PRIMERO para que estén en la capa inferior */}
-            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} onTutorialStepComplete={handleTutorialStepComplete} />}
-            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} onTutorialStepComplete={handleTutorialStepComplete} />}
+            {/* CÓDIGO MODIFICADO: Se eliminan los props de tutorial de estos componentes. */}
+            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
+            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} />}
 
-            {/* El PopUpTutorial se renderiza AL FINAL para que siempre esté en la capa superior */}
             {appState.tutorialStep && (
                 <PopUpTutorial step={appState.tutorialStep} onClose={handleCloseTutorial} />
             )}
 
-            {/* MODIFICADO: Controles de desarrollo ahora se muestran si isAdmin es true O si el status no es 'login' para el RESET */}
-            {(appState.isAdmin || appState.status !== 'login') && ( // Si es admin O no está en login (para mostrar RESET)
+            {(appState.isAdmin || appState.status !== 'login') && (
                 <div className="dev-controls-container">
-                    {appState.isAdmin && ( // Estos botones SÓLO aparecen para el admin
+                    {appState.isAdmin && (
                         <>
-                            {/* CORREGIDO: Botones de bonus de admin - ahora explícitamente listados */}
                             <button className="dev-reset-button dev-bonus" onClick={() => handleAdminJumpToBonus('bonus_portho_1')}>
                                 Jump Portho
                             </button>
-                            {/* Eliminados los botones para los otros bonus que ya no están en allBonusData */}
-                            {/* Eliminados los botones para las distorsiones que no están en distortionEventsData */}
                             <button className="dev-reset-button dev-distortion" onClick={() => handleAdminJumpToDistortion('distorsion_2')}>
                                 Jump Dist. 2
                             </button>
                         </>
                     )}
-                    {/* El botón RESET (DEV) siempre visible si no está en la pantalla de login */}
                     {appState.status !== 'login' && (
                         <button className="dev-reset-button dev-reset" onClick={handleResetDevelopment}>
                             RESET (DEV)
