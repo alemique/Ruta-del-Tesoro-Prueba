@@ -1093,18 +1093,18 @@ input:not(.login-container input)::placeholder {
 /* --- FIN: ESTILOS PARA LA PANTALLA DE BIENVENIDA --- */
 
 
-/* --- NEW: TUTORIAL OVERLAY STYLES --- */
+/* --- NUEVOS ESTILOS PARA EL OVERLAY DEL TUTORIAL --- */
 .tutorial-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999; /* Higher than other app elements */
+    z-index: 9999; /* Asegura que esté por encima de la mayoría de los elementos de la aplicación */
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Allows clicks to pass through by default, controlled by backdrop */
+    pointer-events: none; /* Por defecto, permite que los clics pasen a través, controlado por el backdrop */
 }
 
 .tutorial-backdrop {
@@ -1113,29 +1113,29 @@ input:not(.login-container input)::placeholder {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Dark, semi-transparent background */
-    backdrop-filter: blur(3px); /* Optional blur effect */
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+    backdrop-filter: blur(3px); /* Efecto de desenfoque opcional */
     animation: fadeInTutorialBackdrop 0.3s ease-out forwards;
-    pointer-events: auto; /* Allows clicks on the backdrop to dismiss tutorial */
+    pointer-events: auto; /* Permite clics en el fondo para salir del tutorial */
 }
 
 .tutorial-popup {
-    position: absolute; /* Absolute positioning within the fixed overlay */
-    background-color: var(--color-background-medium); /* Darker background for the popup */
+    position: absolute; /* Posicionamiento absoluto dentro del overlay fijo */
+    background-color: var(--color-background-medium); /* Fondo oscuro para el pop-up */
     color: var(--color-text-primary-on-dark);
     border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 15px;
-    max-width: 280px; /* Slightly wider for messages */
+    max-width: 280px; /* Ancho máximo para los mensajes */
     text-align: center;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    z-index: 10000; /* Ensures it's on top of the backdrop */
+    z-index: 10000; /* Asegura que esté encima del fondo */
     font-size: 1rem;
     line-height: 1.5;
     opacity: 0;
     animation: fadeInTutorialPopup 0.3s ease-out forwards;
-    pointer-events: auto; /* Allows interaction with popup buttons */
-    transform: scale(0.95); /* Initial scale for pop-in effect */
+    pointer-events: auto; /* Permite interacción con los botones del pop-up */
+    transform: scale(0.95); /* Escala inicial para efecto de "aparición" */
 }
 
 .tutorial-popup .tutorial-message {
@@ -1145,7 +1145,7 @@ input:not(.login-container input)::placeholder {
 }
 
 .tutorial-popup .tutorial-message strong {
-    color: var(--color-primary); /* Highlight bold text in message */
+    color: var(--color-primary); /* Resalta el texto en negrita en el mensaje */
 }
 
 .tutorial-controls {
@@ -1153,13 +1153,13 @@ input:not(.login-container input)::placeholder {
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
-    gap: 10px; /* Spacing between controls */
+    gap: 10px; /* Espacio entre los controles */
 }
 
 .tutorial-step-counter {
     font-size: 0.85rem;
     color: var(--color-text-secondary-on-dark);
-    flex-grow: 1; /* Allows it to take available space */
+    flex-grow: 1; /* Permite que ocupe el espacio disponible */
     text-align: left;
     margin-right: 10px;
 }
@@ -1175,7 +1175,7 @@ input:not(.login-container input)::placeholder {
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.2s, transform 0.1s;
-    white-space: nowrap; /* Prevents button text from wrapping */
+    white-space: nowrap; /* Evita que el texto del botón se envuelva */
 }
 
 .tutorial-dismiss-button {
@@ -1194,36 +1194,37 @@ input:not(.login-container input)::placeholder {
     transform: translateY(-1px);
 }
 
-/* Arrow styling for the popup */
+/* Estilo de la flecha para el pop-up */
 .tutorial-popup:before {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 12px; /* Slightly larger border for better visibility */
-    z-index: 10001; /* Above popup content */
+    border-width: 12px; /* Borde ligeramente más grande para mejor visibilidad */
+    z-index: 10001; /* Encima del contenido del pop-up */
 }
 
-.tutorial-popup:after { /* Inner arrow for background color */
+.tutorial-popup:after { /* Flecha interior para el color de fondo */
     content: '';
     position: absolute;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 10px; /* Slightly smaller for inner fill */
-    z-index: 10002; /* Above outer arrow, below popup content */
+    border-width: 10px; /* Ligeramente más pequeño para el relleno interior */
+    z-index: 10002; /* Encima de la flecha exterior, debajo del contenido del pop-up */
 }
 
+/* Posicionamiento de las flechas según la alineación */
 .tutorial-arrow-bottom:before {
     border-color: transparent transparent var(--color-primary) transparent;
-    top: -24px; /* Position above popup */
+    top: -24px; /* Posición encima del pop-up */
     left: 50%;
     transform: translateX(-50%);
 }
 .tutorial-arrow-bottom:after {
     border-color: transparent transparent var(--color-background-medium) transparent;
-    top: -19px; /* Adjust to match inner popup background */
+    top: -19px; /* Ajuste para coincidir con el fondo interior del pop-up */
     left: 50%;
     transform: translateX(-50%);
 }
@@ -1267,7 +1268,7 @@ input:not(.login-container input)::placeholder {
     transform: translateY(-50%);
 }
 
-/* Animations for tutorial elements */
+/* Animaciones para los elementos del tutorial */
 @keyframes fadeInTutorialBackdrop {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -1278,7 +1279,8 @@ input:not(.login-container input)::placeholder {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Ensure elements that can be targetted have a higher z-index to be visible through the backdrop */
+/* Asegura que los elementos objetivo tengan un z-index más alto para ser visibles a través del fondo */
+/* NOTA: Estos IDs deben coincidir exactamente con los IDs que se les dan a los elementos en el HTML/JSX. */
 #score-display,
 #timer-display,
 #welcome-location-text,
@@ -1292,7 +1294,7 @@ input:not(.login-container input)::placeholder {
 #anchor-button,
 #skip-button,
 #trivia-question,
-.trivia-options li,
+.trivia-options li, /* Esto apunta a todos los elementos <li> dentro de .trivia-options */
 #trivia-button,
 #distortion-challenge-question,
 #distortion-challenge-input,
@@ -1310,6 +1312,6 @@ input:not(.login-container input)::placeholder {
 #final-fragments,
 #final-time,
 #leaderboard-title {
-    position: relative; /* Crucial for z-index to work */
-    z-index: 10003; /* A value higher than the backdrop (9999) and popup (10000) */
+    position: relative; /* Crucial para que z-index funcione correctamente */
+    z-index: 10003; /* Un valor superior al fondo (9999) y al pop-up (10000) */
 }
