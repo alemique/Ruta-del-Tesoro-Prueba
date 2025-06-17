@@ -1002,7 +1002,6 @@ input:not(.login-container input)::placeholder {
     justify-content: center;
     align-items: center;
     animation: fadeInWelcome 1s ease-in-out;
-    position: relative; /* Needed for tutorial popups */
 }
 
 @keyframes fadeInWelcome {
@@ -1093,171 +1092,224 @@ input:not(.login-container input)::placeholder {
 }
 /* --- FIN: ESTILOS PARA LA PANTALLA DE BIENVENIDA --- */
 
-/* --- NEW: TUTORIAL POPUP STYLES --- */
+
+/* --- NEW: TUTORIAL OVERLAY STYLES --- */
+.tutorial-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999; /* Higher than other app elements */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Allows clicks to pass through by default, controlled by backdrop */
+}
+
+.tutorial-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark, semi-transparent background */
+    backdrop-filter: blur(3px); /* Optional blur effect */
+    animation: fadeInTutorialBackdrop 0.3s ease-out forwards;
+    pointer-events: auto; /* Allows clicks on the backdrop to dismiss tutorial */
+}
+
 .tutorial-popup {
-    position: absolute; /* Changed to absolute for better positioning with portal */
-    background-color: rgba(30, 30, 45, 0.95);
+    position: absolute; /* Absolute positioning within the fixed overlay */
+    background-color: var(--color-background-medium); /* Darker background for the popup */
     color: var(--color-text-primary-on-dark);
     border: 2px solid var(--color-primary);
     border-radius: 8px;
     padding: 15px;
-    max-width: 250px;
+    max-width: 280px; /* Slightly wider for messages */
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    z-index: 10000;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    opacity: 0; /* Start hidden for animation */
-    animation: fadeInTutorial 0.3s ease-out forwards;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    z-index: 10000; /* Ensures it's on top of the backdrop */
+    font-size: 1rem;
+    line-height: 1.5;
+    opacity: 0;
+    animation: fadeInTutorialPopup 0.3s ease-out forwards;
+    pointer-events: auto; /* Allows interaction with popup buttons */
+    transform: scale(0.95); /* Initial scale for pop-in effect */
 }
 
-.tutorial-popup p {
-    margin-bottom: 10px;
-    color: var(--color-text-primary-on-dark); /* Ensure text color is consistent */
+.tutorial-popup .tutorial-message {
+    margin-bottom: 15px;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
+.tutorial-popup .tutorial-message strong {
+    color: var(--color-primary); /* Highlight bold text in message */
+}
+
+.tutorial-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px; /* Spacing between controls */
+}
+
+.tutorial-step-counter {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary-on-dark);
+    flex-grow: 1; /* Allows it to take available space */
+    text-align: left;
+    margin-right: 10px;
+}
+
+.tutorial-next-button,
 .tutorial-dismiss-button {
+    font-family: var(--font-secondary);
     background-color: var(--color-primary);
     color: var(--color-text-on-primary);
     border: none;
-    padding: 8px 15px;
+    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.85rem;
-    transition: background-color 0.2s;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.1s;
+    white-space: nowrap; /* Prevents button text from wrapping */
+}
+
+.tutorial-dismiss-button {
+    background-color: transparent;
+    color: var(--color-text-secondary-on-dark);
+    border: 1px solid var(--color-text-secondary-on-dark);
+}
+
+.tutorial-next-button:hover {
+    background-color: var(--color-secondary);
+    transform: translateY(-1px);
 }
 
 .tutorial-dismiss-button:hover {
-    background-color: var(--color-secondary);
+    background-color: rgba(var(--color-text-secondary-on-dark), 0.1);
+    transform: translateY(-1px);
 }
 
-/* Arrow styling */
+/* Arrow styling for the popup */
 .tutorial-popup:before {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
     border-style: solid;
-    border-width: 10px;
+    border-width: 12px; /* Slightly larger border for better visibility */
+    z-index: 10001; /* Above popup content */
+}
+
+.tutorial-popup:after { /* Inner arrow for background color */
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px; /* Slightly smaller for inner fill */
+    z-index: 10002; /* Above outer arrow, below popup content */
 }
 
 .tutorial-arrow-bottom:before {
     border-color: transparent transparent var(--color-primary) transparent;
-    top: -20px; /* Position above popup, considering border */
+    top: -24px; /* Position above popup */
     left: 50%;
     transform: translateX(-50%);
 }
-.tutorial-arrow-bottom:after { /* Inner arrow for background color */
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px; /* Smaller for inner */
-    border-color: transparent transparent rgba(30, 30, 45, 0.95) transparent;
-    top: -16px; /* Adjust to match inner popup background */
+.tutorial-arrow-bottom:after {
+    border-color: transparent transparent var(--color-background-medium) transparent;
+    top: -19px; /* Adjust to match inner popup background */
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10001;
 }
-
 
 .tutorial-arrow-top:before {
     border-color: var(--color-primary) transparent transparent transparent;
-    bottom: -20px;
+    bottom: -24px;
     left: 50%;
     transform: translateX(-50%);
 }
 .tutorial-arrow-top:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px;
-    border-color: rgba(30, 30, 45, 0.95) transparent transparent transparent;
-    bottom: -16px;
+    border-color: var(--color-background-medium) transparent transparent transparent;
+    bottom: -19px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 10001;
 }
 
 .tutorial-arrow-left:before {
     border-color: transparent transparent transparent var(--color-primary);
-    right: -20px;
+    right: -24px;
     top: 50%;
     transform: translateY(-50%);
 }
 .tutorial-arrow-left:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px;
-    border-color: transparent transparent transparent rgba(30, 30, 45, 0.95);
-    right: -16px;
+    border-color: transparent transparent transparent var(--color-background-medium);
+    right: -19px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10001;
 }
 
 .tutorial-arrow-right:before {
     border-color: transparent var(--color-primary) transparent transparent;
-    left: -20px;
+    left: -24px;
     top: 50%;
     transform: translateY(-50%);
 }
 .tutorial-arrow-right:after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 8px;
-    border-color: transparent rgba(30, 30, 45, 0.95) transparent transparent;
-    left: -16px;
+    border-color: transparent var(--color-background-medium) transparent transparent;
+    left: -19px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10001;
 }
 
+/* Animations for tutorial elements */
+@keyframes fadeInTutorialBackdrop {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-@keyframes fadeInTutorial {
-    from { opacity: 0; transform: scale(0.9); }
+@keyframes fadeInTutorialPopup {
+    from { opacity: 0; transform: scale(0.8); }
     to { opacity: 1; transform: scale(1); }
 }
 
-/* Ensure elements that can be targetted have a position relative or similar if they are static */
-/* For example, for inputs or buttons that are usually static, adding a relative position can help
-   if the popup is absolutely positioned within a relatively positioned parent.
-   However, since we are portaling to `document.body` and using fixed/absolute positioning
-   relative to the viewport, this might not be strictly necessary for target elements
-   unless they are dynamically moving or within very complex layouts.
-*/
-.login-container #squadCode,
-.login-container #activate-button,
-.welcome-container #welcome-fragments-desc,
-.welcome-container #welcome-time-desc,
-.welcome-container #start-mission-button,
-.en-ruta-container #arrival-button,
-.long-travel-page #long-travel-arrival-button,
-.stage-container #anchor-input,
-.stage-container #hint-button,
-.stage-container #anchor-button,
-.stage-container #skip-button,
-.challenge-container #trivia-option-0,
-.challenge-container #trivia-button,
-.amenaza-modal-content #distortion-challenge-input,
-.amenaza-modal-content #distortion-submit-button,
-.amenaza-modal-overlay #amenaza-visual-element, /* Target video/image if autoplayed */
-.amenaza-modal-overlay #video-play-button, /* Target play button if autoplay blocked */
-.amenaza-modal-content #bonus-offer-description,
-.amenaza-modal-content #bonus-maps-link,
-.amenaza-modal-content #bonus-decline-button,
-.amenaza-modal-content #bonus-accept-button,
-.amenaza-modal-content #bonus-submit-button
-{
-    position: relative; /* Ensures these elements create a stacking context for tutorial arrows if needed */
-    z-index: 1; /* Keep them above general content but below popup */
+/* Ensure elements that can be targetted have a higher z-index to be visible through the backdrop */
+#score-display,
+#timer-display,
+#welcome-location-text,
+#start-mission-button,
+#progress-bar-container,
+#long-travel-progress-bar,
+#arrival-button,
+#long-travel-arrival-button,
+#anchor-input,
+#hint-button,
+#anchor-button,
+#skip-button,
+#trivia-question,
+.trivia-options li,
+#trivia-button,
+#distortion-challenge-question,
+#distortion-challenge-input,
+#distortion-submit-button,
+#distortion-narrative-text,
+#distortion-narrative-button,
+#amenaza-visual-element,
+#video-play-button,
+#bonus-offer-description,
+#bonus-maps-link,
+#bonus-accept-button,
+#bonus-decline-button,
+#bonus-challenge-question,
+#bonus-submit-button,
+#final-fragments,
+#final-time,
+#leaderboard-title {
+    position: relative; /* Crucial for z-index to work */
+    z-index: 10003; /* A value higher than the backdrop (9999) and popup (10000) */
 }

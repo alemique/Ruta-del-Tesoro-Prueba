@@ -1,45 +1,45 @@
-// --- BACKEND CONFIGURATION ---
-// Updated URL to include ranking functionality.
+// --- CONFIGURACIÓN DEL BACKEND ---
+// URL actualizada para incluir la función del ranking.
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbym5-onTOyzlqZn_G4O-5acxAZzReYjIOY5SF8tBh3TtT2jEFVw6IZ2MMMtkHGtRl0F/exec';
 
-// --- REDUCED EVENT DATA FOR THE TEST VERSION ---
-// 4 specific missions, 1 challenge, and 1 bonus have been selected for the test version.
+// --- DATOS REDUCIDOS DEL EVENTO PARA LA VERSIÓN DE PRUEBA ---
+// Se han seleccionado 4 misiones, 1 desafío y 1 bonus específicos para la versión de prueba.
 const eventData = [
-    // SANTA LUCÍA - Mission 1 (Original ID 1)
+    // SANTA LUCÍA - Misión 1 (Original ID 1)
     {
         id: 1, department: "Santa Lucía", location: "Parroquia Santa Lucía",
-        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla.", tutorialDescription: "El 'Ancla Temporal' es una información clave que debes encontrar en tu ubicación. Ingrésala aquí para avanzar." },
-        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900", tutorialDescription: "Responde estas preguntas para recuperar más 'Fragmentos de Historia'." } },
-        nextMissionId: 8 // Link to the next mission in the test version
+        anchor: { missionName: "Ancla: Vestigios del Sismo", enabler: "Consigna: Busquen el año del catastrófico terremoto que destruyó el 'hermoso templo colonial'.\nPista: Este evento marcó un antes y después en la arquitectura de toda la provincia.", enablerKeyword: "1944", transmission: "Guardián, detecto una cicatriz profunda en la línea de tiempo de este lugar sagrado. Debes anclar el año del evento que lo cambió todo para estabilizarla.", tutorialDescription: "El **Ancla Temporal** es la información clave que debes encontrar en el lugar. Ingrésala para avanzar en la misión." },
+        trivia: { missionName: "Trivia: El Templo de 1900", challenge: { question: "¿En qué año fue inaugurado el templo de estilo ecléctico que reemplazó a la primera capilla?", options: ["1894", "1900", "1944", "1964"], correctAnswer: "1900", tutorialDescription: "En la **Trivia**, tu velocidad en responder correctamente te dará más **Fragmentos de Historia**. ¡Elige con sabiduría!" } },
+        nextMissionId: 8 // Enlace a la siguiente misión de la versión de prueba
     },
-    // SANTA LUCÍA - Mission 2 (Original ID 8)
+    // SANTA LUCÍA - Misión 2 (Original ID 8)
     {
         id: 8, department: "Santa Lucía", location: "Plaza General San Martín",
-        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro.", tutorialDescription: "Cada 'Ancla Temporal' es un dato específico del lugar que debes averiguar." },
-        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía", tutorialDescription: "Las 'Trivia' son preguntas de opción múltiple sobre el lugar." } },
-        nextMissionId: 16 // Link to the next mission in the test version
+        anchor: { missionName: "Ancla: La Renovación del Encuentro", enabler: "Consigna: Hallen el año en que la plaza fue totalmente remodelada, con motivo del 152° aniversario.\nPista: Se agregó Wi-Fi público y se descubrió una placa conmemorativa.", enablerKeyword: "2021", transmission: "Los espacios evolucionan para seguir uniendo a las personas. Ancla el año de la gran transformación de este punto de encuentro.", tutorialDescription: "Esta es la descripción del Ancla en la misión 2." },
+        trivia: { missionName: "Trivia: Tradición Decembrina", challenge: { question: "¿Qué importante evento anual, que dura tres noches, se celebra en esta plaza cada diciembre?", options: ["El Festival del Sol", "El Aniversario de Santa Lucía", "La Fiesta Nacional de Santa Lucía", "La Feria de las Colectividades"], correctAnswer: "La Fiesta Nacional de Santa Lucía", tutorialDescription: "Esta es la descripción de la Trivia en la misión 2." } },
+        nextMissionId: 16 // Enlace a la siguiente misión de la versión de prueba
     },
-    // CAPITAL - Mission 3 (Original ID 16)
+    // CAPITAL - Misión 3 (Original ID 16)
     {
         id: 16, department: "Capital", location: "Casa Natal de Sarmiento",
-        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico.", tutorialDescription: "¡Atención! Hay 'pistas' ocultas que te pueden ayudar, pero a un costo." },
-        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno", tutorialDescription: "Tu tiempo en la 'Trivia' es crucial para obtener más puntos." } },
-        nextMissionId: 32 // Link to the next mission in the test version
+        anchor: { missionName: "Ancla: El Primer Monumento Nacional", enabler: "Consigna: Determinen el año en que esta casa se convirtió en el Primer Monumento Histórico Nacional del país.\nPista: Ocurrió por ley del Congreso y un año después abrió sus puertas como museo.", enablerKeyword: "1910", transmission: "Esta humilde casa fue la primera en recibir el máximo honor. Fija el año en que la Nación la declaró su primer monumento histórico.", tutorialDescription: "Esta es la descripción del Ancla en la misión 3." },
+        trivia: { missionName: "Trivia: Sede de Gobierno", challenge: { question: "¿Qué función tuvo la casa durante el gobierno provincial de Sarmiento?", options: ["Escuela de primeras letras", "Biblioteca Pública", "Casa de Gobierno", "Cuartel militar"], correctAnswer: "Casa de Gobierno", tutorialDescription: "Esta es la descripción de la Trivia en la misión 3." } },
+        nextMissionId: 32 // Enlace a la siguiente misión de la versión de prueba
     },
-    // RIVADAVIA - Mission 4 (Original ID 32) - This will be the last mission of the demo before the end.
+    // RIVADAVIA - Misión 4 (Original ID 32) - Esta será la última misión del demo antes del final.
     {
         id: 32, department: "Rivadavia", location: "Autódromo El Zonda",
-        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí.", tutorialDescription: "Cada Ancla y Trivia te suma 'Fragmentos de Historia'." },
-        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros", tutorialDescription: "Al final, tu 'Tiempo Total' y 'Fragmentos' determinarán tu puesto." } },
-        nextMissionId: null // Marks as the last mission for the normal flow
+        anchor: { missionName: "Ancla: La Categoría Reina", enabler: "Consigna: ¿Qué famosa categoría del automovilismo nacional ha tenido competencias memorables en este circuito a lo largo de su historia?\nPista: Es una de las más populares y antiguas de Argentina.", enablerKeyword: "Turismo Carretera", transmission: "Los ídolos más grandes del automovilismo argentino han derrapado en estas curvas. Ancla el nombre de la categoría más emblemática que ha corrido aquí.", tutorialDescription: "Esta es la descripción del Ancla en la misión 4." },
+        trivia: { missionName: "Trivia: La Medida del Desafío", challenge: { question: "¿Qué longitud tiene el desafiante trazado de montaña de este circuito?", options: ["1.800 metros", "2.300 metros", "2.800 metros", "3.200 metros"], correctAnswer: "2.300 metros", tutorialDescription: "Esta es la descripción de la Trivia en la misión 4." } },
+        nextMissionId: null // Marca como la última misión para el flujo normal
     },
 ];
 
-// --- REDUCED DISTORTION EVENT POOL WITH SPECIFIC TRIGGERS ---
+// --- POOL DE EVENTOS DE DISTORSIÓN CON DISPARADORES ESPECÍFICOS (REDUCIDO) ---
 const distortionEventsData = [
     {
-        id: 'distorsion_2', // Selecting only this one for the test version
-        trigger: { onMissionComplete: 8 }, // Will trigger after completing mission with ID 8
+        id: 'distorsion_2', // Seleccionamos solo este para la versión de prueba
+        trigger: { onMissionComplete: 8 }, // Se disparará después de completar la misión con ID 8
         visual: { type: 'video', src: 'imagenes/AMENAZA.mp4' },
         challenge: {
             type: 'multiple_choice',
@@ -55,15 +55,15 @@ const distortionEventsData = [
             correctAnswer: "Conmemorar el Centenario de la Revolución de Mayo",
             bonusPoints: 30,
             penaltyPoints: 0,
-            tutorialDescription: "¡Cuidado! Las 'Distorsiones Temporales' son desafíos inesperados. Responde correctamente para ganar Fragmentos o, si fallas, podrías perderlos."
+            tutorialDescription: "Las **Distorsiones Temporales** son desafíos inesperados. Responde correctamente para ganar **Fragmentos**, o podrías perderlos."
         }
     }
 ];
 
-// --- REDUCED BONUS MISSION DATA ---
-const bonusMissionData = { // This is the 'Portho' bonus
+// --- DATOS DE LAS MISIONES BONUS (REDUCIDO) ---
+const bonusMissionData = { // Este es el bonus 'Portho'
     id: 'bonus_portho_1',
-    triggerMissionId: 16, // Will trigger after completing mission with ID 16
+    triggerMissionId: 16, // Se disparará después de completar la misión con ID 16
     sponsorName: 'Portho Gelatto',
     title: 'Misión Bonus: El Sabor del Tiempo',
     logoSrc: 'imagenes/portho.jpg',
@@ -74,14 +74,14 @@ const bonusMissionData = { // This is the 'Portho' bonus
         options: ['Uva', 'Pistacho', 'Membrillo', 'Dulce de Leche'],
         correctAnswer: 'Membrillo',
         points: 200,
-        tutorialDescription: "Las 'Misiones Bonus' son oportunidades únicas para ganar muchos Fragmentos. ¡Pero el tiempo sigue corriendo!"
+        tutorialDescription: "Las **Misiones Bonus** te ofrecen una gran cantidad de **Fragmentos de Historia**. ¡Decide si el desvío vale el riesgo!"
     }
 };
 
-const allBonusData = [bonusMissionData];
+const allBonusData = [bonusMissionData]; // Solo incluimos el bonus 'Portho' para esta versión.
 
 
-// --- GLOBAL HELPER FUNCTIONS (NO CHANGES) ---
+// --- FUNCIONES GLOBALES DE AYUDA ---
 const formatTime = (totalSeconds) => {
     const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
     const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
@@ -139,7 +139,7 @@ const triggerVibration = (duration = 100) => {
 
 const playSound = (soundPath) => {
     const audio = new Audio(soundPath);
-    audio.play().catch(e => console.error("Error playing sound:", e));
+    audio.play().catch(e => console.error("Error al reproducir sonido:", e));
 };
 
 const playCorrectSound = () => {
@@ -155,7 +155,7 @@ const animatePoints = (points, originElementId) => {
     const origin = document.getElementById(originElementId);
 
     if (!destination || !origin) {
-        console.error("Destination or origin element not found for animation.");
+        console.error("Elemento de destino u origen no encontrado para la animación.");
         return;
     }
 
@@ -165,7 +165,7 @@ const animatePoints = (points, originElementId) => {
     pointsFlyer.style.position = 'fixed';
     pointsFlyer.style.zIndex = '10000';
     pointsFlyer.style.padding = '8px 16px';
-    pointsFlyer.style.backgroundColor = 'var(--color-feedback-success-dark, #2a9d8f)';
+    pointsFlyer.style.backgroundColor = 'var(--color-feedback-success, #27ae60)'; // Changed to success color
     pointsFlyer.style.color = '#FFFFFF';
     pointsFlyer.style.fontWeight = 'bold';
     pointsFlyer.style.fontSize = '1.5rem';
@@ -217,73 +217,104 @@ const animatePoints = (points, originElementId) => {
 };
 
 async function sendResultsToBackend(data) {
-    const timeToSend = data.finalTimeDisplay || formatTime(data.mainTimer);
-    console.warn("Test version: Result submission to the backend is disabled.");
+    // Disabled for demo version
+    console.warn("Versión de prueba: El envío de resultados al backend está deshabilitado.");
     return;
 }
 
 async function sendBonusResultToBackend(data) {
-    console.log('%c[STAGE 3] Attempting to send bonus data to backend.', 'color: #22CC22; font-size: 14px; font-weight: bold;');
-    console.log('Data to be sent:', data);
-    console.warn("Test version: Bonus result submission to the backend is disabled.");
+    // Disabled for demo version
+    console.warn("Versión de prueba: El envío de resultados de bonus al backend está deshabilitado.");
     return;
 }
 
-
-// --- NEW TUTORIAL POPUP COMPONENT ---
-const TutorialPopup = ({ message, targetId, onDismiss, style = {}, arrowPosition = 'bottom' }) => {
+// --- NEW: TUTORIAL OVERLAY COMPONENT ---
+const TutorialOverlay = ({ message, targetId, onNext, onDismiss, currentStep, totalSteps, alignment = 'bottom' }) => {
     const [position, setPosition] = React.useState({ top: 0, left: 0 });
     const popupRef = React.useRef(null);
+    const hasPositioned = React.useRef(false); // To prevent repositioning on every render
 
     React.useLayoutEffect(() => {
         const targetElement = document.getElementById(targetId);
-        if (!targetElement || !popupRef.current) return;
+        if (!targetElement || !popupRef.current || hasPositioned.current) return;
 
         const targetRect = targetElement.getBoundingClientRect();
         const popupRect = popupRef.current.getBoundingClientRect();
 
-        let top, left;
+        let top = 0;
+        let left = 0;
 
-        // Default position: below the target
-        top = targetRect.bottom + 10; // 10px below the target
-        left = targetRect.left + targetRect.width / 2 - popupRect.width / 2;
-
-        // Adjust if it goes off-screen
-        if (left < 0) left = 0;
-        if (left + popupRect.width > window.innerWidth) left = window.innerWidth - popupRect.width;
-
-        // If 'arrowPosition' is 'top', place the popup above
-        if (arrowPosition === 'top') {
-            top = targetRect.top - popupRect.height - 10;
-        } else if (arrowPosition === 'left') {
-            left = targetRect.left - popupRect.width - 10;
-            top = targetRect.top + targetRect.height / 2 - popupRect.height / 2;
-        } else if (arrowPosition === 'right') {
-            left = targetRect.right + 10;
-            top = targetRect.top + targetRect.height / 2 - popupRect.height / 2;
+        // Calculate position based on alignment
+        switch (alignment) {
+            case 'bottom': // Default: popup below target
+                top = targetRect.bottom + 20;
+                left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                break;
+            case 'top': // popup above target
+                top = targetRect.top - popupRect.height - 20;
+                left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                break;
+            case 'left': // popup to the left of target
+                top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                left = targetRect.left - popupRect.width - 20;
+                break;
+            case 'right': // popup to the right of target
+                top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                left = targetRect.right + 20;
+                break;
+            case 'center': // popup centered on target, mainly for full screen or modals
+                top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                break;
         }
 
-
-        // Ensure popup is within viewport
-        if (top < 0) top = 0; // Don't go above the screen
-        if (top + popupRect.height > window.innerHeight) top = window.innerHeight - popupRect.height;
-
-
+        // Adjust for viewport boundaries
+        if (left < 10) left = 10;
+        if (left + popupRect.width > window.innerWidth - 10) {
+            left = window.innerWidth - popupRect.width - 10;
+        }
+        if (top < 10) top = 10;
+        if (top + popupRect.height > window.innerHeight - 10) {
+            top = window.innerHeight - popupRect.height - 10;
+        }
+        
         setPosition({ top: top + window.scrollY, left: left + window.scrollX });
-    }, [targetId, message, arrowPosition]);
+        hasPositioned.current = true; // Mark as positioned
+    }, [targetId, message, alignment]); // Recalculate if target or message changes
 
+    // Scroll to target if it's off-screen
+    React.useEffect(() => {
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }, [targetId]);
+
+    const handleNextClick = () => {
+        hasPositioned.current = false; // Allow repositioning for the next step
+        onNext();
+    };
 
     return ReactDOM.createPortal(
-        <div ref={popupRef} className={`tutorial-popup tutorial-arrow-${arrowPosition}`} style={{ ...position, ...style }}>
-            <p>{message}</p>
-            <button onClick={onDismiss} className="tutorial-dismiss-button">Entendido</button>
+        <div className="tutorial-overlay">
+            <div className="tutorial-backdrop" onClick={onDismiss}></div>
+            <div ref={popupRef} className={`tutorial-popup tutorial-arrow-${alignment}`}>
+                <div className="tutorial-message" dangerouslySetInnerHTML={{ __html: message }}></div>
+                <div className="tutorial-controls">
+                    {totalSteps && <span className="tutorial-step-counter">{currentStep} / {totalSteps}</span>}
+                    <button className="tutorial-next-button" onClick={handleNextClick}>Siguiente</button>
+                    <button className="tutorial-dismiss-button" onClick={onDismiss}>Omitir Tutorial</button>
+                </div>
+            </div>
         </div>,
         document.body
     );
 };
 
 
-const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTutorialStep, handleDismissTutorial }) => {
+// --- REACT COMPONENTS ---
+
+const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
     const [view, setView] = React.useState('visual');
     const videoRef = React.useRef(null);
     const [videoPlaying, setVideoPlaying] = React.useState(false);
@@ -298,7 +329,7 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                 setAutoplayBlocked(false);
             })
             .catch(e => {
-                console.warn("Autoplay blocked or playback error:", e);
+                console.warn("Autoplay bloqueado o error de reproducción:", e);
                 setAutoplayBlocked(true);
                 setVideoPlaying(false);
             });
@@ -306,7 +337,9 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
         const currentVideoRef = videoRef.current;
         const handleEnded = () => {
             setView('challenge');
-            if(tutorialActive) handleNextTutorialStep(); // Move tutorial step after video ends
+            if(tutorialActive && tutorialStep === 11) { // Tutorial step for video end
+                 handleNextTutorialStep();
+            }
         };
         currentVideoRef.addEventListener('ended', handleEnded);
 
@@ -315,14 +348,17 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                 currentVideoRef.removeEventListener('ended', handleEnded);
             }
         };
-    }, [event, view, tutorialActive, handleNextTutorialStep]);
+    }, [event, view, tutorialActive, tutorialStep, handleNextTutorialStep]);
 
     const handlePlayVideo = () => {
         if (videoRef.current) {
             videoRef.current.play().then(() => {
                 setVideoPlaying(true);
                 setAutoplayBlocked(false);
-            }).catch(e => console.error("Error playing video manually:", e));
+                if(tutorialActive && tutorialStep === 10) { // Tutorial step for play button
+                    handleNextTutorialStep();
+                }
+            }).catch(e => console.error("Error al reproducir video manualmente:", e));
         }
     };
 
@@ -343,6 +379,12 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
             return () => clearInterval(interval);
         }, [timer, isLocked]);
 
+        React.useEffect(() => {
+            if(tutorialActive && tutorialStep === 12) { // Tutorial step for challenge question
+                 handleNextTutorialStep();
+            }
+        }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
+
         const handleSubmit = (isTimeout = false) => {
             if (isLocked) return;
             setIsLocked(true);
@@ -359,7 +401,10 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
             if (isCorrect) playCorrectSound();
             else playWrongSound();
 
-            setTimeout(() => onComplete({ points }), 3000);
+            setTimeout(() => {
+                onComplete({ points });
+                if(tutorialActive) handleDismissTutorial(); // End tutorial after challenge
+            }, 3000);
         };
         
         const handleMultipleChoiceSubmit = () => {
@@ -376,13 +421,17 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
             if (isCorrect) playCorrectSound();
             else playWrongSound();
 
-            setTimeout(() => onComplete({ points }), 3000);
+            setTimeout(() => {
+                onComplete({ points });
+                if(tutorialActive) handleDismissTutorial(); // End tutorial after challenge
+            }, 3000);
         };
 
         const handleNarrativeContinue = () => {
              if (isLocked) return;
              setIsLocked(true);
              onComplete({ points: 0 });
+             if(tutorialActive) handleDismissTutorial(); // End tutorial after narrative
         }
 
         switch (challenge.type) {
@@ -392,16 +441,30 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                         <h3>{challenge.title}</h3>
                         <p>{challenge.message}</p>
                         <div className="distortion-timer">⏳ {timer}s</div>
-                        <p className="distortion-challenge-text">{challenge.question}</p>
-                        <input type="text" placeholder="Último dígito" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={isLocked} />
-                        <button className="primary-button" onClick={() => handleSubmit(false)} disabled={isLocked}>RESPONDER</button>
+                        <p id="distortion-challenge-question" className="distortion-challenge-text">{challenge.question}</p>
+                        <input id="distortion-challenge-input" type="text" placeholder="Último dígito" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={isLocked} />
+                        <button id="distortion-submit-button" className="primary-button" onClick={() => handleSubmit(false)} disabled={isLocked}>RESPONDER</button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
-                        {tutorialActive && (
-                            <TutorialPopup
+                        {tutorialActive && tutorialStep === 12 && (
+                            <TutorialOverlay
                                 message={event.challenge.tutorialDescription}
-                                targetId="distortion-challenge-input" // Assuming an ID for the input field
+                                targetId="distortion-challenge-question"
+                                onNext={handleNextTutorialStep}
                                 onDismiss={handleDismissTutorial}
-                                arrowPosition="bottom"
+                                currentStep={tutorialStep}
+                                totalSteps={13} // Assuming total steps for distortion are 3 (visual, question, button)
+                                alignment="bottom"
+                            />
+                        )}
+                        {tutorialActive && tutorialStep === 13 && (
+                            <TutorialOverlay
+                                message="Ingresa tu respuesta en el campo y presiona **Responder**."
+                                targetId="distortion-submit-button"
+                                onNext={handleNextTutorialStep} // Final step for distortion, then it dismisses.
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="top"
                             />
                         )}
                     </div>
@@ -411,12 +474,12 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                     <div className="distortion-container">
                         <h3>{challenge.title}</h3>
                         <p>{challenge.message}</p>
-                        <p className="distortion-challenge-text">{challenge.question}</p>
+                        <p id="distortion-challenge-question" className="distortion-challenge-text">{challenge.question}</p>
                         <ul className="trivia-options">
                             {challenge.options.map((option, index) => (
                                 <li 
                                     key={option} 
-                                    id={`distortion-option-${index}`} // Added ID for tutorial targeting
+                                    id={`distortion-option-${index}`} 
                                     className={selectedOption === option ? 'selected' : ''} 
                                     onClick={() => !isLocked && setSelectedOption(option)}
                                 >
@@ -428,12 +491,26 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                             VERIFICAR
                         </button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
-                        {tutorialActive && (
-                            <TutorialPopup
+                        {tutorialActive && tutorialStep === 12 && (
+                            <TutorialOverlay
                                 message={event.challenge.tutorialDescription}
-                                targetId="distortion-submit-button"
+                                targetId="distortion-challenge-question"
+                                onNext={handleNextTutorialStep}
                                 onDismiss={handleDismissTutorial}
-                                arrowPosition="bottom"
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="bottom"
+                            />
+                        )}
+                        {tutorialActive && tutorialStep === 13 && (
+                            <TutorialOverlay
+                                message="Selecciona la opción correcta y presiona **Verificar**."
+                                targetId="distortion-submit-button"
+                                onNext={handleNextTutorialStep} // Final step for distortion, then it dismisses.
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="top"
                             />
                         )}
                     </div>
@@ -442,8 +519,30 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                     return (
                             <div className="distortion-container">
                                     <h3>{challenge.title}</h3>
-                                    <p className="distortion-narrative-text">{challenge.message}</p>
-                                    <button className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                                    <p id="distortion-narrative-text" className="distortion-narrative-text">{challenge.message}</p>
+                                    <button id="distortion-narrative-button" className="primary-button" onClick={handleNarrativeContinue} disabled={isLocked}>CONTINUAR MISIÓN...</button>
+                                    {tutorialActive && tutorialStep === 12 && (
+                                        <TutorialOverlay
+                                            message={event.challenge.tutorialDescription}
+                                            targetId="distortion-narrative-text"
+                                            onNext={handleNextTutorialStep}
+                                            onDismiss={handleDismissTutorial}
+                                            currentStep={tutorialStep}
+                                            totalSteps={13}
+                                            alignment="bottom"
+                                        />
+                                    )}
+                                    {tutorialActive && tutorialStep === 13 && (
+                                        <TutorialOverlay
+                                            message="Presiona **Continuar Misión** para seguir adelante."
+                                            targetId="distortion-narrative-button"
+                                            onNext={handleNextTutorialStep} // Final step for distortion, then it dismisses.
+                                            onDismiss={handleDismissTutorial}
+                                            currentStep={tutorialStep}
+                                            totalSteps={13}
+                                            alignment="top"
+                                        />
+                                    )}
                             </div>
                     );
             default:
@@ -457,21 +556,35 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
             <div className="amenaza-modal-content">
                 {view === 'visual' && event.visual.type === 'video' && (
                     <>
-                        <video ref={videoRef} className="amenaza-visual" src={event.visual.src} autoPlay playsInline />
+                        <video ref={videoRef} id="amenaza-visual-element" className="amenaza-visual" src={event.visual.src} autoPlay playsInline />
                         {autoplayBlocked && (
-                            <button className="video-play-button" onClick={handlePlayVideo}>
+                            <button id="video-play-button" className="video-play-button" onClick={handlePlayVideo}>
                                 ▶️ Activar Video / Sonido
                             </button>
                         )}
                         {!videoPlaying && !autoplayBlocked && (
                             <p className="video-loading-message">Cargando video...</p>
                         )}
-                        {tutorialActive && (
-                            <TutorialPopup
-                                message="¡Alerta! Una 'Distorsión Temporal' interrumpe tu viaje. Presta atención al video o imagen."
-                                targetId={autoplayBlocked ? "video-play-button" : "amenaza-visual-element"} // Target video or play button
+                        {tutorialActive && tutorialStep === 10 && (
+                            <TutorialOverlay
+                                message="¡Alerta! Una **Distorsión Temporal** interrumpe tu viaje. Si el video no inicia, actívalo."
+                                targetId={autoplayBlocked ? "video-play-button" : "amenaza-visual-element"}
+                                onNext={handleNextTutorialStep}
                                 onDismiss={handleDismissTutorial}
-                                arrowPosition={autoplayBlocked ? "top" : "bottom"}
+                                currentStep={tutorialStep}
+                                totalSteps={13} // Total steps for distortion tutorial
+                                alignment={autoplayBlocked ? "top" : "bottom"}
+                            />
+                        )}
+                        {tutorialActive && tutorialStep === 11 && (
+                            <TutorialOverlay
+                                message="El video contiene información o una amenaza. Presta atención y espera a que termine."
+                                targetId="amenaza-visual-element"
+                                onNext={handleNextTutorialStep}
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="bottom"
                             />
                         )}
                     </>
@@ -479,12 +592,26 @@ const DistortionEventPage = ({ event, onComplete, tutorialActive, handleNextTuto
                 {view === 'visual' && event.visual.type === 'image' && (
                     <>
                         <img id="amenaza-visual-element" className="amenaza-visual" src={event.visual.src} alt="Interrupción de la Amenaza" />
-                        {tutorialActive && (
-                            <TutorialPopup
-                                message="¡Alerta! Una 'Distorsión Temporal' interrumpe tu viaje. Observa la imagen para el desafío."
+                        {tutorialActive && tutorialStep === 10 && (
+                            <TutorialOverlay
+                                message="¡Alerta! Una **Distorsión Temporal** interrumpe tu viaje. Observa la imagen para el desafío."
                                 targetId="amenaza-visual-element"
+                                onNext={handleNextTutorialStep}
                                 onDismiss={handleDismissTutorial}
-                                arrowPosition="bottom"
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="bottom"
+                            />
+                        )}
+                        {tutorialActive && tutorialStep === 11 && (
+                            <TutorialOverlay
+                                message="Esta imagen es parte del desafío. Una vez que la hayas visto, espera al siguiente paso."
+                                targetId="amenaza-visual-element"
+                                onNext={handleNextTutorialStep}
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={13}
+                                alignment="bottom"
                             />
                         )}
                     </>
@@ -504,12 +631,12 @@ const Header = ({ teamName, score, timer }) => (
         </div>
         <div className="header-score">
             <span id="score-display" className="score">{score} FRAGMENTOS</span>
-            <span className="timer">⏳ {formatTime(timer)}</span>
+            <span id="timer-display" className="timer">⏳ {formatTime(timer)}</span>
         </div>
     </div>
 );
 
-const LoginPage = ({ onLogin, setErrorMessage, errorMessage, tutorialActive, handleNextTutorialStep, handleDismissTutorial, tutorialStep }) => {
+const LoginPage = ({ onLogin, setErrorMessage, errorMessage }) => {
     const [squadCode, setSquadCode] = React.useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const logoUrl = "imagenes/LOGO 3 (1).png";
@@ -548,7 +675,7 @@ const LoginPage = ({ onLogin, setErrorMessage, errorMessage, tutorialActive, han
                 disabled={isLoading}
             />
             <button 
-                id="activate-button" // ID for tutorial targeting
+                id="activate-button" 
                 className="primary-button" 
                 onClick={handleLoginInternal} 
                 disabled={isLoading}
@@ -592,11 +719,12 @@ const WelcomePage = ({ teamName, onContinue, tutorialActive, handleNextTutorialS
         return () => clearTimeout(timer);
     }, []);
 
+    // Initial tutorial steps on welcome page
     React.useEffect(() => {
-        if (showContent && tutorialActive) {
+        if (showContent && tutorialActive && tutorialStep === 0) {
             handleNextTutorialStep(); // Trigger first tutorial step on welcome page
         }
-    }, [showContent, tutorialActive, handleNextTutorialStep]);
+    }, [showContent, tutorialActive, tutorialStep, handleNextTutorialStep]);
 
     return (
         <div className="welcome-container" style={{ opacity: showContent ? 1 : 0, transition: 'opacity 1s ease-in-out' }}>
@@ -604,45 +732,46 @@ const WelcomePage = ({ teamName, onContinue, tutorialActive, handleNextTutorialS
             <h2>¡BIENVENIDO, GUARDIÁN <span className="team-name-welcome">{teamName}</span>!</h2>
             <p className="welcome-message">Tu Guía del Tiempo ha sido ACTIVADA. El legado de San Juan cuenta contigo para restaurar la línea temporal.</p>
             
-            <p id="welcome-fragments-desc" className="welcome-first-mission">
-                Los "Fragmentos de Historia" son tus puntos. Acumula la mayor cantidad posible.
-            </p>
-            {tutorialActive && tutorialStep === 1 && (
-                <TutorialPopup
-                    message="Aquí verás los 'Fragmentos de Historia' que recuperes, ¡son tus puntos!"
-                    targetId="welcome-fragments-desc"
-                    onDismiss={handleNextTutorialStep}
-                    arrowPosition="bottom"
-                />
-            )}
-
-            <p id="welcome-time-desc" className="welcome-first-mission">
-                El "Tiempo Total" es tu marcador más valioso. ¡Cada segundo cuenta!
-            </p>
-            {tutorialActive && tutorialStep === 2 && (
-                <TutorialPopup
-                    message="Este es tu 'Tiempo Total' de misión. ¡Sé veloz, el tiempo es crucial!"
-                    targetId="welcome-time-desc"
-                    onDismiss={handleNextTutorialStep}
-                    arrowPosition="bottom"
-                />
-            )}
-
-            <p className="welcome-first-mission">Tu primera ancla te espera en:</p>
+            <p id="welcome-location-text" className="welcome-first-mission">Tu primera ancla te espera en:</p>
             <p className="welcome-location">📍 Parroquia Santa Lucía</p>
             <button id="start-mission-button" className="primary-button welcome-button" onClick={onContinue}>
                 INICIAR
             </button>
-            {tutorialActive && tutorialStep === 3 && (
-                <TutorialPopup
-                    message="Cuando estés listo para tu primera misión, presiona 'Iniciar'."
-                    targetId="start-mission-button"
-                    onDismiss={handleDismissTutorial} // Last step of welcome tutorial
-                    arrowPosition="top"
+            <p className="welcome-footer">Mantén tus sentidos alerta. Cada decisión cuenta.</p>
+
+            {tutorialActive && tutorialStep === 1 && (
+                <TutorialOverlay
+                    message="Aquí verás los **Fragmentos de Historia** que recuperes. Son tus puntos, ¡acumula la mayor cantidad posible!"
+                    targetId="score-display"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={3}
+                    alignment="bottom"
                 />
             )}
-
-            <p className="welcome-footer">Mantén tus sentidos alerta. Cada decisión cuenta.</p>
+            {tutorialActive && tutorialStep === 2 && (
+                <TutorialOverlay
+                    message="Este es tu **Tiempo Total** de misión. ¡Sé veloz! Cada segundo cuenta para tu ranking final."
+                    targetId="timer-display"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={3}
+                    alignment="bottom"
+                />
+            )}
+            {tutorialActive && tutorialStep === 3 && (
+                <TutorialOverlay
+                    message="Cuando estés listo para tu primera misión, presiona **Iniciar**."
+                    targetId="start-mission-button"
+                    onNext={handleNextTutorialStep} // This will increment step beyond total, stopping tutorial
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={3}
+                    alignment="top"
+                />
+            )}
         </div>
     );
 };
@@ -653,10 +782,12 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, tutori
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
-            if(tutorialActive && tutorialStep === 4) handleNextTutorialStep(); // Trigger tutorial step after travel
+            if(tutorialActive && tutorialStep === 4) { // After travel time, show "arrival confirmed" button tutorial
+                handleNextTutorialStep();
+            }
         }, 10000);  
         return () => clearTimeout(travelTimer);
-    }, [tutorialActive, handleNextTutorialStep, tutorialStep]);
+    }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
 
     const getImageFileName = (locationName) => {
         return locationName.toLowerCase()
@@ -675,16 +806,31 @@ const EnRutaPage = ({ nextLocation, onArrival, department, onFinishEarly, tutori
             <h3>VIAJANDO A TRAVÉS DEL TIEMPO...</h3>
             <p>Próxima Sincronización: <strong>{nextLocation}</strong> ({department})</p>
             <p className="progress-info">Sincronizando coordenadas temporales...</p>
-            <div className="progress-bar-container"><div className="progress-bar-filler"></div></div>
+            <div id="progress-bar-container" className="progress-bar-container"><div className="progress-bar-filler"></div></div>
             <p>¡Mantén el rumbo, Guardián! Evita las 'distorsiones temporales' (¡y las multas de tránsito!).</p>
             <button id="arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'SINCRONIZANDO...' : 'LLEGADA CONFIRMADA'}</button>
             <button className="finish-early-button" onClick={onFinishEarly}>Terminar Aquí</button>
+            
             {tutorialActive && tutorialStep === 4 && (
-                <TutorialPopup
-                    message="En esta pantalla viajarás a la siguiente ubicación. Cuando la barra de progreso se complete, presiona 'Llegada Confirmada'."
-                    targetId="arrival-button"
+                <TutorialOverlay
+                    message="En esta pantalla, tu Guía del Tiempo te lleva a la siguiente ubicación. La barra indica el progreso."
+                    targetId="progress-bar-container"
+                    onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
-                    arrowPosition="top"
+                    currentStep={tutorialStep}
+                    totalSteps={5}
+                    alignment="bottom"
+                />
+            )}
+            {tutorialActive && tutorialStep === 5 && (
+                <TutorialOverlay
+                    message="Cuando la barra de progreso esté completa, presiona **Llegada Confirmada** para iniciar el siguiente desafío."
+                    targetId="arrival-button"
+                    onNext={handleNextTutorialStep} // This will increment step beyond total for this page
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={5}
+                    alignment="top"
                 />
             )}
         </div>
@@ -697,13 +843,15 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly, tutorialActi
     React.useEffect(() => {
         const travelTimer = setTimeout(() => {
             setIsTraveling(false);
-            if(tutorialActive && tutorialStep === 4) handleNextTutorialStep(); // Trigger tutorial step after travel
+            if(tutorialActive && tutorialStep === 4) { // After travel time, show "arrival confirmed" button tutorial
+                handleNextTutorialStep();
+            }
         }, 10000);
 
         return () => {
             clearTimeout(travelTimer);
         }
-    }, [tutorialActive, handleNextTutorialStep, tutorialStep]);
+    }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
     
     const imageUrl = nextDepartment === 'Capital' ? 'imagenes/VIAJANDO1.png' : nextDepartment === 'Rivadavia' ? 'imagenes/VIAJANDO2.png' : 'imagenes/VIAJANDO.png';
     return (
@@ -712,16 +860,31 @@ const LongTravelPage = ({ onArrival, nextDepartment, onFinishEarly, tutorialActi
             <h3>HORA DE VIAJAR MÁS LEJOS</h3>
             <p>Rápido, debemos movernos a <strong>{nextDepartment}</strong>, han aparecido nuevos fragmentos de la historia que debemos recoger.</p>
             <p className="progress-info">Abriendo portal de largo alcance...</p>
-            <div className="progress-bar-container"><div className="progress-bar-filler"></div></div>
+            <div id="long-travel-progress-bar" className="progress-bar-container"><div className="progress-bar-filler"></div></div>
             <p style={{fontStyle: 'italic', fontSize: '0.9rem', opacity: 0.8}}>Es importante que respetes las señales de tránsito, hay controles secretos que pueden restarte puntos.</p>
             <button id="long-travel-arrival-button" className="primary-button" onClick={onArrival} disabled={isTraveling}>{isTraveling ? 'VIAJANDO...' : 'HEMOS LLEGADO'}</button>
             <button className="finish-early-button" onClick={onFinishEarly}>Terminar Aquí</button>
+
             {tutorialActive && tutorialStep === 4 && (
-                <TutorialPopup
-                    message="Si el viaje es largo, la barra de progreso te indicará cuánto falta. Presiona 'Hemos Llegado' al finalizar."
-                    targetId="long-travel-arrival-button"
+                <TutorialOverlay
+                    message="Para viajes más largos, la barra de progreso te indicará cuánto falta para llegar a tu próximo departamento."
+                    targetId="long-travel-progress-bar"
+                    onNext={handleNextTutorialStep}
                     onDismiss={handleDismissTutorial}
-                    arrowPosition="top"
+                    currentStep={tutorialStep}
+                    totalSteps={5}
+                    alignment="bottom"
+                />
+            )}
+            {tutorialActive && tutorialStep === 5 && (
+                <TutorialOverlay
+                    message="Cuando el viaje finalice, presiona **Hemos Llegado** para continuar con la misión."
+                    targetId="long-travel-arrival-button"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={5}
+                    alignment="top"
                 />
             )}
         </div>
@@ -733,8 +896,8 @@ const EndGamePage = ({ score, finalTime, teamName }) => (
         <img src="https://cdn-icons-png.flaticon.com/512/784/784408.png" alt="Medalla o Trofeo Guardián" className="medal-image"/>
         <h3>¡MISIÓN TEMPORAL COMPLETADA, {teamName}!</h3>
         <p>Has estabilizado la línea del tiempo de San Juan. ¡La 'Amenaza del Olvido' ha sido contenida gracias a tu escuadrón!</p>
-        <p id="final-score-display"><strong>Fragmentos de Historia Restaurados: {score}</strong></p>
-        <p id="final-time-display"><strong>Tiempo Total de la Misión: {finalTime}</strong></p>
+        <p id="final-fragments"><strong>Fragmentos de Historia Restaurados: {score}</strong></p>
+        <p id="final-time"><strong>Tiempo Total de la Misión: {finalTime}</strong></p>
         <p>¡Has ganado tu Medalla "Guardián del Tiempo"! 🏅 Los "Custodios Mayores" y otros reconocimientos serán anunciados en el Concilio de Guardianes.</p>
         <p style={{fontSize: "0.9rem", marginTop: "20px"}}><em>No olvides compartir tu hazaña y prepararte para la celebración.</em></p>
         
@@ -745,7 +908,7 @@ const EndGamePage = ({ score, finalTime, teamName }) => (
 const AbortedGamePage = ({ score, finalTime, teamName }) => (
     <div className="end-container">
         <img src="https://cdn-icons-png.flaticon.com/512/784/784408.png" alt="Medalla o Trofeo Guardián" className="medal-image"/>
-        <h3>MISION TEMPORAL DETENIDA</h3>
+        <h3>MISIÓN TEMPORAL DETENIDA</h3>
         <p><strong>{teamName}</strong></p>
         <p>Has estabilizado sólo una parte del tiempo de San Juan. ¡La ´Amenaza del Olvido´ ha logrado avanzar en la línea del tiempo.</p>
         
@@ -772,7 +935,7 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
     }, []);
 
     React.useEffect(() => {
-        if(tutorialActive && tutorialStep === 6) { // Step for trivia options/button
+        if(tutorialActive && tutorialStep === 7) { // Tutorial step for trivia options/button
             handleNextTutorialStep();
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
@@ -811,13 +974,13 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
     return (
         <div className={`challenge-container ${glowClass}`}>
             <h3>{missionName}</h3>
-            <p id="trivia-description-text">{stage.trivia.challenge.tutorialDescription}</p>
+            <p id="trivia-description-text"><strong>Descripción:</strong> {stage.trivia.challenge.tutorialDescription}</p>
             <div className="challenge-timer">⏱️ {triviaTimer}s</div>
-            <p>{challenge.question}</p>
+            <p id="trivia-question">{challenge.question}</p>
             <ul className="trivia-options">
                 {challenge.options.map((option, index) => (
                     <li key={option} 
-                        id={`trivia-option-${index}`} // Added ID for tutorial targeting
+                        id={`trivia-option-${index}`} 
                         className={selectedOption === option ? 'selected' : ''} 
                         onClick={() => !feedback.message && setSelectedOption(option)}>
                         {option}
@@ -826,20 +989,26 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
             </ul>
             <button id="trivia-button" className="primary-button" onClick={handleSubmit} disabled={!selectedOption || feedback.message}>VERIFICAR TRANSMISIÓN</button>
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
-            {tutorialActive && tutorialStep === 6 && (
-                <TutorialPopup
-                    message="Elige la opción correcta para ganar puntos. Tu tiempo de respuesta influye en los 'Fragmentos' obtenidos."
-                    targetId="trivia-option-0" // Target the first option
-                    onDismiss={handleNextTutorialStep} // Move to next step (submit button)
-                    arrowPosition="right"
+            {tutorialActive && tutorialStep === 7 && (
+                <TutorialOverlay
+                    message="Aquí debes elegir la opción correcta. Tu tiempo en esta etapa influye en los puntos obtenidos."
+                    targetId="trivia-question"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={8}
+                    alignment="bottom"
                 />
             )}
-            {tutorialActive && tutorialStep === 7 && (
-                <TutorialPopup
-                    message="Presiona 'Verificar Transmisión' para confirmar tu respuesta."
+            {tutorialActive && tutorialStep === 8 && (
+                <TutorialOverlay
+                    message="Selecciona una opción y presiona **Verificar Transmisión** para confirmar tu respuesta."
                     targetId="trivia-button"
-                    onDismiss={handleDismissTutorial} // Dismiss after this
-                    arrowPosition="top"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={8}
+                    alignment="top"
                 />
             )}
         </div>
@@ -865,7 +1034,7 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
     }, [isLocked]);
     
     React.useEffect(() => {
-        if(tutorialActive && tutorialStep === 5) { // Step for anchor input/button
+        if(tutorialActive && tutorialStep === 6) { // Tutorial step for anchor input/button
             handleNextTutorialStep();
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
@@ -875,7 +1044,9 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             onHintRequest();
             const pista = generarPistaDinamica(anchor.enablerKeyword);
             setPistaGenerada(pista);
-            if(tutorialActive) handleNextTutorialStep(); // Move tutorial step after hint
+            if(tutorialActive && tutorialStep === 9) { // Tutorial step for hint generation
+                handleNextTutorialStep();
+            }
         }
     };
 
@@ -958,25 +1129,28 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             <div className="challenge-timer">⏱️ {anchorTimer}s</div>
             <p><strong>Departamento:</strong> {stage.department}</p>
             {anchor.transmission && <div className="transmission-box"><p><strong>📡 Transmisión Interceptada:</strong> {anchor.transmission}</p></div>}
-            <p><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
+            <p id="anchor-enabler-text"><strong>Objetivo de la Coordenada:</strong> {anchor.enabler}</p>
 
             {error && <p className="feedback error">{error}</p>}
             
             {!pistaGenerada && (
                 <div className="hint-request-container">
                     <button
-                        id="hint-button" // ID for tutorial targeting
+                        id="hint-button"
                         className="primary-button"
                         onClick={handleHintRequest}
                         disabled={score < 25 || isLocked}>
                         SOLICITAR PISTA (-25 Fragmentos)
                     </button>
-                    {tutorialActive && tutorialStep === 8 && (
-                        <TutorialPopup
-                            message="Si te quedas atascado, puedes pedir una pista, pero te costará 'Fragmentos'. Úsala con sabiduría."
+                    {tutorialActive && tutorialStep === 9 && (
+                        <TutorialOverlay
+                            message="Si te quedas atascado y tienes suficientes **Fragmentos**, puedes pedir una **Pista**. ¡Te restará puntos, así que úsala con sabiduría!"
                             targetId="hint-button"
-                            onDismiss={handleNextTutorialStep}
-                            arrowPosition="bottom"
+                            onNext={handleNextTutorialStep}
+                            onDismiss={handleDismissTutorial}
+                            currentStep={tutorialStep}
+                            totalSteps={11} // Total steps for anchor tutorial
+                            alignment="bottom"
                         />
                     )}
                 </div>
@@ -984,40 +1158,49 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             
             {pistaGenerada && (
                 <div className="hint-box hint-dynamic">
-                    <p><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
+                    <p id="hint-display"><strong>💡 Pista Recuperada:</strong> {pistaGenerada}</p>
+                    {tutorialActive && tutorialStep === 10 && (
+                        <TutorialOverlay
+                            message="¡Aquí verás la pista! Te ayudará a resolver el Ancla."
+                            targetId="hint-display"
+                            onNext={handleNextTutorialStep}
+                            onDismiss={handleDismissTutorial}
+                            currentStep={tutorialStep}
+                            totalSteps={11}
+                            alignment="bottom"
+                        />
+                    )}
                 </div>
             )}
 
             <input id="anchor-input" type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
-            {tutorialActive && tutorialStep === 5 && (
-                <TutorialPopup
-                    message="Ingresa la 'Ancla Temporal' que encuentres en el lugar. ¡Es clave para estabilizar la línea de tiempo!"
+            {tutorialActive && tutorialStep === 6 && (
+                <TutorialOverlay
+                    message="Ingresa la **Ancla Temporal** que encuentres en el lugar. ¡Es clave para estabilizar la línea de tiempo!"
                     targetId="anchor-input"
-                    onDismiss={handleNextTutorialStep}
-                    arrowPosition="bottom"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={tutorialStep}
+                    totalSteps={11}
+                    alignment="bottom"
                 />
             )}
             
             <div className="button-group-vertical">    
                 <button id="anchor-button" className="primary-button" onClick={handleUnlockInternal} disabled={isLocked}>🗝️ ANCLAR RECUERDO</button>
-                {tutorialActive && tutorialStep === 9 && (
-                    <TutorialPopup
-                        message="Cuando estés seguro, presiona 'Anclar Recuerdo' para validar la información."
+                {tutorialActive && tutorialStep === 11 && (
+                    <TutorialOverlay
+                        message="Cuando estés seguro de tu respuesta, presiona **Anclar Recuerdo** para validarla."
                         targetId="anchor-button"
-                        onDismiss={handleNextTutorialStep}
-                        arrowPosition="top"
+                        onNext={handleNextTutorialStep}
+                        onDismiss={handleDismissTutorial}
+                        currentStep={tutorialStep}
+                        totalSteps={11}
+                        alignment="top"
                     />
                 )}
                 
                 <button id="skip-button" className="skip-button" onClick={handleSkip} disabled={isLocked}>No sé</button>
-                {tutorialActive && tutorialStep === 10 && (
-                    <TutorialPopup
-                        message="Si no puedes resolver el Ancla, puedes omitirla, pero no ganarás 'Fragmentos'."
-                        targetId="skip-button"
-                        onDismiss={handleDismissTutorial}
-                        arrowPosition="top"
-                    />
-                )}
             </div>
             
             {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
@@ -1073,9 +1256,9 @@ const Leaderboard = () => {
 
    React.useEffect(() => {
     const fetchRanking = async () => {
-      console.warn("Test version: Ranking is disabled.");
+      console.warn("Versión de prueba: El ranking está deshabilitado.");
       setIsLoading(false);
-      setError("Ranking not available in the test version.");
+      setError("Ranking no disponible en la versión de prueba.");
       return;
     };
 
@@ -1124,9 +1307,9 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
     const [selectedOption, setSelectedOption] = React.useState('');
 
     React.useEffect(() => {
-        if (view === 'offer' && tutorialActive && tutorialStep === 11) { // When bonus is offered
+        if (view === 'offer' && tutorialActive && tutorialStep === 14) { // When bonus is offered
             handleNextTutorialStep(); // Move to next tutorial step (offer explanation)
-        } else if (view === 'challenge' && tutorialActive && tutorialStep === 13) { // When challenge starts
+        } else if (view === 'challenge' && tutorialActive && tutorialStep === 16) { // When challenge starts
             handleNextTutorialStep(); // Move to next tutorial step (challenge explanation)
         }
     }, [view, tutorialActive, tutorialStep, handleNextTutorialStep]);
@@ -1134,7 +1317,9 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
 
     const handleAccept = () => {
         setView('challenge');
-        if(tutorialActive && tutorialStep === 12) handleNextTutorialStep(); // Trigger tutorial step after accepting
+        if(tutorialActive && tutorialStep === 15) { // Tutorial step after accepting
+            handleNextTutorialStep();
+        }
     };
 
     const handleDecline = () => {
@@ -1175,34 +1360,43 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
                             <p><strong>ALERTA DE OPORTUNIDAD TEMPORAL</strong></p>
                         </div>
                         <p id="bonus-offer-description">{bonusData.description}</p>
-                        {tutorialActive && tutorialStep === 11 && (
-                            <TutorialPopup
-                                message="Una 'Misión Bonus' te ofrece muchos 'Fragmentos' extra, pero el tiempo sigue corriendo en tu misión principal."
+                        {tutorialActive && tutorialStep === 14 && (
+                            <TutorialOverlay
+                                message={bonusData.tutorialDescription}
                                 targetId="bonus-offer-description"
-                                onDismiss={handleNextTutorialStep}
-                                arrowPosition="bottom"
+                                onNext={handleNextTutorialStep}
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={17} // Total steps for bonus tutorial
+                                alignment="bottom"
                             />
                         )}
                         <a id="bonus-maps-link" href={bonusData.mapsLink} target="_blank" rel="noopener noreferrer" className="primary-button" style={{display: 'block', textDecoration: 'none', marginBottom: '10px'}}>
                             📍 ABRIR EN GOOGLE MAPS
                         </a>
-                        {tutorialActive && tutorialStep === 12 && (
-                            <TutorialPopup
-                                message="Puedes abrir el mapa para llegar al lugar, luego decide si aceptas o rechazas el desvío."
+                        {tutorialActive && tutorialStep === 15 && (
+                            <TutorialOverlay
+                                message="Haz clic en **Abrir en Google Maps** para ver la ubicación del Bonus, luego decide si aceptas o no."
                                 targetId="bonus-maps-link"
-                                onDismiss={handleNextTutorialStep} // Move to accept/decline buttons
-                                arrowPosition="top"
+                                onNext={handleNextTutorialStep}
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={17}
+                                alignment="top"
                             />
                         )}
                         <div className="button-group">
                             <button id="bonus-decline-button" className="secondary-button" onClick={handleDecline}>Rechazar Desvío</button>
                             <button id="bonus-accept-button" className="primary-button" onClick={handleAccept}>¡ACEPTO EL DESAFÍO!</button>
-                            {tutorialActive && tutorialStep === 13 && (
-                                <TutorialPopup
-                                    message="Elige 'Acepto el desafío' para intentar ganar los Fragmentos, o 'Rechazar Desvío' para continuar tu misión principal."
+                            {tutorialActive && tutorialStep === 16 && (
+                                <TutorialOverlay
+                                    message="Si decides aceptar, presiona **¡Acepto el Desafío!**, de lo contrario, **Rechazar Desvío**."
                                     targetId="bonus-accept-button"
-                                    onDismiss={handleNextTutorialStep} // Move to challenge explanation
-                                    arrowPosition="top"
+                                    onNext={handleNextTutorialStep}
+                                    onDismiss={handleDismissTutorial}
+                                    currentStep={tutorialStep}
+                                    totalSteps={17}
+                                    alignment="top"
                                 />
                             )}
                         </div>
@@ -1211,12 +1405,11 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
                 {view === 'challenge' && (
                     <div className="challenge-container">
                         <h3>{bonusData.sponsorName} - Desafío</h3>
-                        <p id="bonus-challenge-description">{bonusData.challenge.tutorialDescription}</p>
-                        <p>{bonusData.challenge.question}</p>
+                        <p id="bonus-challenge-question">{bonusData.challenge.question}</p>
                         <ul className="trivia-options">
                             {bonusData.challenge.options.map((option, index) => (
                                 <li key={option} 
-                                    id={`bonus-option-${index}`} // Added ID for tutorial targeting
+                                    id={`bonus-option-${index}`} 
                                     className={selectedOption === option ? 'selected' : ''} 
                                     onClick={() => !feedback.message && setSelectedOption(option)}>
                                     {option}
@@ -1227,12 +1420,15 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
                             CONFIRMAR RESPUESTA
                         </button>
                         {feedback.message && <p className={`feedback ${feedback.type}`}>{feedback.message}</p>}
-                        {tutorialActive && tutorialStep === 14 && (
-                            <TutorialPopup
-                                message="Selecciona la respuesta correcta y confirma para ganar los 'Fragmentos' del bonus."
+                        {tutorialActive && tutorialStep === 17 && (
+                            <TutorialOverlay
+                                message="Selecciona la respuesta correcta al desafío del Bonus y presiona **Confirmar Respuesta**."
                                 targetId="bonus-submit-button"
-                                onDismiss={handleDismissTutorial} // Dismiss after this
-                                arrowPosition="top"
+                                onNext={handleNextTutorialStep}
+                                onDismiss={handleDismissTutorial}
+                                currentStep={tutorialStep}
+                                totalSteps={17}
+                                alignment="top"
                             />
                         )}
                     </div>
@@ -1243,9 +1439,9 @@ const BonusMissionModal = ({ bonusData, onComplete, tutorialActive, handleNextTu
 };
 
 
-// --- MAIN APP BLOCK ---
+// --- BLOQUE PRINCIPAL DE LA APP ---
 const getInitialState = () => ({ 
-    status: 'login',
+    status: 'login', // Puede ser 'login', 'welcome', 'in_game', 'on_the_road', 'long_travel', 'distortion_event', 'finished', 'aborted'
     squadCode: null, 
     teamName: '', 
     currentMissionId: eventData.length > 0 ? eventData[0].id : 1, 
@@ -1280,15 +1476,25 @@ const App = () => {
                 const hours24inMs = 24 * 60 * 60 * 1000;
 
                 if ((now - lastSavedTime) < hours24inMs) {
-                    console.log("Restoring session. Less than 24 hours elapsed.");
-                    return savedData.state;  
+                    console.log("Restaurando sesión. Menos de 24hs transcurridas.");
+                    // Ensure tutorial is active if the session is being restored
+                    // But also ensure it starts from where it left off, or dismiss if already completed
+                    const restoredState = savedData.state;
+                    if (restoredState.tutorialActive && restoredState.tutorialStep > 0 && restoredState.status !== 'finished' && restoredState.status !== 'aborted') {
+                        // Restore tutorial state if active and not finished
+                        return restoredState;
+                    } else {
+                        // If tutorial was inactive or finished, or if game was finished/aborted,
+                        // treat it as a fresh start for tutorial purposes (but keep game state)
+                        return { ...restoredState, tutorialActive: true, tutorialStep: 0 };
+                    }
                 } else {
-                    console.log("Session expired. More than 24 hours have passed. Restarting.");
+                    console.log("Sesión expirada. Han pasado más de 24hs. Reiniciando.");
                     localStorage.removeItem('guardianesAppState');
                 }
             }
         } catch (e) {
-            console.error("Error processing saved data. Restarting.", e);
+            console.error("Error al procesar datos guardados. Reiniciando.", e);
             localStorage.removeItem('guardianesAppState');
         }
 
@@ -1308,13 +1514,13 @@ const App = () => {
 
     React.useEffect(() => {
         let interval;
-        if (appState.status !== 'login' && appState.status !== 'welcome' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId) {
+        if (appState.status !== 'login' && appState.status !== 'welcome' && appState.status !== 'finished' && appState.status !== 'aborted' && !appState.activeDistortionEventId && !appState.activeBonusMissionId && appState.tutorialActive === false) { // Only run timer if tutorial is not active
             interval = setInterval(() => {
                 setAppState(prev => ({ ...prev, mainTimer: prev.mainTimer + 1 }));
             }, 1000);
         }
         return () => clearInterval(interval);
-    }, [appState.status, appState.activeDistortionEventId, appState.activeBonusMissionId]);
+    }, [appState.status, appState.activeDistortionEventId, appState.activeBonusMissionId, appState.tutorialActive]);
 
     const currentStageData = eventData.find(m => m.id === appState.currentMissionId);
     const activeDistortionEvent = distortionEventsData.find(e => e.id === appState.activeDistortionEventId);
@@ -1323,7 +1529,7 @@ const App = () => {
 
     const handleLogin = (code, name, isAdmin = false) => {
         const initialState = getInitialState();
-        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name, isAdmin: isAdmin };
+        const fullState = { ...initialState, status: 'welcome', squadCode: code, teamName: name, isAdmin: isAdmin, tutorialActive: true, tutorialStep: 0 }; // Start tutorial at step 0
         setAppState(fullState);
         sendResultsToBackend(fullState);
     };
@@ -1333,21 +1539,21 @@ const App = () => {
             ...prev,
             status: 'in_game',
             subStage: 'anchor',
-            tutorialStep: 5, // Start anchor tutorial
+            tutorialStep: 6, // Start anchor tutorial step 6
         }));
     };
     
     const handleAnchorComplete = (anchorResult) => {
         if (!currentStageData) return;
         const newScore = appState.score + anchorResult.points;
-        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: 6 })); // Go to trivia tutorial
+        setAppState(prev => ({ ...prev, score: newScore, subStage: 'trivia', pendingAnchorResult: anchorResult, tutorialStep: 7 })); // Go to trivia tutorial step 7
     };
     
     const handleRequestHint = () => {
         setAppState(prev => ({
             ...prev,
             score: Math.max(0, prev.score - 25),
-            tutorialStep: 8, // Go to hint tutorial
+            tutorialStep: 10, // Go to hint generation tutorial step 10
         }));
     };
     
@@ -1384,12 +1590,11 @@ const App = () => {
         }
 
         if (triggeredBonus) {
-            console.log(`%c[STAGE 1] Triggering Bonus: ${triggeredBonus.id}`, 'color: #00AACC; font-size: 14px; font-weight: bold;');
             setAppState({
                 ...baseStateForNextStep,
                 status: 'in_game',
                 activeBonusMissionId: triggeredBonus.id,
-                tutorialStep: 11, // Start bonus tutorial
+                tutorialStep: 14, // Start bonus tutorial step 14
             });
             return;
         }
@@ -1402,7 +1607,7 @@ const App = () => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-                tutorialStep: 15, // Start distortion tutorial
+                tutorialStep: 10, // Start distortion visual tutorial step 10 (adjust for distortion steps)
             });
         } else {
             if (!nextMission) {
@@ -1412,7 +1617,7 @@ const App = () => {
             setAppState({  
                 ...baseStateForNextStep,  
                 status: nextMission.department !== currentStageData.department ? 'long_travel' : 'on_the_road',
-                tutorialStep: 4, // Start travel tutorial
+                tutorialStep: 4, // Start travel tutorial step 4
             });
         }
     };
@@ -1437,7 +1642,7 @@ const App = () => {
         const finalTime = formatTime(totalSeconds);
         const finalScore = (appState.score || 0) + (bonusPoints || 0);
         
-        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialActive: false, tutorialStep: 0 };
+        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialActive: true, tutorialStep: 18 }; // Start final screen tutorial
         
         setAppState(finalState);
         sendResultsToBackend(finalState);
@@ -1450,7 +1655,7 @@ const App = () => {
         }
         const nextMission = eventData.find(m => m.id === currentStageData.nextMissionId);
         if (nextMission) {
-            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: 5 })); // Go to anchor tutorial
+            setAppState(prev => ({ ...prev, currentMissionId: nextMission.id, status: 'in_game', subStage: 'anchor', tutorialStep: 6 })); // Go to anchor tutorial step 6
         } else {
             handleFinalComplete(0);
         }
@@ -1474,8 +1679,8 @@ const App = () => {
                 score: finalScore,  
                 status: 'aborted',
                 finalTimeDisplay: finalTime,
-                tutorialActive: false,
-                tutorialStep: 0,
+                tutorialActive: true, // Enable tutorial on aborted screen
+                tutorialStep: 18, // Start final screen tutorial
             };
             
             setAppState(finalState);
@@ -1484,9 +1689,6 @@ const App = () => {
     };
 
     const handleBonusModalClose = (result) => {
-        console.log('%c[STAGE 2] Closing bonus modal.', 'color: #FF6600; font-size: 14px; font-weight: bold;');
-        console.log('Data received from modal:', result);
-
         const pointsWon = result?.points || 0;
         const participated = result?.participated || false;
 
@@ -1526,13 +1728,13 @@ const App = () => {
                 status: 'distortion_event',
                 activeDistortionEventId: triggeredEvent.id,
                 postDistortionStatus: nextStatus,
-                tutorialStep: 15, // Start distortion tutorial
+                tutorialStep: 10, // Start distortion visual tutorial step 10
             };
         } else {
             finalState = {
                 ...baseStateAfterBonus,
                 status: nextStatus,
-                tutorialStep: 4, // Start travel tutorial
+                tutorialStep: 4, // Start travel tutorial step 4
             };
         }
 
@@ -1560,10 +1762,6 @@ const App = () => {
                             onLogin={handleLogin} 
                             setErrorMessage={(msg) => setAppState(prev => ({ ...prev, errorMessage: msg }))} 
                             errorMessage={appState.errorMessage} 
-                            tutorialActive={appState.tutorialActive}
-                            handleNextTutorialStep={handleNextTutorialStep}
-                            handleDismissTutorial={handleDismissTutorial}
-                            tutorialStep={appState.tutorialStep}
                         />;
             
             case 'welcome':
@@ -1643,7 +1841,7 @@ const App = () => {
                 return <AbortedGamePage score={appState.score} finalTime={appState.finalTimeDisplay} teamName={appState.teamName} />;
             
             default:
-                return <p>Error: Unknown state.</p>;
+                return <p>Error: Estado desconocido.</p>;
         }
     };
 
@@ -1671,6 +1869,42 @@ const App = () => {
                                     handleDismissTutorial={handleDismissTutorial}
                                     tutorialStep={appState.tutorialStep}
                                 />}
+            
+            {/* Tutorial for the final screen */}
+            {(appState.status === 'finished' || appState.status === 'aborted') && appState.tutorialActive && appState.tutorialStep === 18 && (
+                <TutorialOverlay
+                    message="¡Misión completa! Aquí puedes ver tus **Fragmentos de Historia Restaurados**."
+                    targetId="final-fragments"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={appState.tutorialStep}
+                    totalSteps={20} // Assuming 3 steps for final screen tutorial
+                    alignment="bottom"
+                />
+            )}
+            {(appState.status === 'finished' || appState.status === 'aborted') && appState.tutorialActive && appState.tutorialStep === 19 && (
+                <TutorialOverlay
+                    message="Este es tu **Tiempo Total de la Misión**. Recuerda que la velocidad también es importante."
+                    targetId="final-time"
+                    onNext={handleNextTutorialStep}
+                    onDismiss={handleDismissTutorial}
+                    currentStep={appState.tutorialStep}
+                    totalSteps={20}
+                    alignment="bottom"
+                />
+            )}
+            {(appState.status === 'finished' || appState.status === 'aborted') && appState.tutorialActive && appState.tutorialStep === 20 && (
+                <TutorialOverlay
+                    message="Finalmente, aquí se muestra el **Concilio de Guardianes**, el ranking de todos los equipos."
+                    targetId="leaderboard-title"
+                    onNext={handleNextTutorialStep} // This will dismiss the tutorial
+                    onDismiss={handleDismissTutorial}
+                    currentStep={appState.tutorialStep}
+                    totalSteps={20}
+                    alignment="top"
+                />
+            )}
+
 
             {(appState.isAdmin || appState.status !== 'login') && (
                 <div className="dev-controls-container">
