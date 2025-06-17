@@ -297,6 +297,7 @@ const TutorialOverlay = ({ message, targetId, onNext, onDismiss, currentStep, to
 
     return ReactDOM.createPortal(
         <div className="tutorial-overlay">
+            {/* The backdrop now has pointer-events: auto to block clicks on underlying content */}
             <div className="tutorial-backdrop" onClick={onDismiss}></div>
             <div ref={popupRef} className={`tutorial-popup tutorial-arrow-${alignment}`}>
                 <div className="tutorial-message" dangerouslySetInnerHTML={{ __html: message }}></div>
@@ -936,8 +937,10 @@ const TriviaSection = ({ stage, onComplete, tutorialActive, handleNextTutorialSt
 
     // Trigger trivia question tutorial after stage description
     React.useEffect(() => {
+        // Only trigger if tutorial is active and it's the correct step for this component.
+        // The previous component (AnchorSection or Travel) will set tutorialStep 7 when it completes.
         if(tutorialActive && tutorialStep === 7) {
-            handleNextTutorialStep();
+            handleNextTutorialStep(); // Advance to the first overlay for trivia
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
 
@@ -1034,10 +1037,10 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
         return () => clearInterval(interval);
     }, [isLocked]);
     
-    // Trigger anchor input tutorial
+    // Trigger anchor input tutorial when component is rendered AND it's the correct tutorial step
     React.useEffect(() => {
         if(tutorialActive && tutorialStep === 6) {
-            handleNextTutorialStep();
+            handleNextTutorialStep(); // This will advance to tutorialStep 7 for the input field itself
         }
     }, [tutorialActive, tutorialStep, handleNextTutorialStep]);
 
@@ -1176,14 +1179,15 @@ const AnchorSection = ({ stage, onComplete, onHintRequest, score, tutorialActive
             )}
 
             <input id="anchor-input" type="text" placeholder="Ingresa el 'Ancla Temporal'" value={keyword} onChange={handleInputChange} onKeyPress={(e) => e.key === 'Enter' && handleUnlockInternal()} disabled={isLocked} />
+            {/* Tutorial for anchor input field */}
             {tutorialActive && tutorialStep === 6 && (
                 <TutorialOverlay
                     message={stage.anchor.tutorialDescription}
                     targetId="anchor-input"
-                    onNext={handleNextTutorialStep}
+                    onNext={handleNextTutorialStep} // Advance to the next step (Anchor button)
                     onDismiss={handleDismissTutorial}
                     currentStep={tutorialStep}
-                    totalSteps={11}
+                    totalSteps={11} // Total steps for Anchor tutorial (including buttons and hint)
                     alignment="bottom"
                 />
             )}
