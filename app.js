@@ -307,7 +307,7 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         2: {
             title: "Paso 2: El Tiempo General",
-            description: "Este es el <strong>tiempo total</strong> que llevas en la misión. ¡Corre rápido, Guardián! Cada segundo cuenta para tu clasificación final.",
+            description: "Este es el <strong>tiempo total</strong> que llevas en la misión. Al ser un evento de regularidad, <strong>no necesitas correr!<strong> La clasificación final dependerá de acercarse al tiempo promedio.",
             targetElementId: "main-timer-display"
         },
         3: {
@@ -322,7 +322,7 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         5: {
             title: "Paso 5: Anclando Recuerdos (Misión Ancla)",
-            description: "Aquí debes encontrar la <strong>'Ancla Temporal'</strong>. Lee la consigna y la pista para descubrir la palabra o el año exacto que debes ingresar en el campo de texto. ¡Cada respuesta correcta estabiliza la línea temporal!",
+            description: "Aquí debes encontrar la <strong>'Ancla Temporal'</strong>. Lee la consigna para descubrir la palabra o el año exacto que debes ingresar en el campo de texto. Puedes valerte de las <strong>pistas<strong> si tienes fragmentos disponibles. ¡Cada respuesta correcta estabiliza la línea temporal!",
             targetElementId: "anchor-button"
         },
         6: {
@@ -342,12 +342,12 @@ const PopUpTutorial = ({ step, onClose }) => {
         },
         9: {
             title: "Paso 9: Misión Completada",
-            description: "¡Felicidades! Has restaurado la línea del tiempo. Aquí verás tu <strong>total de Fragmentos</strong>, el <strong>Tiempo Total</strong> de la misión y el <strong>Concilio de Guardianes</strong> con las mejores puntuaciones. ¡Has dejado tu marca en la historia!",
+            description: "¡Felicidades! Has restaurado la línea del tiempo. Aquí verás tu <strong>total de Fragmentos</strong>, el <strong>Tiempo Total</strong> de la misión y el <strong>Concilio de Guardianes</strong> mostrará los 10 mejores el día del desafío. ¡Has dejado tu marca en la historia!",
             targetElementId: "leaderboard-container"
         },
         10: {
             title: "Paso 10: Bonus de Patrocinadores",
-            description: "¡Atención! Has encontrado una <strong>misión bonus</strong> opcional de un patrocinador. Te dará la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Decide si aceptas el desafío.",
+            description: "¡Atención! Has encontrado una <strong>misión bonus</strong> opcional de un <strong>asistente del tiempo<strong>. Te dará la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Decide si aceptas el desafío.",
             targetElementId: null
         }
     };
