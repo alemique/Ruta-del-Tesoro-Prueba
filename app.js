@@ -372,13 +372,16 @@ const PopUpTutorial = ({ step, onClose }) => {
 };
 
 
-const DistortionEventPage = ({ event, onComplete }) => {
+const DistortionEventPage = ({ event, onComplete, onTutorialStepComplete }) => { // Agregado onTutorialStepComplete
     const [view, setView] = React.useState('visual');
     const videoRef = React.useRef(null);
     const [videoPlaying, setVideoPlaying] = React.useState(false);
     const [autoplayBlocked, setAutoplayBlocked] = React.useState(false);
 
     React.useEffect(() => {
+        // Disparar el tutorial cuando se renderiza la página de distorsión
+        onTutorialStepComplete(8);
+
         if (view !== 'visual' || !videoRef.current) return;
 
         // Intentar reproducir el video
@@ -486,7 +489,7 @@ const DistortionEventPage = ({ event, onComplete }) => {
                     <div className="distortion-container">
                         <h3>{challenge.title}</h3>
                         <p>{challenge.message}</p>
-                        <div className="challenge-timer" id="challenge-timer">⏳ {timer}s</div>
+                        <div className="challenge-timer" id="challenge-timer">⏳ {timer}s</div> {/* Agregado ID para tutorial */}
                         <p className="distortion-challenge-text">{challenge.question}</p>
                         <input type="text" placeholder="Último dígito" value={answer} onChange={(e) => setAnswer(e.target.value)} disabled={isLocked} />
                         <button className="primary-button" onClick={() => handleSubmit(false)} disabled={isLocked}>RESPONDER</button>
@@ -677,7 +680,10 @@ const WelcomePage = ({ teamName, onContinue, onTutorialStepComplete }) => {
         const timer = setTimeout(() => {
             setShowContent(true);
         }, 500); // Aparece 0.5 segundos después de cargar la página
-        onTutorialStepComplete(1); // Muestra Paso 1: Explicar Fragmentos
+        
+        // Iniciar el tutorial desde el paso 1 cuando la página de bienvenida se carga
+        onTutorialStepComplete(1); 
+
         return () => clearTimeout(timer);
     }, []);
 
@@ -1124,14 +1130,15 @@ const Leaderboard = () => {
    );
 };
 
-const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) => {
+const BonusMissionModal = ({ bonusData, onComplete, onTutorialStepComplete }) => { // Agregado onTutorialStepComplete
     const [view, setView] = React.useState('offer');
     const [feedback, setFeedback] = React.useState({ message: '', type: '' });
     const [glowClass, setGlowClass] = React.useState('');
     const [selectedOption, setSelectedOption] = React.useState('');
 
     React.useEffect(() => {
-        onTutorialStepComplete(10); // Muestra Paso 10
+        // Disparar el tutorial cuando se renderiza el modal de bonus
+        onTutorialStepComplete(10);
     }, []);
 
     const handleAccept = () => {
@@ -1248,7 +1255,8 @@ const App = () => {
 
                 if ((now - lastSavedTime) < hours24inMs) {
                     console.log("Restaurando sesión. Menos de 24hs transcurridas.");
-                    return savedData.state;  
+                    // IMPORTANTE: Al restaurar el estado, no queremos iniciar el tutorial de nuevo a menos que sea explícito
+                    return { ...savedData.state, tutorialStep: null }; 
                 } else {
                     console.log("Sesión expirada. Han pasado más de 24hs. Reiniciando.");
                     localStorage.removeItem('guardianesAppState');
@@ -1289,36 +1297,24 @@ const App = () => {
 
     // --- NUEVA FUNCIÓN: Manejador de tutoriales ---
     const handleTutorialStepComplete = (stepNumber) => {
-        setAppState(prev => ({ ...prev, tutorialStep: stepNumber }));
+        // Solo avanza el tutorial si no está ya en un paso mayor o si no ha terminado
+        if (appState.tutorialStep === null || stepNumber === appState.tutorialStep + 1 || (stepNumber === 1 && appState.status === 'welcome')) {
+            setAppState(prev => ({ ...prev, tutorialStep: stepNumber }));
+        }
     };
 
     const handleCloseTutorial = () => {
         // Lógica para avanzar al siguiente paso del tutorial
-        let nextStep = appState.tutorialStep + 1;
-        // Si el paso actual es 1, el siguiente es 2. Si es 2, el siguiente es 3, etc.
-        // Si es el paso 4, ya no hay más tutoriales hasta la próxima pantalla clave.
         if (appState.tutorialStep === 1) { // Después de explicar Fragmentos
-            handleTutorialStepComplete(2); // Explicar Tiempo General
+            setAppState(prev => ({ ...prev, tutorialStep: 2 })); // Explicar Tiempo General
         } else if (appState.tutorialStep === 2) { // Después de explicar Tiempo General
-            handleTutorialStepComplete(3); // Explicar Tiempos Parciales
+            setAppState(prev => ({ ...prev, tutorialStep: 3 })); // Explicar Tiempos Parciales
         } else if (appState.tutorialStep === 3) { // Después de explicar Tiempos Parciales
-            handleTutorialStepComplete(4); // Explicar Botón Iniciar
-        } else if (appState.tutorialStep === 4) { // Después de explicar Botón Iniciar
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial, el usuario debe interactuar con el botón
-        } else if (appState.tutorialStep === 5) { // Después de Ancla
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial para que el usuario responda
-        } else if (appState.tutorialStep === 6) { // Después de Trivia
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial para que el usuario responda
-        } else if (appState.tutorialStep === 7) { // Después de Viaje
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial para que el usuario cliquee
-        } else if (appState.tutorialStep === 8) { // Después de Distorsión
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial para que el usuario responda
-        } else if (appState.tutorialStep === 9) { // Después de la pantalla final
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial
-        } else if (appState.tutorialStep === 10) { // Después del bonus
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Cierra el tutorial
+            setAppState(prev => ({ ...prev, tutorialStep: 4 })); // Explicar Botón Iniciar
         } else {
-            setAppState(prev => ({ ...prev, tutorialStep: null })); // Por defecto, cierra el tutorial
+            // Para todos los demás pasos (5, 6, 7, 8, 9, 10), simplemente cierra el tutorial.
+            // La siguiente pantalla o interacción disparará el próximo tutorial si es necesario.
+            setAppState(prev => ({ ...prev, tutorialStep: null }));
         }
     };
 
@@ -1396,7 +1392,7 @@ const handleTriviaComplete = (triviaResult) => {
             ...baseStateForNextStep,
             status: 'in_game', 
             activeBonusMissionId: triggeredBonus.id,
-            tutorialStep: null, // Cierra el tutorial de la trivia, el bonus abre su propio tutorial
+            tutorialStep: 10, // Muestra Paso 10 para el bonus
         });
         return;
     }
@@ -1444,7 +1440,7 @@ const handleTriviaComplete = (triviaResult) => {
         const finalTime = formatTime(totalSeconds);
         const finalScore = (appState.score || 0) + (bonusPoints || 0);
         
-        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime };
+        const finalState = { ...appState, score: finalScore, status: 'finished', finalTimeDisplay: finalTime, tutorialStep: 9 }; // Muestra Paso 9 al final
         
         setAppState(finalState);
         sendResultsToBackend(finalState); // Aunque deshabilitado, la llamada está aquí.
@@ -1481,7 +1477,8 @@ const handleTriviaComplete = (triviaResult) => {
                 ...appState,  
                 score: finalScore,  
                 status: 'aborted',
-                finalTimeDisplay: finalTime  
+                finalTimeDisplay: finalTime,
+                tutorialStep: 9 // Muestra Paso 9 si se aborta
             };
             
             setAppState(finalState);
@@ -1646,13 +1643,13 @@ const handleBonusModalClose = (result) => {
                 {renderContent()}
             </div>
             
-            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} />}
-            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} onTutorialStepComplete={handleTutorialStepComplete} />}
-
-            {/* Renderizar PopUpTutorial si appState.tutorialStep tiene un valor */}
+            {/* El PopUpTutorial se renderiza aquí, condicionalmente */}
             {appState.tutorialStep && (
                 <PopUpTutorial step={appState.tutorialStep} onClose={handleCloseTutorial} />
             )}
+
+            {activeDistortionEvent && <DistortionEventPage event={activeDistortionEvent} onComplete={handleDistortionComplete} onTutorialStepComplete={handleTutorialStepComplete} />} {/* Pasa el handler de tutorial */}
+            {activeBonusData && <BonusMissionModal bonusData={{...activeBonusData, teamName: appState.teamName}} onComplete={handleBonusModalClose} onTutorialStepComplete={handleTutorialStepComplete} />} {/* Pasa el handler de tutorial */}
 
             {/* MODIFICADO: Controles de desarrollo ahora se muestran si isAdmin es true O si el status no es 'login' para el RESET */}
             {(appState.isAdmin || appState.status !== 'login') && ( // Si es admin O no está en login (para mostrar RESET)
