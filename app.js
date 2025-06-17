@@ -302,53 +302,53 @@ const PopUpTutorial = ({ step, onClose }) => {
     const tutorialContent = {
         1: {
             title: "Paso 1: Fragmentos de Historia",
-            description: "Los **Fragmentos** son tu puntaje en la misión. ¡Recoge tantos como puedas! A medida que resuelvas desafíos, tu contador de fragmentos aumentará.",
-            targetElementId: "score-display" // El ID del elemento al que apunta (opcional)
+            description: "Los <strong>Fragmentos</strong> son tu puntaje en la misión. ¡Recoge tantos como puedas! A medida que resuelvas desafíos, tu contador de fragmentos aumentará.",
+            targetElementId: "score-display"
         },
         2: {
             title: "Paso 2: El Tiempo General",
-            description: "Este es el **tiempo total** que llevas en la misión. ¡Corre rápido, Guardián! Cada segundo cuenta para tu clasificación final.",
-            targetElementId: "main-timer-display" // Necesitamos agregar un ID al timer en el Header
+            description: "Este es el <strong>tiempo total</strong> que llevas en la misión. ¡Corre rápido, Guardián! Cada segundo cuenta para tu clasificación final.",
+            targetElementId: "main-timer-display"
         },
         3: {
             title: "Paso 3: Tiempos Parciales",
-            description: "Cada desafío tiene su propio **cronómetro**. Si respondes rápido, ganarás más Fragmentos. ¡La velocidad es clave para maximizar tu puntuación!",
+            description: "Cada desafío tiene su propio <strong>cronómetro</strong>. Si respondes rápido, ganarás más Fragmentos. ¡La velocidad es clave para maximizar tu puntuación!",
             targetElementId: "challenge-timer"
         },
         4: {
             title: "Paso 4: ¡Inicia tu Aventura!",
-            description: "Estás listo para comenzar tu primera misión. Presiona **'INICIAR'** para activar tu Guía del Tiempo y adentrarte en el legado de San Juan.",
-            targetElementId: "welcome-start-button" // ID del botón de iniciar
+            description: "Estás listo para comenzar tu primera misión. Presiona <strong>'INICIAR'</strong> para activar tu Guía del Tiempo y adentrarte en el legado de San Juan.",
+            targetElementId: "welcome-start-button"
         },
         5: {
             title: "Paso 5: Anclando Recuerdos (Misión Ancla)",
-            description: "Aquí debes encontrar la **'Ancla Temporal'**. Lee la consigna y la pista para descubrir la palabra o el año exacto que debes ingresar en el campo de texto. ¡Cada respuesta correcta estabiliza la línea temporal!",
+            description: "Aquí debes encontrar la <strong>'Ancla Temporal'</strong>. Lee la consigna y la pista para descubrir la palabra o el año exacto que debes ingresar en el campo de texto. ¡Cada respuesta correcta estabiliza la línea temporal!",
             targetElementId: "anchor-button"
         },
         6: {
             title: "Paso 6: Desafío de Trivia",
-            description: "¡Es hora de la **trivia**! Elige la opción correcta de la lista. Selecciona una y luego presiona **'VERIFICAR TRANSMISIÓN'**. ¡Tu conocimiento te dará más Fragmentos!",
+            description: "¡Es hora de la <strong>trivia</strong>! Elige la opción correcta de la lista. Selecciona una y luego presiona <strong>'VERIFICAR TRANSMISIÓN'</strong>. ¡Tu conocimiento te dará más Fragmentos!",
             targetElementId: "trivia-button"
         },
         7: {
             title: "Paso 7: Viajando en el Tiempo",
-            description: "Tu Guía del Tiempo te llevará a la siguiente ubicación. Espera a que la **barra de progreso** se complete y el botón **'LLEGADA CONFIRMADA'** aparezca. ¡Haz clic para continuar tu viaje!",
+            description: "Tu Guía del Tiempo te llevará a la siguiente ubicación. Espera a que la <strong>barra de progreso</strong> se complete y el botón <strong>'LLEGADA CONFIRMADA'</strong> aparezca. ¡Haz clic para continuar tu viaje!",
             targetElementId: "en-ruta-arrival-button"
         },
         8: {
             title: "Paso 8: Distorsiones Temporales",
-            description: "¡Cuidado! Una **distorsión** está a punto de aparecer. Son desafíos especiales. Presta atención al mensaje y responde al enigma para ganar fragmentos o evitar perderlos. ¡Actúa rápido!",
-            targetElementId: null // No hay un elemento específico, es una pantalla completa
+            description: "¡Cuidado! Una <strong>distorsión</strong> está a punto de aparecer. Son desafíos especiales. Presta atención al mensaje y responde al enigma para ganar fragmentos o evitar perderlos. ¡Actúa rápido!",
+            targetElementId: null
         },
         9: {
             title: "Paso 9: Misión Completada",
-            description: "¡Felicidades! Has restaurado la línea del tiempo. Aquí verás tu **total de Fragmentos**, el **Tiempo Total** de la misión y el **Concilio de Guardianes** con las mejores puntuaciones. ¡Has dejado tu marca en la historia!",
+            description: "¡Felicidades! Has restaurado la línea del tiempo. Aquí verás tu <strong>total de Fragmentos</strong>, el <strong>Tiempo Total</strong> de la misión y el <strong>Concilio de Guardianes</strong> con las mejores puntuaciones. ¡Has dejado tu marca en la historia!",
             targetElementId: "leaderboard-container"
         },
         10: {
             title: "Paso 10: Bonus de Patrocinadores",
-            description: "¡Atención! Has encontrado una **misión bonus** opcional de un patrocinador. Te dará la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Decide si aceptas el desafío.",
-            targetElementId: "bonus-mission-modal-accept" // O el botón de aceptar
+            description: "¡Atención! Has encontrado una <strong>misión bonus</strong> opcional de un patrocinador. Te dará la oportunidad de ganar más fragmentos, ¡pero el tiempo general no se detendrá! Decide si aceptas el desafío.",
+            targetElementId: null
         }
     };
 
@@ -359,9 +359,9 @@ const PopUpTutorial = ({ step, onClose }) => {
     }
 
     return (
-        <div className="amenaza-modal-overlay"> {/* Reutilizamos los estilos del modal de amenaza */}
+        <div className="amenaza-modal-overlay">
             <div className="amenaza-modal-content" style={{maxWidth: '400px'}}>
-                <div className="stage-container" style={{borderColor: 'var(--color-feedback-success)'}}> {/* Ajustamos el color del borde */}
+                <div className="stage-container" style={{borderColor: 'var(--color-feedback-success)'}}>
                     <h3>{currentTutorial.title}</h3>
                     <p dangerouslySetInnerHTML={{ __html: currentTutorial.description }}></p>
                     <button className="primary-button" onClick={onClose}>ENTENDIDO</button>
