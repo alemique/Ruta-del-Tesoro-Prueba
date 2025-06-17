@@ -672,16 +672,17 @@ input:not(.login-container input)::placeholder {
     padding-top: 20px;
     border-top: 2px solid var(--color-secondary);
     animation: decodeIn 1s ease-out 0.5s backwards;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    /* Nuevo: Contenedor para scroll horizontal */
+    overflow-x: auto; /* Permite el scroll horizontal si el contenido es muy ancho */
+    -webkit-overflow-scrolling: touch; /* Suaviza el scroll en iOS */
 }
 
 .leaderboard-table {
-    width: 100%;
+    width: 100%; /* La tabla ocupará todo el ancho de su contenedor */
     border-collapse: collapse;
     margin-top: 15px;
     font-family: var(--font-secondary);
-    min-width: 320px;
+    min-width: 320px; /* Asegura un ancho mínimo para la tabla si el contenido lo permite */
 }
 
 .leaderboard-table th,
@@ -689,14 +690,14 @@ input:not(.login-container input)::placeholder {
     padding: 12px 10px;
     text-align: left;
     border-bottom: 1px solid var(--color-background-light);
-    white-space: nowrap;
+    white-space: nowrap; /* Evita que el contenido de las celdas se rompa en varias líneas */
 }
 
 .leaderboard-table thead th {
     font-family: var(--font-primary);
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Tamaño base para encabezados */
     color: var(--color-primary);
-    text-align: center;
+    text-align: center; /* Centramos los encabezados */
     text-transform: uppercase;
     letter-spacing: 1px;
 }
@@ -711,48 +712,49 @@ input:not(.login-container input)::placeholder {
 
 .leaderboard-table td:first-child {
     font-family: var(--font-primary);
-    font-size: 1.6rem;
+    font-size: 1.6rem; /* Tamaño base para el número de posición */
     color: var(--color-primary);
     font-weight: 700;
-    text-align: center;
+    text-align: center; /* Centramos el número de posición */
 }
 
-.leaderboard-table td:nth-child(2) {
-    text-align: left;
+.leaderboard-table td:nth-child(2) { /* Para el nombre del guardián */
+    text-align: left; /* Aseguramos alineación izquierda para nombres */
 }
 
-.leaderboard-table td:nth-child(3) {
+.leaderboard-table td:nth-child(3) { /* Para "Fragmentos" (Score) */
     font-weight: bold;
     color: var(--color-text-primary-on-dark);
-    text-align: center;
+    text-align: center; /* Centramos los fragmentos */
 }
 
-.leaderboard-table td:nth-child(4) {
-    text-align: center;
+.leaderboard-table td:nth-child(4) { /* Para "Tiempo" */
+    text-align: center; /* Centramos el tiempo */
 }
 
+/* Media queries para adaptar la fuente en pantallas pequeñas */
 @media (max-width: 480px) {
     .leaderboard-table th,
     .leaderboard-table td {
-        padding: 8px 6px;
+        padding: 8px 6px; /* Reducimos el padding */
     }
 
     .leaderboard-table thead th {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* Reducimos la fuente del encabezado */
     }
 
     .leaderboard-table td:first-child {
-        font-size: 1.3rem;
+        font-size: 1.3rem; /* Reducimos la fuente del número de posición */
     }
 
-    .leaderboard-table td:nth-child(2),
-    .leaderboard-table td:nth-child(3),
-    .leaderboard-table td:nth-child(4) {
-        font-size: 0.9rem;
+    .leaderboard-table td:nth-child(2), /* Nombre del Guardián */
+    .leaderboard-table td:nth-child(3), /* Fragmentos */
+    .leaderboard-table td:nth-child(4) { /* Tiempo */
+        font-size: 0.9rem; /* Reducimos la fuente de los datos */
     }
 }
 
-@media (max-width: 360px) {
+@media (max-width: 360px) { /* Para los celulares más pequeños */
     .leaderboard-table thead th {
         font-size: 1.1rem;
     }
@@ -776,10 +778,10 @@ input:not(.login-container input)::placeholder {
     font-family: var(--font-secondary);
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 25px;
-    margin-bottom: 15px;
+    margin-top: 25px; /* Lo separa de la barra de progreso */
+    margin-bottom: 15px; /* Lo separa del texto inferior */
     transition: all 0.3s ease;
-    display: inline-block;
+    display: inline-block; /* Asegura que los márgenes funcionen bien */
 }
 
 .finish-early-button:hover {
@@ -812,7 +814,7 @@ input:not(.login-container input)::placeholder {
 
 .amenaza-modal-content {
     width: 90%;
-    max-width: 600px;
+    max-width: 600px; /* Un poco más grande para videos */
     animation: zoomInContent 0.5s ease-in-out;
 }
 
@@ -835,7 +837,7 @@ input:not(.login-container input)::placeholder {
     padding: 25px;
     background: var(--color-background-light);
     color: var(--color-text-primary-on-dark);
-    margin: 0;
+    margin: 0; /* El modal se encarga del centrado */
     text-align: center;
 }
 
@@ -896,11 +898,11 @@ input:not(.login-container input)::placeholder {
     right: 10px;
     z-index: 2000;
     display: flex;
-    gap: 8px;
+    gap: 8px; /* Espacio entre botones */
 }
 
 .dev-controls-container .dev-reset-button {
-    position: static;
+    position: static; /* Anulamos el posicionamiento individual */
     opacity: 0.8;
     transition: opacity 0.3s ease;
     padding: 8px 12px;
@@ -916,56 +918,66 @@ input:not(.login-container input)::placeholder {
     opacity: 1;
 }
 
-.dev-jump-sl { background-color: #2980b9; }
-.dev-jump-cpt { background-color: #8e44ad; }
-.dev-reset { background-color: #c0392b; }
+/* Colores para distinguir los botones */
+.dev-jump-sl { background-color: #2980b9; } /* Azul */
+.dev-jump-cpt { background-color: #8e44ad; } /* Púrpura */
+.dev-reset { background-color: #c0392b; } /* Rojo (el que ya tenías) */
 
 /* --- FIN: ESTILOS PARA BOTONES DE DEPURACIÓN --- */
 
+/* Añade esto al final de tu archivo estilos.css */
+
 .dev-reset-button.dev-profecia {
-    background-color: #27ae60;
+    background-color: #27ae60; /* Verde */
 }
 
+/* Y puedes renombrar el de bonus para que sea más específico */
 .dev-reset-button.dev-bonus {
-    background-color: #8e44ad;
+    background-color: #8e44ad; /* Púrpura */
 }
 
 /* --- INICIO: MODIFICACIONES PARA BOTONES DE ANCLAJE (V2) --- */
 
+/* 1. Contenedor vertical con MÁS espacio superior */
 .button-group-vertical {
     display: flex;
-    flex-direction: column;    
-    align-items: center;       
-    gap: 15px;                 
-    margin-top: 40px;          
+    flex-direction: column;    /* Apila los botones */
+    align-items: center;       /* Centra los botones horizontalmente */
+    gap: 15px;                 /* Un poco más de espacio entre botones */
+    margin-top: 40px;          /* Aumentamos el margen superior para alejarlo del input (el "renglón" extra) */
 }
 
+/* 2. Estilo para el botón "No sé" (Opción 1: Ghost) */
 .skip-button {
     font-family: var(--font-primary);
     border-radius: 8px;
     font-size: 1.7rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; /* Transición general para suavidad */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
 
-    background-color: transparent;
-    color: var(--color-primary);  
-    border: 2px solid var(--color-primary);
+    /* Estilos Ghost */
+    background-color: transparent; /* Fondo transparente */
+    color: var(--color-primary);   /* Color del texto como el primario */
+    border: 2px solid var(--color-primary); /* Borde con color primario */
 
-    width: 60%;
-    max-width: 250px;
-    padding: 12px;
+    /* La diferencia clave: el ancho */
+    width: 60%; /* Hacemos que sea más angosto que el 100% del contenedor */
+    max-width: 250px; /* Un tope para que no se vea mal en pantallas muy anchas */
+    padding: 12px; /* Mantener el padding para consistencia */
 }
 
+/* Efecto hover para la Opción 1 */
 .skip-button:hover:not(:disabled) {
-    background-color: rgba(243, 156, 18, 0.1);
-    color: white;
-    border-color: var(--color-secondary);
+    background-color: rgba(243, 156, 18, 0.1); /* Ligero relleno transparente al pasar el ratón */
+    color: white; /* Texto blanco para mayor contraste */
+    border-color: var(--color-secondary); /* Borde secundario para un toque diferente */
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
+/* Estado deshabilitado (ajustado para estilo ghost) */
 .skip-button:disabled {
     background-color: transparent;
     cursor: not-allowed;
@@ -975,6 +987,7 @@ input:not(.login-container input)::placeholder {
     transform: none;
 }
 
+/* 3. Mantenemos la regla para que el botón principal ocupe todo el ancho */
 .button-group-vertical .primary-button {
     width: 100%;
 }
@@ -983,6 +996,7 @@ input:not(.login-container input)::placeholder {
 
 /* --- INICIO: Ocultar botones de depuración específicos --- */
 
+/* Ocultamos los botones de bonus, pero dejamos el de RESET */
 .dev-reset-button.dev-bonus,
 .dev-reset-button.dev-profecia {
     display: none;
@@ -1014,11 +1028,12 @@ input:not(.login-container input)::placeholder {
     max-width: 200px;
     margin-bottom: 25px;
     animation: scaleIn 1s ease-out;
-    border: 4px solid var(--color-primary);
-    box-shadow: 0 0 25px rgba(243, 156, 18, 0.6);
-    border-radius: 15px;
-    padding: 5px;
-    background-color: var(--color-background-dark);
+    /* NUEVO: Estilos para el recuadro */
+    border: 4px solid var(--color-primary); /* Borde de color primario */
+    box-shadow: 0 0 25px rgba(243, 156, 18, 0.6); /* Sombra que brilla */
+    border-radius: 15px; /* Bordes ligeramente redondeados */
+    padding: 5px; /* Espacio entre el borde y la imagen */
+    background-color: var(--color-background-dark); /* Fondo oscuro para el padding */
 }
 
 @keyframes scaleIn {
@@ -1037,8 +1052,8 @@ input:not(.login-container input)::placeholder {
 
 .welcome-container .team-name-welcome {
     color: var(--color-secondary);
-    display: block;
-    font-size: 1.5em;
+    display: block; /* Para que el nombre del equipo quede en una línea propia */
+    font-size: 1.5em; /* Más grande que el resto del h2 */
     margin-top: 5px;
 }
 
@@ -1070,12 +1085,12 @@ input:not(.login-container input)::placeholder {
 }
 
 .welcome-button {
-    width: 80%;
+    width: 80%; /* Un poco más ancho que el de login para que sea más visible */
     max-width: 300px;
     padding: 15px;
     font-size: 2rem;
     margin-top: 20px;
-    animation: pulseButton 2s infinite;
+    animation: pulseButton 2s infinite; /* Animación para llamar la atención */
 }
 
 @keyframes pulseButton {
@@ -1092,226 +1107,50 @@ input:not(.login-container input)::placeholder {
 }
 /* --- FIN: ESTILOS PARA LA PANTALLA DE BIENVENIDA --- */
 
+/* --- ESTILOS ESPECÍFICOS PARA EL PopUpTutorial --- */
 
-/* --- NUEVOS ESTILOS PARA EL OVERLAY DEL TUTORIAL --- */
-.tutorial-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999; /* Asegura que esté por encima de la mayoría de los elementos de la aplicación */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none; /* Por defecto, permite que los clics pasen a través, controlado por el backdrop */
+/* Ajustes generales para el overlay del tutorial para que no sea tan "agresivo" como la amenaza */
+.amenaza-modal-overlay {
+    /* Mantenemos el estilo base para la superposición, pero podemos suavizarlo */
+    background-color: rgba(0, 0, 0, 0.7); /* Un poco menos oscuro que el 0.85 */
 }
 
-.tutorial-backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
-    backdrop-filter: blur(3px); /* Efecto de desenfoque opcional */
-    animation: fadeInTutorialBackdrop 0.3s ease-out forwards;
-    pointer-events: auto; /* Permite clics en el fondo para salir del tutorial */
+/* Contenido del tutorial: un poco más amigable */
+.amenaza-modal-content .stage-container {
+    border-color: var(--color-feedback-success); /* Borde verde para indicar "guía" */
+    box-shadow: 0 0 40px rgba(39, 174, 96, 0.5); /* Sombra verde */
 }
 
-.tutorial-popup {
-    position: absolute; /* Posicionamiento absoluto dentro del overlay fijo */
-    background-color: var(--color-background-medium); /* Fondo oscuro para el pop-up */
-    color: var(--color-text-primary-on-dark);
-    border: 2px solid var(--color-primary);
-    border-radius: 8px;
-    padding: 15px;
-    max-width: 280px; /* Ancho máximo para los mensajes */
-    text-align: center;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    z-index: 10000; /* Asegura que esté encima del fondo */
-    font-size: 1rem;
-    line-height: 1.5;
+.amenaza-modal-content .stage-container h3 {
+    color: var(--color-feedback-success); /* Título verde */
+    border-bottom-color: var(--color-feedback-success); /* Línea inferior verde */
+}
+
+.amenaza-modal-content .stage-container p {
+    color: var(--color-text-primary-on-dark); /* Texto más claro para el tutorial */
+    font-size: 1.05rem; /* Un poco más grande para facilitar la lectura */
+}
+
+.amenaza-modal-content .stage-container strong {
+    color: var(--color-primary); /* Resaltar negritas con tu color primario */
+}
+
+/* Animación para los pop-ups de tutorial (opcional, pero añade fluidez) */
+.popup-tutorial-enter {
     opacity: 0;
-    animation: fadeInTutorialPopup 0.3s ease-out forwards;
-    pointer-events: auto; /* Permite interacción con los botones del pop-up */
-    transform: scale(0.95); /* Escala inicial para efecto de "aparición" */
+    transform: translateY(20px);
 }
-
-.tutorial-popup .tutorial-message {
-    margin-bottom: 15px;
-    font-size: 1rem;
-    line-height: 1.5;
+.popup-tutorial-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
 }
-
-.tutorial-popup .tutorial-message strong {
-    color: var(--color-primary); /* Resalta el texto en negrita en el mensaje */
+.popup-tutorial-exit {
+    opacity: 1;
+    transform: translateY(0);
 }
-
-.tutorial-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    gap: 10px; /* Espacio entre los controles */
-}
-
-.tutorial-step-counter {
-    font-size: 0.85rem;
-    color: var(--color-text-secondary-on-dark);
-    flex-grow: 1; /* Permite que ocupe el espacio disponible */
-    text-align: left;
-    margin-right: 10px;
-}
-
-.tutorial-next-button,
-.tutorial-dismiss-button {
-    font-family: var(--font-secondary);
-    background-color: var(--color-primary);
-    color: var(--color-text-on-primary);
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s, transform 0.1s;
-    white-space: nowrap; /* Evita que el texto del botón se envuelva */
-}
-
-.tutorial-dismiss-button {
-    background-color: transparent;
-    color: var(--color-text-secondary-on-dark);
-    border: 1px solid var(--color-text-secondary-on-dark);
-}
-
-.tutorial-next-button:hover {
-    background-color: var(--color-secondary);
-    transform: translateY(-1px);
-}
-
-.tutorial-dismiss-button:hover {
-    background-color: rgba(var(--color-text-secondary-on-dark), 0.1);
-    transform: translateY(-1px);
-}
-
-/* Estilo de la flecha para el pop-up */
-.tutorial-popup:before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 12px; /* Borde ligeramente más grande para mejor visibilidad */
-    z-index: 10001; /* Encima del contenido del pop-up */
-}
-
-.tutorial-popup:after { /* Flecha interior para el color de fondo */
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 10px; /* Ligeramente más pequeño para el relleno interior */
-    z-index: 10002; /* Encima de la flecha exterior, debajo del contenido del pop-up */
-}
-
-/* Posicionamiento de las flechas según la alineación */
-.tutorial-arrow-bottom:before {
-    border-color: transparent transparent var(--color-primary) transparent;
-    top: -24px; /* Posición encima del pop-up */
-    left: 50%;
-    transform: translateX(-50%);
-}
-.tutorial-arrow-bottom:after {
-    border-color: transparent transparent var(--color-background-medium) transparent;
-    top: -19px; /* Ajuste para coincidir con el fondo interior del pop-up */
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.tutorial-arrow-top:before {
-    border-color: var(--color-primary) transparent transparent transparent;
-    bottom: -24px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-.tutorial-arrow-top:after {
-    border-color: var(--color-background-medium) transparent transparent transparent;
-    bottom: -19px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.tutorial-arrow-left:before {
-    border-color: transparent transparent transparent var(--color-primary);
-    right: -24px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.tutorial-arrow-left:after {
-    border-color: transparent transparent transparent var(--color-background-medium);
-    right: -19px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.tutorial-arrow-right:before {
-    border-color: transparent var(--color-primary) transparent transparent;
-    left: -24px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-.tutorial-arrow-right:after {
-    border-color: transparent var(--color-background-medium) transparent transparent;
-    left: -19px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-/* Animaciones para los elementos del tutorial */
-@keyframes fadeInTutorialBackdrop {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes fadeInTutorialPopup {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-/* Asegura que los elementos objetivo tengan un z-index más alto para ser visibles a través del fondo */
-/* NOTA: Estos IDs deben coincidir exactamente con los IDs que se les dan a los elementos en el HTML/JSX. */
-#score-display,
-#timer-display,
-#welcome-location-text,
-#start-mission-button,
-#progress-bar-container,
-#long-travel-progress-bar,
-#arrival-button,
-#long-travel-arrival-button,
-#anchor-input,
-#hint-button,
-#anchor-button,
-#skip-button,
-#trivia-question,
-.trivia-options li, /* Esto apunta a todos los elementos <li> dentro de .trivia-options */
-#trivia-button,
-#distortion-challenge-question,
-#distortion-challenge-input,
-#distortion-submit-button,
-#distortion-narrative-text,
-#distortion-narrative-button,
-#amenaza-visual-element,
-#video-play-button,
-#bonus-offer-description,
-#bonus-maps-link,
-#bonus-accept-button,
-#bonus-decline-button,
-#bonus-challenge-question,
-#bonus-submit-button,
-#final-fragments,
-#final-time,
-#leaderboard-title {
-    position: relative; /* Crucial para que z-index funcione correctamente */
-    z-index: 10003; /* Un valor superior al fondo (9999) y al pop-up (10000) */
+.popup-tutorial-exit-active {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 300ms, transform 300ms;
 }
